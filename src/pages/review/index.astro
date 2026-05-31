@@ -1,0 +1,252 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const reviews = [
+  {
+    slug: "asus-tuf-gaming-a16",
+    nama: "ASUS TUF Gaming A16",
+    model: "FA607NUG",
+    harga: "Rp 16.999.000",
+    rating: 4.5,
+    kategori: "Gaming",
+    tanggal: "1 Juni 2025",
+    ringkasan: "RTX 4050 full power, layar 16:10 165Hz 100% sRGB. Pilihan solid untuk gamer dan kreator konten.",
+    tags: ["RTX 4050", "165Hz", "DDR5", "16 inci"]
+  },
+  {
+    slug: "asus-vivobook-15",
+    nama: "ASUS VivoBook 15",
+    model: "X1502ZA",
+    harga: "Rp 7.499.000",
+    rating: 4.2,
+    kategori: "Budget",
+    tanggal: "1 Juni 2025",
+    ringkasan: "Laptop budget terbaik untuk pelajar dan mahasiswa dengan performa harian yang solid.",
+    tags: ["Budget", "Ryzen 5", "FHD", "Ringan"]
+  },
+];
+
+const kategoris = ["Semua", "Gaming", "Budget", "Mid-range", "Bisnis", "Creator"];
+---
+
+<BaseLayout title="Review Laptop" description="Semua review laptop jujur dari AstroLaptop">
+  <style>
+    .page-header {
+      margin-bottom: 32px;
+    }
+
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .page-header p {
+      color: #6b7280;
+    }
+
+    /* FILTER */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .filter-btn {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid #e5e7eb;
+      background: white;
+      font-size: 0.875rem;
+      cursor: pointer;
+      color: #374151;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+    }
+
+    /* REVIEW LIST */
+    .review-list {
+      display: grid;
+      gap: 20px;
+    }
+
+    .review-item {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      gap: 20px;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .review-item:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 600px) {
+      .review-item {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .item-img {
+      width: 120px;
+      height: 80px;
+      background: #f3f4f6;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .item-body {}
+
+    .item-meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .badge-gaming {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .item-date {
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+
+    .item-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .item-model {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+
+    .item-desc {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
+
+    .item-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: #f3f4f6;
+      color: #374151;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .item-right {
+      text-align: right;
+      min-width: 120px;
+    }
+
+    .item-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #059669;
+      margin-bottom: 8px;
+    }
+
+    .item-rating {
+      background: #fef9c3;
+      color: #92400e;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .total-count {
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+  </style>
+
+  <div class="page-header">
+    <h1>📋 Semua Review Laptop</h1>
+    <p>Review jujur berdasarkan pengujian langsung, bukan sekadar spesifikasi kertas.</p>
+  </div>
+
+  <!-- FILTER KATEGORI -->
+  <div class="filter-bar">
+    {kategoris.map((k) => (
+      <a href="#" class={`filter-btn ${k === "Semua" ? "active" : ""}`}>{k}</a>
+    ))}
+  </div>
+
+  <p class="total-count">{reviews.length} review tersedia</p>
+
+  <!-- DAFTAR REVIEW -->
+  <div class="review-list">
+    {reviews.map((laptop) => (
+      <a href={`/review/${laptop.slug}`} class="review-item">
+        <div class="item-img">💻</div>
+
+        <div class="item-body">
+          <div class="item-meta">
+            <span class={`badge ${laptop.kategori === "Gaming" ? "badge-gaming" : ""}`}>
+              {laptop.kategori}
+            </span>
+            <span class="item-date">{laptop.tanggal}</span>
+          </div>
+          <div class="item-title">{laptop.nama}</div>
+          <div class="item-model">{laptop.model}</div>
+          <div class="item-desc">{laptop.ringkasan}</div>
+          <div class="item-tags">
+            {laptop.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        </div>
+
+        <div class="item-right">
+          <div class="item-price">{laptop.harga}</div>
+          <div class="item-rating">⭐ {laptop.rating}/5</div>
+        </div>
+      </a>
+    ))}
+  </div>
+</BaseLayout>
