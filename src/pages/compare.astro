@@ -1,0 +1,464 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Perbandingan Laptop" description="Bandingkan laptop gaming berdasarkan harga, GPU, CPU, RAM, dan layar.">
+  <style>
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 6px; }
+    .page-header p { color: #6b7280; }
+
+    /* FILTER BAR */
+    .filters {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .filter-group label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .filter-group select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #111;
+      background: #f9fafb;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+
+    .filter-group select:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    .reset-btn {
+      align-self: end;
+      padding: 8px 16px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      color: #374151;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .reset-btn:hover { background: #e5e7eb; }
+
+    /* RESULT COUNT */
+    .result-info {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
+
+    .result-info strong { color: #111; }
+
+    /* TABLE */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      font-size: 0.875rem;
+    }
+
+    thead tr {
+      background: #f8f9fa;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th:hover { color: #2563eb; }
+    th.sort-asc::after { content: " ↑"; color: #2563eb; }
+    th.sort-desc::after { content: " ↓"; color: #2563eb; }
+
+    tbody tr {
+      border-bottom: 1px solid #f3f4f6;
+      transition: background 0.15s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f0f7ff; }
+    tbody tr.hidden { display: none; }
+
+    td {
+      padding: 14px 16px;
+      color: #374151;
+      vertical-align: middle;
+    }
+
+    .td-nama {
+      font-weight: 600;
+      color: #111;
+      min-width: 200px;
+    }
+
+    .td-nama a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .td-nama a:hover { text-decoration: underline; }
+
+    .td-merk {
+      white-space: nowrap;
+    }
+
+    .badge-gpu {
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .badge-gpu.rtx5050 { background: #d1fae5; color: #065f46; }
+    .badge-gpu.rtx4050 { background: #dbeafe; color: #1e40af; }
+    .badge-gpu.rtx3050 { background: #fef3c7; color: #92400e; }
+
+    .badge-cpu {
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .badge-amd {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-intel {
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-ram {
+      background: #f3f4f6;
+      color: #374151;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .check { color: #059669; font-size: 1rem; }
+    .cross  { color: #d1d5db; font-size: 1rem; }
+
+    .harga-cell {
+      font-weight: 700;
+      color: #059669;
+      white-space: nowrap;
+    }
+
+    .no-result {
+      text-align: center;
+      padding: 48px;
+      color: #9ca3af;
+      display: none;
+    }
+
+    .no-result.show { display: table-row; }
+  </style>
+
+  <div class="page-header">
+    <h1>🔍 Perbandingan Laptop</h1>
+    <p>Filter dan bandingkan laptop berdasarkan kebutuhan kamu.</p>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filters">
+    <div class="filter-group">
+      <label>Rentang Harga</label>
+      <select id="f-harga">
+        <option value="">Semua Harga</option>
+        <option value="0-10">Di bawah 10 Juta</option>
+        <option value="10-13">10 – 13 Juta</option>
+        <option value="13-17">13 – 17 Juta</option>
+        <option value="17-99">17 Juta ke atas</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>GPU</label>
+      <select id="f-gpu">
+        <option value="">Semua GPU</option>
+        <option value="RTX 5050">RTX 5050</option>
+        <option value="RTX 4050">RTX 4050</option>
+        <option value="RTX 3050">RTX 3050</option>
+        <option value="Integrated">Integrated / Tanpa GPU</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Jenis CPU</label>
+      <select id="f-cpu">
+        <option value="">Intel & AMD</option>
+        <option value="Intel">Intel</option>
+        <option value="AMD">AMD</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Tipe RAM</label>
+      <select id="f-ram">
+        <option value="">DDR4 & DDR5</option>
+        <option value="DDR5">DDR5</option>
+        <option value="DDR4">DDR4</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>100% sRGB</label>
+      <select id="f-srgb">
+        <option value="">Semua</option>
+        <option value="ya">Ada 100% sRGB</option>
+        <option value="tidak">Tanpa 100% sRGB</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <button class="reset-btn" id="btn-reset">↺ Reset Filter</button>
+    </div>
+  </div>
+
+  <p class="result-info">Menampilkan <strong id="result-count">7</strong> laptop</p>
+
+  <!-- TABEL -->
+  <div class="table-wrap">
+    <table id="compare-table">
+      <thead>
+        <tr>
+          <th data-col="nama">Laptop</th>
+          <th data-col="merk">Merk</th>
+          <th data-col="cpu">CPU</th>
+          <th data-col="gpu">GPU</th>
+          <th data-col="ram">RAM</th>
+          <th data-col="layar">Layar</th>
+          <th data-col="srgb">100% sRGB</th>
+          <th data-col="harga">Harga</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <!-- data-harga dalam juta (angka), data-gpu, data-cpu, data-ram, data-srgb -->
+
+        <tr data-harga="7.5" data-gpu="Integrated" data-cpu="AMD" data-ram="DDR5" data-srgb="tidak">
+          <td class="td-nama"><a href="/review/asus-vivobook-15">ASUS VivoBook 15</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 5 7520U</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>15" FHD 60Hz</td>
+          <td class="cross">—</td>
+          <td class="harga-cell">Rp 7,5 Jt</td>
+        </tr>
+
+        <tr data-harga="11.5" data-gpu="RTX 3050" data-cpu="Intel" data-ram="DDR4" data-srgb="tidak">
+          <td class="td-nama"><a href="/review/acer-aspire-7-pro-a715">Acer Aspire 7 Pro A715</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-13420H</span></td>
+          <td><span class="badge-gpu rtx3050">RTX 3050</span></td>
+          <td><span class="badge-ram">DDR4</span></td>
+          <td>15" FHD 144Hz</td>
+          <td class="cross">—</td>
+          <td class="harga-cell">Rp 11–12 Jt</td>
+        </tr>
+
+        <tr data-harga="12.5" data-gpu="RTX 3050" data-cpu="Intel" data-ram="DDR5" data-srgb="ya">
+          <td class="td-nama"><a href="/review/acer-nitro-lite-nl16">Acer Nitro Lite NL16</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core 5 210H</span></td>
+          <td><span class="badge-gpu rtx3050">RTX 3050</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WUXGA 180Hz</td>
+          <td class="check">✅</td>
+          <td class="harga-cell">Rp 12–13 Jt</td>
+        </tr>
+
+        <tr data-harga="15.5" data-gpu="RTX 5050" data-cpu="Intel" data-ram="DDR5" data-srgb="tidak">
+          <td class="td-nama"><a href="/review/colorful-evol-p15-rtx5050">Colorful Evol P15 RTX 5050</a></td>
+          <td class="td-merk">Colorful</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-13420H</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>15" FHD 144Hz</td>
+          <td class="cross">—</td>
+          <td class="harga-cell">Rp 15–16 Jt</td>
+        </tr>
+
+        <tr data-harga="15.5" data-gpu="RTX 5050" data-cpu="Intel" data-ram="DDR4" data-srgb="tidak">
+          <td class="td-nama"><a href="/review/acer-nitro-v15-5050">Acer Nitro V15 RTX 5050</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-13420H</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ram">DDR4</span></td>
+          <td>15" FHD 144Hz</td>
+          <td class="cross">—</td>
+          <td class="harga-cell">Rp 15–16 Jt</td>
+        </tr>
+
+        <tr data-harga="17" data-gpu="RTX 4050" data-cpu="AMD" data-ram="DDR5" data-srgb="ya">
+          <td class="td-nama"><a href="/review/asus-tuf-gaming-a16">ASUS TUF Gaming A16 FA607NUG</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 7445HS</span></td>
+          <td><span class="badge-gpu rtx4050">RTX 4050</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WUXGA 165Hz</td>
+          <td class="check">✅</td>
+          <td class="harga-cell">Rp 17–18 Jt</td>
+        </tr>
+
+        <tr data-harga="19.5" data-gpu="RTX 5050" data-cpu="AMD" data-ram="DDR5" data-srgb="tidak">
+          <td class="td-nama"><a href="/review/asus-tuf-a16-fa608uh-rtx5050">ASUS TUF A16 FA608UH RTX 5050</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 260</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WUXGA 165Hz</td>
+          <td class="cross">—</td>
+          <td class="harga-cell">Rp 19–20 Jt</td>
+        </tr>
+
+        <tr id="no-result" class="no-result">
+          <td colspan="8">😕 Tidak ada laptop yang cocok dengan filter ini.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const rows = document.querySelectorAll('#table-body tr:not(#no-result)');
+    const noResult = document.getElementById('no-result');
+    const resultCount = document.getElementById('result-count');
+
+    const fHarga = document.getElementById('f-harga');
+    const fGpu   = document.getElementById('f-gpu');
+    const fCpu   = document.getElementById('f-cpu');
+    const fRam   = document.getElementById('f-ram');
+    const fSrgb  = document.getElementById('f-srgb');
+
+    function applyFilters() {
+      const harga = fHarga.value;
+      const gpu   = fGpu.value;
+      const cpu   = fCpu.value;
+      const ram   = fRam.value;
+      const srgb  = fSrgb.value;
+
+      let visible = 0;
+
+      rows.forEach(row => {
+        const rHarga = parseFloat(row.dataset.harga);
+        const rGpu   = row.dataset.gpu;
+        const rCpu   = row.dataset.cpu;
+        const rRam   = row.dataset.ram;
+        const rSrgb  = row.dataset.srgb;
+
+        let show = true;
+
+        if (harga) {
+          const [min, max] = harga.split('-').map(Number);
+          if (rHarga < min || rHarga > max) show = false;
+        }
+        if (gpu   && rGpu  !== gpu)   show = false;
+        if (cpu   && rCpu  !== cpu)   show = false;
+        if (ram   && rRam  !== ram)   show = false;
+        if (srgb  && rSrgb !== srgb)  show = false;
+
+        row.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+
+      resultCount.textContent = visible;
+      noResult.classList.toggle('show', visible === 0);
+    }
+
+    [fHarga, fGpu, fCpu, fRam, fSrgb].forEach(f => f.addEventListener('change', applyFilters));
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      [fHarga, fGpu, fCpu, fRam, fSrgb].forEach(f => f.value = '');
+      applyFilters();
+    });
+
+    // Sort
+    let sortCol = '', sortDir = 1;
+    document.querySelectorAll('th[data-col]').forEach(th => {
+      th.addEventListener('click', () => {
+        const col = th.dataset.col;
+        if (sortCol === col) {
+          sortDir *= -1;
+        } else {
+          sortCol = col;
+          sortDir = 1;
+        }
+
+        document.querySelectorAll('th').forEach(t => t.classList.remove('sort-asc','sort-desc'));
+        th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+
+        const tbody = document.getElementById('table-body');
+        const rowsArr = Array.from(rows);
+
+        rowsArr.sort((a, b) => {
+          let aVal, bVal;
+          if (col === 'harga') {
+            aVal = parseFloat(a.dataset.harga);
+            bVal = parseFloat(b.dataset.harga);
+          } else {
+            aVal = a.querySelector('td').textContent.trim().toLowerCase();
+            bVal = b.querySelector('td').textContent.trim().toLowerCase();
+          }
+          if (aVal < bVal) return -1 * sortDir;
+          if (aVal > bVal) return  1 * sortDir;
+          return 0;
+        });
+
+        rowsArr.forEach(r => tbody.insertBefore(r, noResult));
+      });
+    });
+  </script>
+</BaseLayout>
