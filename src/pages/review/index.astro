@@ -398,7 +398,7 @@ const kategoris = ["Semua", "Gaming", "Budget", "Mid-range", "Bisnis", "Creator"
   <!-- DAFTAR REVIEW -->
   <div class="review-list">
     {reviews.map((laptop) => (
-      <a href={`/review/${laptop.slug}`} class="review-item">
+      <a href={`/review/${laptop.slug}`} class="review-item" data-kategori={laptop.kategori}>
         <div class="item-img">💻</div>
 
         <div class="item-body">
@@ -425,4 +425,30 @@ const kategoris = ["Semua", "Gaming", "Budget", "Mid-range", "Bisnis", "Creator"
       </a>
     ))}
   </div>
+
+  <script>
+    const btns = document.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.review-item');
+    const countEl = document.querySelector('.total-count');
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const selected = btn.textContent.trim();
+
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        let visible = 0;
+        items.forEach(item => {
+          const kat = item.dataset.kategori;
+          const show = selected === 'Semua' || kat === selected;
+          item.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+
+        countEl.textContent = `${visible} review tersedia`;
+      });
+    });
+  </script>
 </BaseLayout>
