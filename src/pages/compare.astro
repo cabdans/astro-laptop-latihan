@@ -577,4 +577,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         const tbody = document.getElementById('table-body');
         const rowsArr = Array.from(rows);
 
-        r
+        const colMap = { nama: 1, merk: 2, cpu: 3, gpu: 4, ram: 5, layar: 6, srgb: 7, harga: 8 };
+        const colIdx = colMap[col] || 1;
+
+        rowsArr.sort((a, b) => {
+          if (col === 'harga') {
+            return (parseFloat(a.dataset.harga) - parseFloat(b.dataset.harga)) * sortDir;
+          }
+          const aVal = a.querySelector(`td:nth-child(${colIdx})`)?.textContent?.trim() || '';
+          const bVal = b.querySelector(`td:nth-child(${colIdx})`)?.textContent?.trim() || '';
+          return aVal.localeCompare(bVal) * sortDir;
+        });
+
+        rowsArr.forEach(row => tbody.insertBefore(row, noResult));
+        applyFilters();
+      });
+    });
+  </script>
+
+</BaseLayout>
