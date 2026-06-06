@@ -47,7 +47,7 @@ const reviews = [
     tags: ["Ryzen 7 7735HS", "8 Core", "WUXGA", "Radeon 680M", "100W Type-C"]
   },
   {
-    slug: "advan-workmate-ultra-core-ultra5-115u",
+    slug: "budget/advan-workmate-ultra-core-ultra5-115u",
     nama: "Advan Workmate Ultra Core Ultra 5 115U",
     model: "Workmate Ultra",
     harga: "Rp 7–8 Juta",
@@ -58,7 +58,7 @@ const reviews = [
     tags: ["Core Ultra 5", "WUXGA", "Type-C", "Tipis", "Intel AI"]
   },
   {
-    slug: "advan-workplus-r5-6600h",
+    slug: "budget/advan-workplus-r5-6600h",
     nama: "Advan Workplus Ryzen 5 6600H",
     model: "Workplus",
     harga: "Rp 7–8 Juta",
@@ -69,7 +69,7 @@ const reviews = [
     tags: ["Ryzen 5 6600H", "16GB RAM", "58Wh", "Type-C", "Brand Lokal"]
   },
   {
-    slug: "advan-workplus-heritage-r5-7535hs",
+    slug: "budget/advan-workplus-heritage-r5-7535hs",
     nama: "Advan Workplus Heritage Ryzen 5 7535HS",
     model: "Workplus Heritage",
     harga: "Rp 7–8 Juta",
@@ -80,7 +80,7 @@ const reviews = [
     tags: ["Ryzen 5 7535HS", "WUXGA", "60Wh", "Type-C", "Brand Lokal"]
   },
   {
-    slug: "lenovo-ideapad-slim3-14iru8-i3",
+    slug: "budget/lenovo-ideapad-slim3-14iru8-i3",
     nama: "Lenovo IdeaPad Slim 3 14IRU8 Core i3",
     model: "14IRU8",
     harga: "Rp 7–8 Juta",
@@ -190,7 +190,7 @@ const reviews = [
     tags: ["RTX 4050", "165Hz", "DDR5", "16 inci"]
   },
   {
-    slug: "asus-vivobook-15",
+    slug: "budget/asus-vivobook-15",
     nama: "ASUS VivoBook 15",
     model: "X1502ZA",
     harga: "Rp 7.499.000",
@@ -423,32 +423,3 @@ const kategoris = ["Semua", "Gaming", "Budget", "Mid-range", "Bisnis", "Creator"
           <div class="item-rating">⭐ {laptop.rating}/5</div>
         </div>
       </a>
-    ))}
-  </div>
-
-  <script>
-    const btns = document.querySelectorAll('.filter-btn');
-    const items = document.querySelectorAll('.review-item');
-    const countEl = document.querySelector('.total-count');
-
-    btns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const selected = btn.textContent.trim();
-
-        btns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        let visible = 0;
-        items.forEach(item => {
-          const kat = item.dataset.kategori;
-          const show = selected === 'Semua' || kat === selected;
-          item.style.display = show ? '' : 'none';
-          if (show) visible++;
-        });
-
-        countEl.textContent = `${visible} review tersedia`;
-      });
-    });
-  </script>
-</BaseLayout>
