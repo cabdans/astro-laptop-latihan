@@ -1,0 +1,628 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="H2H Laptop" description="Bandingkan dua laptop secara head-to-head berdasarkan spesifikasi lengkap.">
+  <style>
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 6px; }
+    .page-header p { color: #6b7280; }
+
+    /* SELECTOR */
+    .selector-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .selector-box {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .selector-box label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .selector-box select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: #111;
+      background: #f9fafb;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+
+    .selector-box select:focus { outline: none; border-color: #2563eb; }
+
+    .vs-badge {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #2563eb;
+      background: #eff6ff;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      border: 2px solid #bfdbfe;
+    }
+
+    /* PLACEHOLDER */
+    .placeholder {
+      background: white;
+      border: 2px dashed #e5e7eb;
+      border-radius: 12px;
+      padding: 60px 24px;
+      text-align: center;
+      color: #9ca3af;
+      font-size: 1rem;
+    }
+
+    /* COMPARISON TABLE */
+    .compare-wrap { display: none; }
+    .compare-wrap.show { display: block; }
+
+    /* HEADER CARDS */
+    .laptop-headers {
+      display: grid;
+      grid-template-columns: 220px 1fr 1fr;
+      gap: 0;
+      margin-bottom: 0;
+    }
+
+    .header-empty { background: transparent; }
+
+    .laptop-card {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px 12px 0 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .laptop-card.card-a { border-color: #2563eb; }
+    .laptop-card.card-b { border-color: #7c3aed; }
+
+    .laptop-card .card-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .card-a .card-label { color: #2563eb; }
+    .card-b .card-label { color: #7c3aed; }
+
+    .laptop-card .card-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 4px;
+    }
+
+    .laptop-card .card-price {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #059669;
+    }
+
+    /* TABLE */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      overflow: hidden;
+    }
+
+    .spec-table tr:nth-child(even) { background: #f9fafb; }
+
+    .spec-table td {
+      padding: 13px 16px;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+
+    .spec-table td:first-child {
+      width: 220px;
+      font-weight: 600;
+      color: #6b7280;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      background: #f9fafb;
+      border-right: 1px solid #e5e7eb;
+    }
+
+    .spec-table td.win-a { background: #eff6ff; font-weight: 700; color: #1d4ed8; }
+    .spec-table td.win-b { background: #f5f3ff; font-weight: 700; color: #6d28d9; }
+    .spec-table td.draw { color: #374151; }
+
+    .badge-gpu {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-cpu-intel { background: #eff6ff; color: #1e40af; display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; }
+    .badge-cpu-amd { background: #fff7ed; color: #c2410c; display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; }
+
+    .check { color: #059669; font-weight: 700; }
+    .dash { color: #9ca3af; }
+
+    /* VERDICT */
+    .verdict {
+      margin-top: 24px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .verdict h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: #111; }
+
+    .verdict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .verdict-col { padding: 16px; border-radius: 8px; }
+    .verdict-col.col-a { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .verdict-col.col-b { background: #f5f3ff; border: 1px solid #ddd6fe; }
+
+    .verdict-col h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; }
+    .col-a h4 { color: #1d4ed8; }
+    .col-b h4 { color: #6d28d9; }
+
+    .verdict-col ul { list-style: none; padding: 0; }
+    .verdict-col ul li { font-size: 0.875rem; color: #374151; padding: 3px 0; }
+    .verdict-col ul li::before { content: "✓ "; color: #059669; font-weight: 700; }
+
+    .winner-banner {
+      margin-top: 16px;
+      padding: 14px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-align: center;
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+  </style>
+
+  <div class="page-header">
+    <h1>⚔️ H2H Laptop</h1>
+    <p>Pilih dua laptop dan bandingkan spesifikasi mereka secara langsung.</p>
+  </div>
+
+  <!-- SELECTOR -->
+  <div class="selector-wrap">
+    <div class="selector-box">
+      <label>Laptop A</label>
+      <select id="sel-a">
+        <option value="">-- Pilih Laptop --</option>
+      </select>
+    </div>
+    <div class="vs-badge">VS</div>
+    <div class="selector-box">
+      <label>Laptop B</label>
+      <select id="sel-b">
+        <option value="">-- Pilih Laptop --</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- PLACEHOLDER -->
+  <div class="placeholder" id="placeholder">
+    Pilih dua laptop di atas untuk melihat perbandingan spesifikasi lengkap.
+  </div>
+
+  <!-- COMPARISON -->
+  <div class="compare-wrap" id="compare-wrap">
+    <div class="laptop-headers">
+      <div class="header-empty"></div>
+      <div class="laptop-card card-a">
+        <div class="card-label">Laptop A</div>
+        <div class="card-name" id="name-a">—</div>
+        <div class="card-price" id="price-a">—</div>
+      </div>
+      <div class="laptop-card card-b">
+        <div class="card-label">Laptop B</div>
+        <div class="card-name" id="name-b">—</div>
+        <div class="card-price" id="price-b">—</div>
+      </div>
+    </div>
+
+    <table class="spec-table">
+      <tbody id="spec-tbody"></tbody>
+    </table>
+
+    <div class="verdict">
+      <h3>📊 Kesimpulan</h3>
+      <div class="verdict-grid">
+        <div class="verdict-col col-a">
+          <h4 id="verdict-name-a">Laptop A</h4>
+          <ul id="verdict-pros-a"></ul>
+        </div>
+        <div class="verdict-col col-b">
+          <h4 id="verdict-name-b">Laptop B</h4>
+          <ul id="verdict-pros-b"></ul>
+        </div>
+      </div>
+      <div class="winner-banner" id="winner-banner"></div>
+    </div>
+  </div>
+
+  <script>
+    const laptops = [
+      {
+        id: "lenovo-slim3-14irh10",
+        nama: "Lenovo IdeaPad Slim 3 14IRH10 i5",
+        harga: "Rp 10–11 Jt", hargaNum: 10.5,
+        merk: "Lenovo", kategori: "Produktivitas",
+        cpu: "Intel Core i5-13420H", cpuMerk: "Intel",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 8,
+        layar: '14" WUXGA 16:10', layarHz: 60,
+        srgb: false, baterai: "56Wh", berat: "1.65 kg",
+        garansi: "2 Tahun + ADP", os: "Windows 11",
+        slug: "/review/produktivitas/lenovo-ideapad-slim3-14irh10-i5"
+      },
+      {
+        id: "lenovo-slim3-14arp10",
+        nama: "Lenovo IdeaPad Slim 3 14ARP10 R5",
+        harga: "Rp 10–11 Jt", hargaNum: 10.5,
+        merk: "Lenovo", kategori: "Produktivitas",
+        cpu: "AMD Ryzen 5 7535HS", cpuMerk: "AMD",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 8,
+        layar: '14" WUXGA 16:10', layarHz: 60,
+        srgb: false, baterai: "56Wh", berat: "1.65 kg",
+        garansi: "2 Tahun + ADP", os: "Windows 11",
+        slug: "/review/produktivitas/lenovo-ideapad-slim3-14arp10-r5"
+      },
+      {
+        id: "polytron-luxia-ultra5",
+        nama: "Polytron Luxia Pro Ultra 5 125H",
+        harga: "Rp 10–11 Jt", hargaNum: 10.5,
+        merk: "Polytron", kategori: "Produktivitas",
+        cpu: "Intel Core Ultra 5 125H", cpuMerk: "Intel",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 16,
+        layar: '14" IPS', layarHz: 60,
+        srgb: true, baterai: "60Wh", berat: "1.4 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/produktivitas/polytron-luxia-pro-ultra5-125h"
+      },
+      {
+        id: "acer-aspire-go-14",
+        nama: "Acer Aspire Go 14 Ai Ultra 5 125H",
+        harga: "Rp 10–12 Jt", hargaNum: 11,
+        merk: "Acer", kategori: "Produktivitas",
+        cpu: "Intel Core Ultra 5 125H", cpuMerk: "Intel",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 16,
+        layar: '14" WUXGA', layarHz: 60,
+        srgb: true, baterai: "65Wh", berat: "1.45 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/produktivitas/acer-aspire-go-14-ultra5-125h"
+      },
+      {
+        id: "acer-aspire-lite-15",
+        nama: "Acer Aspire Lite 15 R7 8840HS",
+        harga: "Rp 11–12 Jt", hargaNum: 11.5,
+        merk: "Acer", kategori: "Produktivitas",
+        cpu: "AMD Ryzen 7 8840HS", cpuMerk: "AMD",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 16,
+        layar: '15" FHD', layarHz: 60,
+        srgb: false, baterai: "60Wh", berat: "1.8 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/produktivitas/acer-aspire-lite-15-r7-8840hs"
+      },
+      {
+        id: "advan-pixwar",
+        nama: "ADVAN Pixwar Touchscreen R7 8745HS",
+        harga: "Rp 9–10 Jt", hargaNum: 9.5,
+        merk: "Advan", kategori: "Produktivitas",
+        cpu: "AMD Ryzen 7 8745HS", cpuMerk: "AMD",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 16,
+        layar: '15" FHD Touch', layarHz: 60,
+        srgb: false, baterai: "54Wh", berat: "1.9 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/produktivitas/advan-pixwar-touch-r7-8745hs"
+      },
+      {
+        id: "advan-workplus-r7",
+        nama: "Advan Workplus Ryzen 7 7735HS",
+        harga: "Rp 8–9 Jt", hargaNum: 8.5,
+        merk: "Advan", kategori: "Produktivitas",
+        cpu: "AMD Ryzen 7 7735HS", cpuMerk: "AMD",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 16,
+        layar: '14" WUXGA', layarHz: 60,
+        srgb: false, baterai: "56Wh", berat: "1.5 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/produktivitas/advan-workplus-r7-7735hs"
+      },
+      {
+        id: "advan-workmate-ultra",
+        nama: "Advan Workmate Ultra Core Ultra 5 115U",
+        harga: "Rp 7–8 Jt", hargaNum: 7.5,
+        merk: "Advan", kategori: "Budget",
+        cpu: "Intel Core Ultra 5 115U", cpuMerk: "Intel",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 8,
+        layar: '14" WUXGA', layarHz: 60,
+        srgb: false, baterai: "54Wh", berat: "1.4 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/budget/advan-workmate-ultra-core-ultra5-115u"
+      },
+      {
+        id: "advan-workplus-r5",
+        nama: "Advan Workplus R5 6600H",
+        harga: "Rp 7–8 Jt", hargaNum: 7.5,
+        merk: "Advan", kategori: "Budget",
+        cpu: "AMD Ryzen 5 6600H", cpuMerk: "AMD",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 8,
+        layar: '14" FHD', layarHz: 60,
+        srgb: false, baterai: "56Wh", berat: "1.5 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/budget/advan-workplus-r5-6600h"
+      },
+      {
+        id: "advan-workplus-heritage",
+        nama: "Advan Workplus Heritage R5 7535HS",
+        harga: "Rp 7–8 Jt", hargaNum: 7.5,
+        merk: "Advan", kategori: "Budget",
+        cpu: "AMD Ryzen 5 7535HS", cpuMerk: "AMD",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 8,
+        layar: '14" WUXGA', layarHz: 60,
+        srgb: false, baterai: "56Wh", berat: "1.5 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/budget/advan-workplus-heritage-r5-7535hs"
+      },
+      {
+        id: "lenovo-slim3-14iru8",
+        nama: "Lenovo IdeaPad Slim 3 14IRU8 i3",
+        harga: "Rp 7–8 Jt", hargaNum: 7.5,
+        merk: "Lenovo", kategori: "Budget",
+        cpu: "Intel Core i3-1315U", cpuMerk: "Intel",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 8,
+        layar: '14" FHD TN', layarHz: 60,
+        srgb: false, baterai: "45Wh", berat: "1.62 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/budget/lenovo-ideapad-slim3-14iru8-i3"
+      },
+      {
+        id: "asus-vivobook-15",
+        nama: "ASUS VivoBook 15",
+        harga: "Rp 7,5 Jt", hargaNum: 7.5,
+        merk: "ASUS", kategori: "Budget",
+        cpu: "AMD Ryzen 5 7520U", cpuMerk: "AMD",
+        gpu: "Integrated", gpuNum: 0,
+        ram: "DDR5", ramSize: 8,
+        layar: '15" FHD 60Hz', layarHz: 60,
+        srgb: false, baterai: "42Wh", berat: "1.8 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/budget/asus-vivobook-15"
+      },
+      {
+        id: "acer-aspire7-pro",
+        nama: "Acer Aspire 7 Pro A715",
+        harga: "Rp 11–12 Jt", hargaNum: 11.5,
+        merk: "Acer", kategori: "Gaming",
+        cpu: "Intel i5-13420H", cpuMerk: "Intel",
+        gpu: "RTX 3050", gpuNum: 3,
+        ram: "DDR4", ramSize: 16,
+        layar: '15" FHD 144Hz', layarHz: 144,
+        srgb: false, baterai: "54Wh", berat: "2.1 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/gaming/acer-aspire-7-pro-a715"
+      },
+      {
+        id: "acer-nitro-lite-nl16",
+        nama: "Acer Nitro Lite NL16",
+        harga: "Rp 12–13 Jt", hargaNum: 12.5,
+        merk: "Acer", kategori: "Gaming",
+        cpu: "Intel Core 5 210H", cpuMerk: "Intel",
+        gpu: "RTX 3050", gpuNum: 3,
+        ram: "DDR5", ramSize: 16,
+        layar: '16" WUXGA 180Hz', layarHz: 180,
+        srgb: true, baterai: "65Wh", berat: "2.3 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/gaming/acer-nitro-lite-nl16"
+      },
+      {
+        id: "colorful-evol-p15",
+        nama: "Colorful Evol P15 RTX 5050",
+        harga: "Rp 15–16 Jt", hargaNum: 15.5,
+        merk: "Colorful", kategori: "Gaming",
+        cpu: "Intel i5-13420H", cpuMerk: "Intel",
+        gpu: "RTX 5050", gpuNum: 5,
+        ram: "DDR5", ramSize: 16,
+        layar: '15" FHD 144Hz', layarHz: 144,
+        srgb: true, baterai: "70Wh", berat: "2.1 kg",
+        garansi: "1 Tahun", os: "Windows 11",
+        slug: "/review/gaming/colorful-evol-p15-rtx5050"
+      },
+      {
+        id: "acer-nitro-v15",
+        nama: "Acer Nitro V15 RTX 5050",
+        harga: "Rp 15–16 Jt", hargaNum: 15.5,
+        merk: "Acer", kategori: "Gaming",
+        cpu: "Intel i5-13420H", cpuMerk: "Intel",
+        gpu: "RTX 5050", gpuNum: 5,
+        ram: "DDR4", ramSize: 16,
+        layar: '15" FHD 144Hz', layarHz: 144,
+        srgb: true, baterai: "57Wh", berat: "2.2 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/gaming/acer-nitro-v15-5050"
+      },
+      {
+        id: "asus-tuf-a16",
+        nama: "ASUS TUF Gaming A16 FA607NUG",
+        harga: "Rp 17–18 Jt", hargaNum: 17.5,
+        merk: "ASUS", kategori: "Gaming",
+        cpu: "AMD Ryzen 7 7445HS", cpuMerk: "AMD",
+        gpu: "RTX 4050", gpuNum: 4,
+        ram: "DDR5", ramSize: 16,
+        layar: '16" WUXGA 165Hz', layarHz: 165,
+        srgb: true, baterai: "90Wh", berat: "2.2 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/gaming/asus-tuf-gaming-a16"
+      },
+      {
+        id: "asus-tuf-a16-rtx5050",
+        nama: "ASUS TUF A16 FA608UH RTX 5050",
+        harga: "Rp 19–20 Jt", hargaNum: 19.5,
+        merk: "ASUS", kategori: "Gaming",
+        cpu: "AMD Ryzen AI 7 260", cpuMerk: "AMD",
+        gpu: "RTX 5050", gpuNum: 5,
+        ram: "DDR5", ramSize: 16,
+        layar: '16" WUXGA 165Hz', layarHz: 165,
+        srgb: true, baterai: "90Wh", berat: "2.2 kg",
+        garansi: "2 Tahun", os: "Windows 11",
+        slug: "/review/gaming/asus-tuf-a16-fa608uh-rtx5050"
+      }
+    ];
+
+    const selA = document.getElementById('sel-a');
+    const selB = document.getElementById('sel-b');
+    const placeholder = document.getElementById('placeholder');
+    const compareWrap = document.getElementById('compare-wrap');
+
+    // Populate selects
+    laptops.forEach(l => {
+      [selA, selB].forEach(sel => {
+        const opt = document.createElement('option');
+        opt.value = l.id;
+        opt.textContent = `${l.nama} (${l.harga})`;
+        sel.appendChild(opt);
+      });
+    });
+
+    function cpuBadge(cpu, merk) {
+      const cls = merk === 'Intel' ? 'badge-cpu-intel' : 'badge-cpu-amd';
+      return `<span class="${cls}">${merk}</span> ${cpu}`;
+    }
+
+    function gpuBadge(gpu) {
+      if (gpu === 'Integrated') return '<span style="color:#6b7280">Integrated</span>';
+      return `<span class="badge-gpu">${gpu}</span>`;
+    }
+
+    function srgbBadge(v) {
+      return v ? '<span class="check">✅ Ada</span>' : '<span class="dash">—</span>';
+    }
+
+    function render() {
+      const a = laptops.find(l => l.id === selA.value);
+      const b = laptops.find(l => l.id === selB.value);
+
+      if (!a || !b || a.id === b.id) {
+        placeholder.style.display = '';
+        compareWrap.classList.remove('show');
+        if (a && b && a.id === b.id) placeholder.textContent = 'Pilih dua laptop yang berbeda.';
+        else placeholder.textContent = 'Pilih dua laptop di atas untuk melihat perbandingan spesifikasi lengkap.';
+        return;
+      }
+
+      placeholder.style.display = 'none';
+      compareWrap.classList.add('show');
+
+      document.getElementById('name-a').textContent = a.nama;
+      document.getElementById('price-a').textContent = a.harga;
+      document.getElementById('name-b').textContent = b.nama;
+      document.getElementById('price-b').textContent = b.harga;
+
+      // Rows: [label, valA, valB, compareType]
+      // compareType: 'higher' (lebih besar = menang), 'lower' (lebih kecil = menang), 'equal' (tidak ada pemenang)
+      const rows = [
+        ['Kategori', a.kategori, b.kategori, 'equal'],
+        ['Merk', a.merk, b.merk, 'equal'],
+        ['Harga', a.harga, b.harga, 'lower', a.hargaNum, b.hargaNum],
+        ['CPU', cpuBadge(a.cpu, a.cpuMerk), cpuBadge(b.cpu, b.cpuMerk), 'equal'],
+        ['GPU', gpuBadge(a.gpu), gpuBadge(b.gpu), 'higher', a.gpuNum, b.gpuNum],
+        ['RAM', a.ram, b.ram, 'equal'],
+        ['Kapasitas RAM', `${a.ramSize} GB`, `${b.ramSize} GB`, 'higher', a.ramSize, b.ramSize],
+        ['Layar', a.layar, b.layar, 'equal'],
+        ['Refresh Rate', `${a.layarHz} Hz`, `${b.layarHz} Hz`, 'higher', a.layarHz, b.layarHz],
+        ['100% sRGB', srgbBadge(a.srgb), srgbBadge(b.srgb), 'higher', a.srgb ? 1 : 0, b.srgb ? 1 : 0],
+        ['Baterai', a.baterai, b.baterai, 'equal'],
+        ['Berat', a.berat, b.berat, 'equal'],
+        ['Garansi', a.garansi, b.garansi, 'equal'],
+        ['OS', a.os, b.os, 'equal'],
+      ];
+
+      let winsA = 0, winsB = 0;
+      const prosA = [], prosB = [];
+
+      const tbody = document.getElementById('spec-tbody');
+      tbody.innerHTML = '';
+
+      rows.forEach(([label, vA, vB, type, numA, numB]) => {
+        let clsA = 'draw', clsB = 'draw';
+        if (type !== 'equal' && numA !== undefined) {
+          if (numA !== numB) {
+            const aWins = type === 'higher' ? numA > numB : numA < numB;
+            if (aWins) { clsA = 'win-a'; winsA++; prosA.push(label); }
+            else { clsB = 'win-b'; winsB++; prosB.push(label); }
+          }
+        }
+        tbody.innerHTML += `<tr>
+          <td>${label}</td>
+          <td class="${clsA}">${vA}</td>
+          <td class="${clsB}">${vB}</td>
+        </tr>`;
+      });
+
+      // Verdict
+      document.getElementById('verdict-name-a').textContent = a.nama;
+      document.getElementById('verdict-name-b').textContent = b.nama;
+
+      const ulA = document.getElementById('verdict-pros-a');
+      const ulB = document.getElementById('verdict-pros-b');
+      ulA.innerHTML = prosA.length ? prosA.map(p => `<li>${p}</li>`).join('') : '<li style="color:#9ca3af;list-style:none">Tidak unggul di kategori ini</li>';
+      ulB.innerHTML = prosB.length ? prosB.map(p => `<li>${p}</li>`).join('') : '<li style="color:#9ca3af;list-style:none">Tidak unggul di kategori ini</li>';
+
+      const banner = document.getElementById('winner-banner');
+      if (winsA > winsB) banner.textContent = `🏆 ${a.nama} unggul di lebih banyak kategori (${winsA} vs ${winsB})`;
+      else if (winsB > winsA) banner.textContent = `🏆 ${b.nama} unggul di lebih banyak kategori (${winsB} vs ${winsA})`;
+      else banner.textContent = `🤝 Kedua laptop seimbang (${winsA} vs ${winsB})`;
+    }
+
+    selA.addEventListener('change', render);
+    selB.addEventListener('change', render);
+  </script>
+</BaseLayout>
