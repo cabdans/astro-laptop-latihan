@@ -423,3 +423,29 @@ const kategoris = ["Semua", "Gaming", "Produktivitas", "Budget", "Mid-range", "B
           <div class="item-rating">⭐ {laptop.rating}/5</div>
         </div>
       </a>
+    ))}
+  </div>
+
+  <script>
+    const btns = document.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.review-item');
+    const countEl = document.querySelector('.total-count');
+    btns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const selected = btn.textContent.trim();
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        let visible = 0;
+        items.forEach(item => {
+          const kat = item.dataset.kategori;
+          const show = selected === 'Semua' || kat === selected;
+          item.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        countEl.textContent = `${visible} review tersedia`;
+      });
+    });
+  </script>
+
+</BaseLayout>
