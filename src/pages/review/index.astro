@@ -202,7 +202,7 @@ const reviews = [
   },
 ];
 
-const kategoris = ["Semua", "Gaming", "Produktivitas", "Budget", "Mid-range", "Bisnis", "Creator"];
+const kategoris = ["Semua", "Gaming", "Produktivitas", "Budget"];
 ---
 
 <BaseLayout title="Review Laptop" description="Semua review laptop jujur dari AstroLaptop">
@@ -221,12 +221,33 @@ const kategoris = ["Semua", "Gaming", "Produktivitas", "Budget", "Mid-range", "B
       color: #6b7280;
     }
 
+    /* SEARCH */
+    .search-bar {
+      margin-bottom: 16px;
+    }
+
+    #review-search {
+      width: 100%;
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #f9fafb;
+      color: #111;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    #review-search:focus {
+      border-color: #2563eb;
+    }
+
     /* FILTER */
     .filter-bar {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 32px;
+      margin-bottom: 16px;
     }
 
     .filter-btn {
@@ -386,6 +407,11 @@ const kategoris = ["Semua", "Gaming", "Produktivitas", "Budget", "Mid-range", "B
     <p>Review jujur berdasarkan pengujian langsung, bukan sekadar spesifikasi kertas.</p>
   </div>
 
+  <!-- SEARCH -->
+  <div class="search-bar">
+    <input type="text" id="review-search" placeholder="Cari nama laptop, CPU, merk..." autocomplete="off" />
+  </div>
+
   <!-- FILTER KATEGORI -->
   <div class="filter-bar">
     {kategoris.map((k) => (
@@ -430,22 +456,35 @@ const kategoris = ["Semua", "Gaming", "Produktivitas", "Budget", "Mid-range", "B
     const btns = document.querySelectorAll('.filter-btn');
     const items = document.querySelectorAll('.review-item');
     const countEl = document.querySelector('.total-count');
+    const searchInput = document.getElementById('review-search');
+    let activeKategori = 'Semua';
+
+    function applyFilter() {
+      const q = searchInput.value.toLowerCase().trim();
+      let visible = 0;
+      items.forEach(item => {
+        const kat = item.dataset.kategori;
+        const text = item.textContent.toLowerCase();
+        const matchKat = activeKategori === 'Semua' || kat === activeKategori;
+        const matchSearch = !q || text.includes(q);
+        const show = matchKat && matchSearch;
+        item.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      countEl.textContent = `${visible} review tersedia`;
+    }
+
     btns.forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        const selected = btn.textContent.trim();
+        activeKategori = btn.textContent.trim();
         btns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        let visible = 0;
-        items.forEach(item => {
-          const kat = item.dataset.kategori;
-          const show = selected === 'Semua' || kat === selected;
-          item.style.display = show ? '' : 'none';
-          if (show) visible++;
-        });
-        countEl.textContent = `${visible} review tersedia`;
+        applyFilter();
       });
     });
+
+    searchInput.addEventListener('input', applyFilter);
   </script>
 
 </BaseLayout>
