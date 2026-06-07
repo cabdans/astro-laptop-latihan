@@ -207,26 +207,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .no-result.show { display: table-row; }
 
     /* SEARCH */
-    .search-wrap {
-      margin-bottom: 16px;
+    .search-full {
+      grid-column: 1 / -1;
     }
 
     #search-input {
       width: 100%;
-      padding: 12px 16px;
-      font-size: 1rem;
+      padding: 8px 12px;
+      font-size: 0.9rem;
       border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      background: white;
+      border-radius: 8px;
+      background: #f9fafb;
       color: #111;
       box-sizing: border-box;
       outline: none;
-      transition: border-color 0.2s;
     }
 
     #search-input:focus {
       border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
     }
   </style>
 
@@ -235,13 +233,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <p>Filter dan bandingkan laptop berdasarkan kebutuhan kamu.</p>
   </div>
 
-  <!-- SEARCH -->
-  <div class="search-wrap">
-    <input type="text" id="search-input" placeholder="🔍 Cari nama laptop, CPU, GPU..." autocomplete="off" />
-  </div>
-
   <!-- FILTER -->
   <div class="filters">
+    <div class="filter-group search-full">
+      <label>Cari Laptop</label>
+      <input type="text" id="search-input" placeholder="Nama, CPU, GPU, Merk..." autocomplete="off" />
+    </div>
     <div class="filter-group">
       <label>Rentang Harga</label>
       <select id="f-harga">
@@ -605,28 +602,4 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           sortDir = 1;
         }
 
-        document.querySelectorAll('th').forEach(t => t.classList.remove('sort-asc','sort-desc'));
-        th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
-
-        const tbody = document.getElementById('table-body');
-        const rowsArr = Array.from(rows);
-
-        const colMap = { nama: 1, merk: 2, cpu: 3, gpu: 4, ram: 5, layar: 6, srgb: 7, harga: 8 };
-        const colIdx = colMap[col] || 1;
-
-        rowsArr.sort((a, b) => {
-          if (col === 'harga') {
-            return (parseFloat(a.dataset.harga) - parseFloat(b.dataset.harga)) * sortDir;
-          }
-          const aVal = a.querySelector(`td:nth-child(${colIdx})`)?.textContent?.trim() || '';
-          const bVal = b.querySelector(`td:nth-child(${colIdx})`)?.textContent?.trim() || '';
-          return aVal.localeCompare(bVal) * sortDir;
-        });
-
-        rowsArr.forEach(row => tbody.insertBefore(row, noResult));
-        applyFilters();
-      });
-    });
-  </script>
-
-</BaseLayout>
+        document.querySelectorAll('th').forEach(t => t.classList.remove('s
