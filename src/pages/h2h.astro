@@ -34,7 +34,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       margin-bottom: 8px;
     }
 
-    .selector-box select {
+    .custom-select { position: relative; }
+
+    .cs-input {
       width: 100%;
       padding: 10px 12px;
       border: 1px solid #e5e7eb;
@@ -42,14 +44,40 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       font-size: 0.95rem;
       color: #111;
       background: #f9fafb;
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
+      cursor: text;
+      box-sizing: border-box;
     }
 
-    .selector-box select:focus { outline: none; border-color: #2563eb; }
+    .cs-input:focus { outline: none; border-color: #2563eb; background: white; }
+
+    .cs-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+      z-index: 200;
+      display: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+
+    .cs-dropdown.open { display: block; }
+
+    .cs-option {
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      color: #111;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .cs-option:last-child { border-bottom: none; }
+    .cs-option:hover { background: #eff6ff; color: #2563eb; }
+    .cs-option.selected { background: #eff6ff; color: #2563eb; font-weight: 600; }
+    .cs-option.hidden { display: none; }
 
     .vs-badge {
       text-align: center;
@@ -225,16 +253,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <div class="selector-wrap">
     <div class="selector-box">
       <label>Laptop A</label>
-      <select id="sel-a">
-        <option value="">-- Pilih Laptop --</option>
-      </select>
+      <div class="custom-select" id="cs-a">
+        <input type="text" class="cs-input" id="sel-a-input" placeholder="Cari laptop..." autocomplete="off">
+        <div class="cs-dropdown" id="sel-a-dropdown"></div>
+      </div>
     </div>
     <div class="vs-badge">VS</div>
     <div class="selector-box">
       <label>Laptop B</label>
-      <select id="sel-b">
-        <option value="">-- Pilih Laptop --</option>
-      </select>
+      <div class="custom-select" id="cs-b">
+        <input type="text" class="cs-input" id="sel-b-input" placeholder="Cari laptop..." autocomplete="off">
+        <div class="cs-dropdown" id="sel-b-dropdown"></div>
+      </div>
     </div>
   </div>
 
@@ -582,19 +612,68 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }
     ];
 
-    const selA = document.getElementById('sel-a');
-    const selB = document.getElementById('sel-b');
     const placeholder = document.getElementById('placeholder');
     const compareWrap = document.getElementById('compare-wrap');
 
-    // Populate selects
-    laptops.forEach(l => {
-      [selA, selB].forEach(sel => {
-        const opt = document.createElement('option');
-        opt.value = l.id;
-        opt.textContent = `${l.nama} (${l.harga})`;
-        sel.appendChild(opt);
+    // Custom searchable dropdown
+    let selectedA = '', selectedB = '';
+
+    function buildDropdown(inputId, dropdownId, onSelect) {
+      const input = document.getElementById(inputId);
+      const dropdown = document.getElementById(dropdownId);
+
+      // Populate options
+      laptops.forEach(l => {
+        const div = document.createElement('div');
+        div.className = 'cs-option';
+        div.dataset.value = l.id;
+        div.textContent = `${l.nama} (${l.harga})`;
+        div.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          onSelect(l.id, `${l.nama} (${l.harga})`);
+          dropdown.classList.remove('open');
+        });
+        dropdown.appendChild(div);
       });
+
+      input.addEventListener('focus', () => {
+        dropdown.classList.add('open');
+        filterOptions(input, dropdown);
+      });
+
+      input.addEventListener('blur', () => {
+        setTimeout(() => dropdown.classList.remove('open'), 150);
+      });
+
+      input.addEventListener('input', () => filterOptions(input, dropdown));
+    }
+
+    function filterOptions(input, dropdown) {
+      const q = input.value.toLowerCase().trim();
+      dropdown.querySelectorAll('.cs-option').forEach(opt => {
+        opt.classList.toggle('hidden', q && !opt.textContent.toLowerCase().includes(q));
+      });
+    }
+
+    function setSelected(dropdownId, value) {
+      const dropdown = document.getElementById(dropdownId);
+      dropdown.querySelectorAll('.cs-option').forEach(opt => {
+        opt.classList.toggle('selected', opt.dataset.value === value);
+      });
+    }
+
+    buildDropdown('sel-a-input', 'sel-a-dropdown', (id, label) => {
+      selectedA = id;
+      document.getElementById('sel-a-input').value = label;
+      setSelected('sel-a-dropdown', id);
+      render();
+    });
+
+    buildDropdown('sel-b-input', 'sel-b-dropdown', (id, label) => {
+      selectedB = id;
+      document.getElementById('sel-b-input').value = label;
+      setSelected('sel-b-dropdown', id);
+      render();
     });
 
     function cpuBadge(cpu, merk) {
@@ -612,8 +691,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
 
     function render() {
-      const a = laptops.find(l => l.id === selA.value);
-      const b = laptops.find(l => l.id === selB.value);
+      const a = laptops.find(l => l.id === selectedA);
+      const b = laptops.find(l => l.id === selectedB);
 
       if (!a || !b || a.id === b.id) {
         placeholder.style.display = '';
@@ -687,7 +766,5 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       else banner.textContent = `🤝 Kedua laptop seimbang (${winsA} vs ${winsB})`;
     }
 
-    selA.addEventListener('change', render);
-    selB.addEventListener('change', render);
   </script>
 </BaseLayout>
