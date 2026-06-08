@@ -58,23 +58,23 @@ const reviews = [
     tags: ["Core Ultra 5", "WUXGA", "Type-C", "Tipis", "Intel AI"]
   },
   {
-    slug: "budget/advan-workplus-r5-6600h",
+    slug: "produktivitas/advan-workplus-r5-6600h",
     nama: "Advan Workplus Ryzen 5 6600H",
     model: "Workplus",
     harga: "Rp 7–8 Juta",
     rating: 4.1,
-    kategori: "Budget",
+    kategori: "Produktivitas",
     tanggal: "6 Juni 2025",
     ringkasan: "16GB RAM langsung, 58Wh, charger 100W Type-C di 7–8 jutaan. Saudara Workplus Heritage dengan RAM lebih besar tapi CPU lebih lama dan layar FHD.",
     tags: ["Ryzen 5 6600H", "16GB RAM", "58Wh", "Type-C", "Brand Lokal"]
   },
   {
-    slug: "budget/advan-workplus-heritage-r5-7535hs",
+    slug: "produktivitas/advan-workplus-heritage-r5-7535hs",
     nama: "Advan Workplus Heritage Ryzen 5 7535HS",
     model: "Workplus Heritage",
     harga: "Rp 7–8 Juta",
     rating: 4.5,
-    kategori: "Budget",
+    kategori: "Produktivitas",
     tanggal: "6 Juni 2025",
     ringkasan: "Ryzen 5 7535HS + WUXGA + baterai 60Wh + 100W Type-C di harga 7–8 jutaan. Spesifikasi laptop 10 jutaan dengan harga budget.",
     tags: ["Ryzen 5 7535HS", "WUXGA", "60Wh", "Type-C", "Brand Lokal"]
@@ -480,9 +480,7 @@ const kategoris = ["Semua", "Gaming", "Produktivitas", "Budget"];
   <div class="review-list">
     {reviews.map((laptop) => (
       <a href={`/review/${laptop.slug}`} class="review-item" data-kategori={laptop.kategori}>
-        <div class="item-img">💻</div>
-
-        <div class="item-body">
+        <div class="item-left">
           <div class="item-meta">
             <span class={`badge ${laptop.kategori === "Gaming" ? "badge-gaming" : ""}`}>
               {laptop.kategori}
