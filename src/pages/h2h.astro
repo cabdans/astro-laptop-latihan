@@ -651,7 +651,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     function filterOptions(input, dropdown) {
       const q = input.value.toLowerCase().trim();
       dropdown.querySelectorAll('.cs-option').forEach(opt => {
-        opt.classList.toggle('hidden', q && !opt.textContent.toLowerCase().includes(q));
+        opt.style.display = (q && !opt.textContent.toLowerCase().includes(q)) ? 'none' : '';
       });
     }
 
