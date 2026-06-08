@@ -607,20 +607,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       let visible = 0;
 
       rows.forEach(row => {
-        const rHarga    = parseFloat(row.dataset.harga);
-        const rGpu      = row.dataset.gpu;
-        const rCpu      = row.dataset.cpu;
-        const rRam      = row.dataset.ram;
-        const rSrgb     = row.dataset.srgb;
-        const rKategori = row.dataset.kategori;
+        const rHarga    = row.dataset.harga ? parseFloat(row.dataset.harga) : 0;
+        const rGpu      = row.dataset.gpu   || '';
+        const rCpu      = row.dataset.cpu   || '';
+        const rRam      = row.dataset.ram   || '';
+        const rSrgb     = row.dataset.srgb  || '';
+        const rKategori = row.dataset.kategori || '';
         const rText     = row.textContent.toLowerCase();
 
         let show = true;
 
-        if (harga) {
-          const [min, max] = harga.split('-').map(Number);
-          if (rHarga < min || rHarga > max) show = false;
-        }
+        if (harga === 'bawah10')   { if (rHarga >= 10) show = false; }
+        else if (harga === '10-13') { if (rHarga < 10 || rHarga > 13) show = false; }
+        else if (harga === '13-17') { if (rHarga < 13 || rHarga > 17) show = false; }
+        else if (harga === 'atas17') { if (rHarga <= 17) show = false; }
+
         if (gpu      && rGpu      !== gpu)      show = false;
         if (cpu      && rCpu      !== cpu)      show = false;
         if (ram      && rRam      !== ram)      show = false;
@@ -632,11 +633,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         if (show) visible++;
       });
 
-      resultCount.textContent = visible;
+      countEl.textContent = visible;
       noResult.classList.toggle('show', visible === 0);
     }
 
-    [fHarga, fGpu, fCpu, fRam, fSrgb, fKategori].forEach(f => f.addEventListener('change', applyFilters));
+    [fHarga, fGpu, fCpu, fRam, fSrgb, fKategori].forEach(f =>
+      f.addEventListener('change', applyFilters)
+    );
     fSearch.addEventListener('input', applyFilters);
 
     document.getElementById('btn-reset').addEventListener('click', () => {
