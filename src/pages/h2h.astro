@@ -280,6 +280,41 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     .budget-btn:hover { border-color: #2563eb; color: #2563eb; }
     .budget-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
+
+    /* GPU FILTER */
+    .gpu-filter {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .gpu-filter label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+    .gpu-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .gpu-btn {
+      padding: 6px 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: white;
+      color: #374151;
+      transition: all 0.15s;
+    }
+    .gpu-btn:hover { border-color: #7c3aed; color: #7c3aed; }
+    .gpu-btn.active { background: #7c3aed; color: white; border-color: #7c3aed; }
   </style>
 
   <div class="page-header">
@@ -296,6 +331,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <button class="budget-btn" data-min="8" data-max="10">8–10 Jt</button>
       <button class="budget-btn" data-min="10" data-max="12">10–12 Jt</button>
       <button class="budget-btn" data-min="12" data-max="999">12 Jt ke atas</button>
+    </div>
+  </div>
+
+  <!-- GPU FILTER -->
+  <div class="gpu-filter">
+    <label>Filter GPU:</label>
+    <div class="gpu-btns">
+      <button class="gpu-btn active" data-gpu="all">Semua</button>
+      <button class="gpu-btn" data-gpu="integrated">Integrated</button>
+      <button class="gpu-btn" data-gpu="dedicated">Dedicated</button>
+      <button class="gpu-btn" data-gpu="RTX 3050">RTX 3050</button>
+      <button class="gpu-btn" data-gpu="RTX 4050">RTX 4050</button>
+      <button class="gpu-btn" data-gpu="RTX 5050">RTX 5050</button>
     </div>
   </div>
 
@@ -655,7 +703,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         cpu: "Intel i5-13420H", cpuMerk: "Intel",
         gpu: "RTX 5050", gpuNum: 5,
         ram: "DDR4", ramSize: 16,
-        layar: '15" FHD 144Hz', layarHz: 144,
+        layar: '15" FHD 180Hz', layarHz: 180,
         srgb: true, baterai: "57Wh", berat: "2.2 kg",
         garansi: "2 Tahun", os: "Windows 11",
         tdp: "45W", tgp: "75W", slug: "/review/gaming/acer-nitro-v15-5050"
@@ -728,9 +776,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       const q = input.value.toLowerCase().trim();
       dropdown.querySelectorAll('.cs-option').forEach(opt => {
         const laptop = laptops.find(l => l.id === opt.dataset.value);
-        const inBudget = !laptop || (laptop.hargaNum >= budgetMin && laptop.hargaNum <= budgetMax);
+        const inFilters = !laptop || matchesFilters(laptop);
         const matchSearch = !q || opt.textContent.toLowerCase().includes(q);
-        opt.style.display = (inBudget && matchSearch) ? '' : 'none';
+        opt.style.display = (inFilters && matchSearch) ? '' : 'none';
       });
     }
 
@@ -755,17 +803,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       render();
     });
 
-    // Budget filter
+    // Filters
     let budgetMin = 0, budgetMax = 999;
+    let gpuFilter = 'all';
 
-    function applyBudgetFilter() {
+    function matchesFilters(laptop) {
+      if (!laptop) return true;
+      const inBudget = laptop.hargaNum >= budgetMin && laptop.hargaNum <= budgetMax;
+      let inGpu = true;
+      if (gpuFilter === 'integrated') inGpu = laptop.gpu === 'Integrated';
+      else if (gpuFilter === 'dedicated') inGpu = laptop.gpu !== 'Integrated';
+      else if (gpuFilter !== 'all') inGpu = laptop.gpu === gpuFilter;
+      return inBudget && inGpu;
+    }
+
+    function applyFilters() {
       ['sel-a-dropdown', 'sel-b-dropdown'].forEach(dropId => {
         const drop = document.getElementById(dropId);
         drop.querySelectorAll('.cs-option').forEach(opt => {
           const laptop = laptops.find(l => l.id === opt.dataset.value);
-          if (!laptop) return;
-          const inRange = laptop.hargaNum >= budgetMin && laptop.hargaNum <= budgetMax;
-          opt.style.display = inRange ? '' : 'none';
+          opt.style.display = matchesFilters(laptop) ? '' : 'none';
         });
       });
     }
@@ -776,18 +833,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         btn.classList.add('active');
         budgetMin = parseFloat(btn.dataset.min);
         budgetMax = parseFloat(btn.dataset.max);
-        // Reset selections if out of range
         const a = laptops.find(l => l.id === selectedA);
         const b = laptops.find(l => l.id === selectedB);
-        if (a && (a.hargaNum < budgetMin || a.hargaNum > budgetMax)) {
-          selectedA = '';
-          document.getElementById('sel-a-input').value = '';
-        }
-        if (b && (b.hargaNum < budgetMin || b.hargaNum > budgetMax)) {
-          selectedB = '';
-          document.getElementById('sel-b-input').value = '';
-        }
-        applyBudgetFilter();
+        if (a && !matchesFilters(a)) { selectedA = ''; document.getElementById('sel-a-input').value = ''; }
+        if (b && !matchesFilters(b)) { selectedB = ''; document.getElementById('sel-b-input').value = ''; }
+        applyFilters();
+        render();
+      });
+    });
+
+    document.querySelectorAll('.gpu-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.gpu-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        gpuFilter = btn.dataset.gpu;
+        const a = laptops.find(l => l.id === selectedA);
+        const b = laptops.find(l => l.id === selectedB);
+        if (a && !matchesFilters(a)) { selectedA = ''; document.getElementById('sel-a-input').value = ''; }
+        if (b && !matchesFilters(b)) { selectedB = ''; document.getElementById('sel-b-input').value = ''; }
+        applyFilters();
         render();
       });
     });
