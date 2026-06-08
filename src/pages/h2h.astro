@@ -242,11 +242,61 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       color: #166534;
       border: 1px solid #bbf7d0;
     }
+    /* BUDGET FILTER */
+    .budget-filter {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .budget-filter label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .budget-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .budget-btn {
+      padding: 6px 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: white;
+      color: #374151;
+      transition: all 0.15s;
+    }
+
+    .budget-btn:hover { border-color: #2563eb; color: #2563eb; }
+    .budget-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
   </style>
 
   <div class="page-header">
     <h1>⚔️ H2H Laptop</h1>
     <p>Pilih dua laptop dan bandingkan spesifikasi mereka secara langsung.</p>
+  </div>
+
+  <!-- BUDGET FILTER -->
+  <div class="budget-filter">
+    <label>Filter Budget:</label>
+    <div class="budget-btns">
+      <button class="budget-btn active" data-min="0" data-max="999">Semua</button>
+      <button class="budget-btn" data-min="0" data-max="8">Di bawah 8 Jt</button>
+      <button class="budget-btn" data-min="8" data-max="10">8–10 Jt</button>
+      <button class="budget-btn" data-min="10" data-max="12">10–12 Jt</button>
+      <button class="budget-btn" data-min="12" data-max="999">12 Jt ke atas</button>
+    </div>
   </div>
 
   <!-- SELECTOR -->
@@ -700,6 +750,43 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       document.getElementById('sel-b-input').value = label;
       setSelected('sel-b-dropdown', id);
       render();
+    });
+
+    // Budget filter
+    let budgetMin = 0, budgetMax = 999;
+
+    function applyBudgetFilter() {
+      ['sel-a-dropdown', 'sel-b-dropdown'].forEach(dropId => {
+        const drop = document.getElementById(dropId);
+        drop.querySelectorAll('.cs-option').forEach(opt => {
+          const laptop = laptops.find(l => l.id === opt.dataset.value);
+          if (!laptop) return;
+          const inRange = laptop.hargaNum >= budgetMin && laptop.hargaNum <= budgetMax;
+          opt.style.display = inRange ? '' : 'none';
+        });
+      });
+    }
+
+    document.querySelectorAll('.budget-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.budget-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        budgetMin = parseFloat(btn.dataset.min);
+        budgetMax = parseFloat(btn.dataset.max);
+        // Reset selections if out of range
+        const a = laptops.find(l => l.id === selectedA);
+        const b = laptops.find(l => l.id === selectedB);
+        if (a && (a.hargaNum < budgetMin || a.hargaNum > budgetMax)) {
+          selectedA = '';
+          document.getElementById('sel-a-input').value = '';
+        }
+        if (b && (b.hargaNum < budgetMin || b.hargaNum > budgetMax)) {
+          selectedB = '';
+          document.getElementById('sel-b-input').value = '';
+        }
+        applyBudgetFilter();
+        render();
+      });
     });
 
     function cpuBadge(cpu, merk) {
