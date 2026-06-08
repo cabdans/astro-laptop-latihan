@@ -727,7 +727,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     function filterOptions(input, dropdown) {
       const q = input.value.toLowerCase().trim();
       dropdown.querySelectorAll('.cs-option').forEach(opt => {
-        opt.style.display = (q && !opt.textContent.toLowerCase().includes(q)) ? 'none' : '';
+        const laptop = laptops.find(l => l.id === opt.dataset.value);
+        const inBudget = !laptop || (laptop.hargaNum >= budgetMin && laptop.hargaNum <= budgetMax);
+        const matchSearch = !q || opt.textContent.toLowerCase().includes(q);
+        opt.style.display = (inBudget && matchSearch) ? '' : 'none';
       });
     }
 
