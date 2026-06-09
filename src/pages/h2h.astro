@@ -856,6 +856,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       });
     });
 
+
+    // CPU Benchmark lookup
+    const cpuBench = {
+      'Intel i5-13420H':          { nano: 46, pmS: 3357,  pmM: 16934, eff: 57 },
+      'Intel Core i5-13420H':     { nano: 46, pmS: 3357,  pmM: 16934, eff: 57 },
+      'AMD Ryzen 5 7535HS':       { nano: 46, pmS: 3105,  pmM: 17651, eff: 68 },
+      'Intel Core Ultra 5 125H':  { nano: 53, pmS: 3336,  pmM: 20314, eff: 68 },
+      'AMD Ryzen 5 8640HS':       { nano: 52, pmS: 3523,  pmM: 19897, eff: 76 },
+      'AMD Ryzen 5 7430U':        { nano: 43, pmS: 2929,  pmM: 15484, eff: 70 },
+    };
+    function getBench(cpu) { return cpuBench[cpu] || null; }
+    function benchVal(b, key) {
+      if (!b) return '<span style="color:#9ca3af;font-style:italic;font-size:0.82rem;">No Data</span>';
+      return b[key].toLocaleString('id-ID');
+    }
+
     function cpuBadge(cpu, merk) {
       const cls = merk === 'Intel' ? 'badge-cpu-intel' : 'badge-cpu-amd';
       return `<span class="${cls}">${merk}</span> ${cpu}`;
