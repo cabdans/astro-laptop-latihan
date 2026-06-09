@@ -228,10 +228,13 @@ const kategoriBadgeText: Record<string, string> = {
 
 <BaseLayout title="Home" description="Review laptop Indonesia jujur & terpercaya — 25 laptop dari budget hingga gaming">
   <style>
-    .hero { background: linear-gradient(135deg, #1e40af, #2563eb); color: white; padding: 56px 40px; border-radius: 16px; text-align: center; margin-bottom: 40px; }
-    .hero h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 12px; }
-    .hero p { font-size: 1.05rem; opacity: 0.9; max-width: 520px; margin: 0 auto 24px; }
-    .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero { background: linear-gradient(135deg, #0f2d6e, #1e40af, #2563eb); color: white; border-radius: 16px; margin-bottom: 40px; overflow: hidden; display: flex; align-items: stretch; min-height: 320px; }
+    .hero-text { flex: 1; padding: 52px 44px; display: flex; flex-direction: column; justify-content: center; }
+    .hero h1 { font-size: 2.3rem; font-weight: 800; margin-bottom: 12px; line-height: 1.15; }
+    .hero p { font-size: 1.02rem; opacity: 0.9; max-width: 420px; margin-bottom: 24px; line-height: 1.6; }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-img { width: 360px; flex-shrink: 0; position: relative; overflow: hidden; background: linear-gradient(135deg, #1e3a8a, #1d4ed8); }
+    .hero-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
     .hero-btn { background: white; color: #2563eb; padding: 11px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 0.95rem; display: inline-block; transition: transform 0.2s; }
     .hero-btn:hover { transform: translateY(-2px); }
     .hero-btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.6); padding: 11px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 0.95rem; display: inline-block; transition: all 0.2s; }
@@ -267,9 +270,11 @@ const kategoriBadgeText: Record<string, string> = {
     .cta-icon { font-size: 1.8rem; margin-bottom: 8px; }
     .cta-title { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
     .cta-desc { font-size: 0.82rem; color: #6b7280; }
-    @media (max-width: 640px) {
-      .hero { padding: 40px 20px; }
-      .hero h1 { font-size: 1.8rem; }
+    @media (max-width: 768px) {
+      .hero { flex-direction: column; min-height: unset; }
+      .hero-text { padding: 36px 24px; }
+      .hero h1 { font-size: 1.9rem; }
+      .hero-img { width: 100%; height: 220px; }
       .stats-bar { grid-template-columns: repeat(2, 1fr); }
       .kategori-grid { grid-template-columns: 1fr; }
       .cta-bar { grid-template-columns: 1fr; }
@@ -277,11 +282,16 @@ const kategoriBadgeText: Record<string, string> = {
   </style>
 
   <section class="hero">
-    <h1>Review Laptop Indonesia 🇮🇩</h1>
-    <p>Panduan jujur memilih laptop sesuai kebutuhan dan budget — dari pelajar sampai gamer.</p>
-    <div class="hero-btns">
-      <a href="/review" class="hero-btn">Lihat Semua Review →</a>
-      <a href="/compare" class="hero-btn-outline">Bandingkan Laptop</a>
+    <div class="hero-text">
+      <h1>Review Laptop Indonesia 🇮🇩</h1>
+      <p>Panduan jujur memilih laptop sesuai kebutuhan dan budget — dari pelajar sampai gamer.</p>
+      <div class="hero-btns">
+        <a href="/review" class="hero-btn">Lihat Semua Review →</a>
+        <a href="/compare" class="hero-btn-outline">Bandingkan Laptop</a>
+      </div>
+    </div>
+    <div class="hero-img">
+      <img src="/astrolaptop-mascot.jpg" alt="AstroLaptop Mascot" />
     </div>
   </section>
 
