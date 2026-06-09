@@ -734,12 +734,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         const tbody = document.getElementById('table-body');
         const rowsArr = Array.from(rows);
 
-        const colMap = { nama: 1, merk: 2, cpu: 3, gpu: 4, ram: 5, layar: 6, srgb: 7, harga: 8 };
+        const colMap = { nama: 1, merk: 2, cpu: 3, gpu: 4, ram: 5, layar: 6, srgb: 7, score: 8, harga: 9 };
         const colIdx = colMap[col] || 1;
 
         rowsArr.sort((a, b) => {
           if (col === 'harga') {
             return (parseFloat(a.dataset.harga) - parseFloat(b.dataset.harga)) * sortDir;
+          }
+          if (col === 'score') {
+            const getScore = row => {
+              const badge = row.querySelector('.score-badge');
+              return badge ? parseInt(badge.textContent.trim()) : null;
+            };
+            const sA = getScore(a), sB = getScore(b);
+            // No Data always goes to bottom
+            if (sA === null && sB === null) return 0;
+            if (sA === null) return 1;
+            if (sB === null) return -1;
+            return (sA - sB) * sortDir;
           }
           const aVal = a.querySelector(`td:nth-child(${colIdx})`)?.textContent?.trim() || '';
           const bVal = b.querySelector(`td:nth-child(${colIdx})`)?.textContent?.trim() || '';
