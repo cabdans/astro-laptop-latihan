@@ -211,7 +211,7 @@ const stats = [
   { angka: "25", label: "Laptop Diulas" },
   { angka: "3", label: "Kategori" },
   { angka: "9", label: "Brand" },
-  { angka: "6\u201320 Jt", label: "Rentang Harga" },
+  { angka: "6–20 Jt", label: "Rentang Harga" },
 ];
 
 const kategoriBadgeColor: Record<string, string> = {
@@ -277,10 +277,10 @@ const kategoriBadgeText: Record<string, string> = {
   </style>
 
   <section class="hero">
-    <h1>Review Laptop Indonesia \U0001F1EE\U0001F1E9</h1>
+    <h1>Review Laptop Indonesia 🇮🇩</h1>
     <p>Panduan jujur memilih laptop sesuai kebutuhan dan budget — dari pelajar sampai gamer.</p>
     <div class="hero-btns">
-      <a href="/review" class="hero-btn">Lihat Semua Review \u2192</a>
+      <a href="/review" class="hero-btn">Lihat Semua Review →</a>
       <a href="/compare" class="hero-btn-outline">Bandingkan Laptop</a>
     </div>
   </section>
@@ -300,19 +300,19 @@ const kategoriBadgeText: Record<string, string> = {
     </div>
     <div class="kategori-grid">
       <a href="/review?kategori=Budget" class="kat-card">
-        <div class="kat-icon">\U0001F4B0</div>
+        <div class="kat-icon">💰</div>
         <div class="kat-name">Budget</div>
-        <div class="kat-count">7 laptop \u00B7 Rp 6\u20139 Juta</div>
+        <div class="kat-count">7 laptop · Rp 6\u20139 Juta</div>
       </a>
       <a href="/review?kategori=Produktivitas" class="kat-card">
-        <div class="kat-icon">\U0001F4BC</div>
+        <div class="kat-icon">💼</div>
         <div class="kat-name">Produktivitas</div>
-        <div class="kat-count">12 laptop \u00B7 Rp 7\u201312 Juta</div>
+        <div class="kat-count">12 laptop · Rp 7\u201312 Juta</div>
       </a>
       <a href="/review?kategori=Gaming" class="kat-card">
-        <div class="kat-icon">\U0001F3AE</div>
+        <div class="kat-icon">🎮</div>
         <div class="kat-name">Gaming</div>
-        <div class="kat-count">6 laptop \u00B7 Rp 11\u201320 Juta</div>
+        <div class="kat-count">6 laptop · Rp 11\u201320 Juta</div>
       </a>
     </div>
   </section>
@@ -320,12 +320,12 @@ const kategoriBadgeText: Record<string, string> = {
   <section>
     <div class="section-header">
       <h2 class="section-title">Semua Review ({reviews.length} Laptop)</h2>
-      <a href="/review" class="section-link">Filter lengkap \u2192</a>
+      <a href="/review" class="section-link">Filter lengkap →</a>
     </div>
     <div class="review-grid">
       {reviews.map((laptop) => (
         <a href={`/review/${laptop.slug}`} class="review-card">
-          <div class="card-top">\U0001F4BB</div>
+          <div class="card-top">💻</div>
           <div class="card-body">
             <span class="card-badge" style={`background:${kategoriBadgeColor[laptop.kategori]};color:${kategoriBadgeText[laptop.kategori]}`}>
               {laptop.kategori}
@@ -348,12 +348,12 @@ const kategoriBadgeText: Record<string, string> = {
     </div>
     <div class="cta-bar">
       <a href="/compare" class="cta-card">
-        <div class="cta-icon">\U0001F4CA</div>
+        <div class="cta-icon">📊</div>
         <div class="cta-title">Tabel Perbandingan</div>
         <div class="cta-desc">Bandingkan semua 25 laptop side-by-side. Sortir dan filter per kolom.</div>
       </a>
       <a href="/h2h" class="cta-card">
-        <div class="cta-icon">\u2694\uFE0F</div>
+        <div class="cta-icon">⚔️</div>
         <div class="cta-title">Head-to-Head</div>
         <div class="cta-desc">Pilih 2 laptop, bandingkan spesifikasi + data benchmark secara detail.</div>
       </a>
