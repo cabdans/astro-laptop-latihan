@@ -909,6 +909,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ['OS', a.os, b.os, 'equal'],
         ['TDP (CPU)', a.tdp || '—', b.tdp || '—', 'equal'],
         ['TGP (GPU)', a.tgp || '—', b.tgp || '—', 'equal'],
+        // Benchmark rows
+        ['NanoReview Score', benchVal(getBench(a.cpu), 'nano'), benchVal(getBench(b.cpu), 'nano'), 'higher',
+          getBench(a.cpu) ? getBench(a.cpu).nano : null, getBench(b.cpu) ? getBench(b.cpu).nano : null],
+        ['Power Efficiency', benchVal(getBench(a.cpu), 'eff'), benchVal(getBench(b.cpu), 'eff'), 'higher',
+          getBench(a.cpu) ? getBench(a.cpu).eff : null, getBench(b.cpu) ? getBench(b.cpu).eff : null],
+        ['Passmark Single-Thread', benchVal(getBench(a.cpu), 'pmS'), benchVal(getBench(b.cpu), 'pmS'), 'higher',
+          getBench(a.cpu) ? getBench(a.cpu).pmS : null, getBench(b.cpu) ? getBench(b.cpu).pmS : null],
+        ['Passmark Multi-Thread', benchVal(getBench(a.cpu), 'pmM'), benchVal(getBench(b.cpu), 'pmM'), 'higher',
+          getBench(a.cpu) ? getBench(a.cpu).pmM : null, getBench(b.cpu) ? getBench(b.cpu).pmM : null],
       ];
 
       let winsA = 0, winsB = 0;
@@ -919,7 +928,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       rows.forEach(([label, vA, vB, type, numA, numB]) => {
         let clsA = 'draw', clsB = 'draw';
-        if (type !== 'equal' && numA !== undefined) {
+        if (type !== 'equal' && numA !== undefined && numA !== null && numB !== null) {
           if (numA !== numB) {
             const aWins = type === 'higher' ? numA > numB : numA < numB;
             if (aWins) { clsA = 'win-a'; winsA++; prosA.push(label); }
