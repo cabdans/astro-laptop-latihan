@@ -228,23 +228,22 @@ const kategoriBadgeText: Record<string, string> = {
 
 <BaseLayout title="Home" description="Review laptop Indonesia jujur & terpercaya — 25 laptop dari budget hingga gaming">
   <style>
-    /* HERO — NGC248 pink nebula */
+    /* HERO — deep space split layout */
     .hero {
-      background:
-        linear-gradient(135deg, rgba(2,2,14,0.92) 0%, rgba(30,10,50,0.82) 40%, rgba(10,5,25,0.88) 100%),
-        url('/nasa-ngc248.jpg') center/cover no-repeat;
-      border: 1px solid rgba(216,80,180,0.25);
+      background: linear-gradient(135deg, #02020e 0%, #07071f 35%, #0d1140 70%, #0a1832 100%);
+      border: 1px solid rgba(96,165,250,0.2);
       color: white; border-radius: 16px; margin-bottom: 40px;
       overflow: hidden; display: flex; align-items: stretch; min-height: 340px;
       position: relative;
-      box-shadow: 0 0 60px rgba(200,60,160,0.12);
+      box-shadow: 0 0 60px rgba(96,165,250,0.08);
     }
     .hero::before {
       content: "";
       position: absolute; inset: 0; pointer-events: none;
       background:
-        radial-gradient(ellipse at 25% 60%, rgba(216,80,180,0.2) 0%, transparent 55%),
-        radial-gradient(ellipse at 70% 20%, rgba(167,139,250,0.15) 0%, transparent 45%);
+        radial-gradient(ellipse at 25% 60%, rgba(167,139,250,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 20%, rgba(34,211,238,0.12) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 90%, rgba(96,165,250,0.1) 0%, transparent 40%);
     }
     .hero-text { flex: 1; padding: 52px 44px; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 1; }
     .hero h1 { font-size: 2.3rem; font-weight: 800; margin-bottom: 12px; line-height: 1.15; text-shadow: 0 0 40px rgba(96,165,250,0.5); }
