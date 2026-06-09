@@ -4,9 +4,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="Perbandingan Laptop" description="Bandingkan laptop gaming berdasarkan harga, GPU, CPU, RAM, dan layar.">
   <style>
-    .page-header { margin-bottom: 28px; }
-    .page-header h1 { font-size: 2rem; font-weight: 800; color: #e2e8f0; margin-bottom: 6px; }
-    .page-header p { color: #64748b; }
+    .page-header {
+      margin-bottom: 28px;
+      background:
+        linear-gradient(135deg, rgba(14,2,2,0.92) 0%, rgba(25,8,5,0.82) 40%, rgba(2,14,20,0.9) 100%),
+        url('/nasa-lambda.jpg') center/cover no-repeat;
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 16px; padding: 48px 40px; position: relative; overflow: hidden;
+      box-shadow: 0 0 60px rgba(239,68,68,0.08);
+    }
+    .page-header::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 40% 50%, rgba(239,68,68,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 30%, rgba(20,184,166,0.12) 0%, transparent 45%);
+    }
+    .page-header h1 {
+      font-size: 2rem; font-weight: 800; color: #e2e8f0; margin-bottom: 6px;
+      position: relative; z-index: 1;
+      text-shadow: 0 0 32px rgba(239,68,68,0.5);
+    }
+    .page-header p { color: rgba(255,255,255,0.7); position: relative; z-index: 1; }
 
     .filters {
       background: rgba(255,255,255,0.04);
