@@ -5,246 +5,108 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <BaseLayout title="Perbandingan Laptop" description="Bandingkan laptop gaming berdasarkan harga, GPU, CPU, RAM, dan layar.">
   <style>
     .page-header { margin-bottom: 28px; }
-    .page-header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 6px; }
-    .page-header p { color: #6b7280; }
+    .page-header h1 { font-size: 2rem; font-weight: 800; color: #e2e8f0; margin-bottom: 6px; }
+    .page-header p { color: #64748b; }
 
-    /* FILTER BAR */
     .filters {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 20px 24px;
-      margin-bottom: 24px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px; padding: 20px 24px; margin-bottom: 24px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px;
     }
-
     .filter-group label {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 6px;
+      display: block; font-size: 0.78rem; font-weight: 700; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;
     }
-
     .filter-group select {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      color: #111;
-      background: #f9fafb;
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
+      width: 100%; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; font-size: 0.9rem; color: #e2e8f0;
+      background: rgba(255,255,255,0.06); cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
     }
-
-    .filter-group select:focus {
-      outline: none;
-      border-color: #2563eb;
-    }
+    .filter-group select:focus { outline: none; border-color: rgba(96,165,250,0.5); }
+    .filter-group select option { background: #0a0a1e; color: #e2e8f0; }
 
     .reset-btn {
-      align-self: end;
-      padding: 8px 16px;
-      background: #f3f4f6;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 0.875rem;
-      cursor: pointer;
-      color: #374151;
-      font-weight: 600;
-      transition: background 0.2s;
+      align-self: end; padding: 8px 16px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; font-size: 0.875rem; cursor: pointer;
+      color: #94a3b8; font-weight: 600; transition: all 0.2s;
     }
+    .reset-btn:hover { background: rgba(255,255,255,0.1); color: #e2e8f0; }
 
-    .reset-btn:hover { background: #e5e7eb; }
+    .result-info { font-size: 0.875rem; color: #64748b; margin-bottom: 12px; }
+    .result-info strong { color: #e2e8f0; }
 
-    /* RESULT COUNT */
-    .result-info {
-      font-size: 0.875rem;
-      color: #6b7280;
-      margin-bottom: 12px;
-    }
-
-    .result-info strong { color: #111; }
-
-    /* TABLE */
     .table-wrap {
-      overflow-x: auto;
-      border-radius: 12px;
-      border: 1px solid #e5e7eb;
+      overflow-x: auto; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.09);
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      font-size: 0.875rem;
-    }
-
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
     thead tr {
-      background: #f8f9fa;
-      border-bottom: 2px solid #e5e7eb;
+      background: rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-
     th {
-      padding: 12px 16px;
-      text-align: left;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-      cursor: pointer;
-      user-select: none;
+      padding: 12px 16px; text-align: left;
+      font-size: 0.78rem; font-weight: 700; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      white-space: nowrap; cursor: pointer; user-select: none;
     }
+    th:hover { color: #60a5fa; }
+    th.sort-asc::after { content: " ↑"; color: #60a5fa; }
+    th.sort-desc::after { content: " ↓"; color: #60a5fa; }
 
-    th:hover { color: #2563eb; }
-    th.sort-asc::after { content: " ↑"; color: #2563eb; }
-    th.sort-desc::after { content: " ↓"; color: #2563eb; }
-
-    tbody tr {
-      border-bottom: 1px solid #f3f4f6;
-      transition: background 0.15s;
-    }
-
+    tbody tr { border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.15s; }
     tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: #f0f7ff; }
+    tbody tr:hover { background: rgba(96,165,250,0.05); }
     tbody tr.hidden { display: none; }
 
-    td {
-      padding: 14px 16px;
-      color: #374151;
-      vertical-align: middle;
-    }
-
-    .td-nama {
-      font-weight: 600;
-      color: #111;
-      min-width: 200px;
-    }
-
-    .td-nama a {
-      color: #2563eb;
-      text-decoration: none;
-    }
-
+    td { padding: 14px 16px; color: #cbd5e1; vertical-align: middle; }
+    .td-nama { font-weight: 600; color: #e2e8f0; min-width: 200px; }
+    .td-nama a { color: #60a5fa; text-decoration: none; }
     .td-nama a:hover { text-decoration: underline; }
+    .td-merk { white-space: nowrap; }
 
-    .score-cell {
-      text-align: center;
-      font-weight: 700;
-      font-size: 0.88rem;
-    }
+    .score-cell { text-align: center; font-weight: 700; font-size: 0.88rem; }
     .score-badge {
-      display: inline-block;
-      background: #1e40af;
-      color: white;
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-size: 0.82rem;
-      font-weight: 700;
+      display: inline-block; background: rgba(59,130,246,0.25); color: #93c5fd;
+      border: 1px solid rgba(59,130,246,0.3); padding: 2px 10px;
+      border-radius: 12px; font-size: 0.82rem; font-weight: 700;
     }
-    .score-nodata {
-      color: #9ca3af;
-      font-size: 0.78rem;
-      font-style: italic;
-    }
-    .td-merk {
-      white-space: nowrap;
-    }
+    .score-nodata { color: #475569; font-size: 0.78rem; font-style: italic; }
 
     .badge-gpu {
-      background: #fef3c7;
-      color: #92400e;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 20px;
-      white-space: nowrap;
+      background: rgba(251,191,36,0.12); color: #fbbf24;
+      font-size: 0.75rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; white-space: nowrap;
     }
+    .badge-gpu.rtx5050 { background: rgba(52,211,153,0.12); color: #34d399; }
+    .badge-gpu.rtx4050 { background: rgba(96,165,250,0.12); color: #60a5fa; }
+    .badge-gpu.rtx3050 { background: rgba(251,191,36,0.12); color: #fbbf24; }
 
-    .badge-gpu.rtx5050 { background: #d1fae5; color: #065f46; }
-    .badge-gpu.rtx4050 { background: #dbeafe; color: #1e40af; }
-    .badge-gpu.rtx3050 { background: #fef3c7; color: #92400e; }
+    .badge-cpu { font-size: 0.8rem; white-space: nowrap; }
+    .badge-amd { background: rgba(239,68,68,0.15); color: #f87171; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .badge-intel { background: rgba(96,165,250,0.12); color: #60a5fa; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .badge-ram { background: rgba(255,255,255,0.08); color: #94a3b8; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
 
-    .badge-cpu {
-      font-size: 0.8rem;
-      white-space: nowrap;
-    }
+    .check { color: #34d399; font-size: 1rem; }
+    .cross { color: #334155; font-size: 1rem; }
+    .harga-cell { font-weight: 700; color: #34d399; white-space: nowrap; }
 
-    .badge-amd {
-      background: #fee2e2;
-      color: #991b1b;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .badge-intel {
-      background: #dbeafe;
-      color: #1e40af;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .badge-ram {
-      background: #f3f4f6;
-      color: #374151;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .check { color: #059669; font-size: 1rem; }
-    .cross  { color: #d1d5db; font-size: 1rem; }
-
-    .harga-cell {
-      font-weight: 700;
-      color: #059669;
-      white-space: nowrap;
-    }
-
-    .no-result {
-      text-align: center;
-      padding: 48px;
-      color: #9ca3af;
-      display: none;
-    }
-
+    .no-result { text-align: center; padding: 48px; color: #475569; display: none; }
     .no-result.show { display: table-row; }
 
-    /* SEARCH */
-    .search-full {
-      grid-column: 1 / -1;
-    }
-
+    .search-full { grid-column: 1 / -1; }
     #search-input {
-      width: 100%;
-      padding: 8px 12px;
-      font-size: 0.9rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      background: #f9fafb;
-      color: #111;
-      box-sizing: border-box;
-      outline: none;
+      width: 100%; padding: 8px 12px; font-size: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+      background: rgba(255,255,255,0.06); color: #e2e8f0;
+      box-sizing: border-box; outline: none;
     }
-
-    #search-input:focus {
-      border-color: #2563eb;
-    }
+    #search-input:focus { border-color: rgba(96,165,250,0.5); }
+    #search-input::placeholder { color: #475569; }
   </style>
 
   <div class="page-header">

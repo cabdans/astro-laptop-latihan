@@ -52,78 +52,80 @@ const metodologiItems = [
 <BaseLayout title="Tentang" description="Tentang AstroLaptop — website review laptop Indonesia yang jujur dan terverifikasi">
   <style>
     .page-hero {
-      background: linear-gradient(135deg, #1e3a5f, #1e40af);
-      color: white;
-      padding: 52px 40px;
-      border-radius: 16px;
-      margin-bottom: 48px;
+      background: linear-gradient(135deg, #02020e 0%, #0a0a28 40%, #0d1844 100%);
+      border: 1px solid rgba(96,165,250,0.2);
+      color: white; padding: 56px 44px; border-radius: 16px; margin-bottom: 48px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 0 60px rgba(96,165,250,0.08);
     }
-    .page-hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
-    .page-hero p { font-size: 1rem; opacity: 0.88; max-width: 560px; line-height: 1.6; }
+    .page-hero::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 80% 50%, rgba(167,139,250,0.2) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 20%, rgba(34,211,238,0.12) 0%, transparent 45%);
+    }
+    .page-hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; position: relative; z-index: 1; text-shadow: 0 0 32px rgba(96,165,250,0.5); }
+    .page-hero p { font-size: 1rem; opacity: 0.85; max-width: 560px; line-height: 1.65; position: relative; z-index: 1; }
 
-    /* SECTION */
     .section { margin-bottom: 52px; }
     .section-title {
-      font-size: 1.3rem; font-weight: 700; color: #111;
+      font-size: 1.3rem; font-weight: 700; color: #e2e8f0;
       margin-bottom: 20px; padding-bottom: 10px;
-      border-bottom: 2px solid #e5e7eb;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
-    /* ABOUT CARD */
     .about-card {
-      background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 28px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px; padding: 28px;
     }
-    .about-card p { color: #374151; line-height: 1.75; margin-bottom: 14px; }
+    .about-card p { color: #94a3b8; line-height: 1.75; margin-bottom: 14px; }
     .about-card p:last-child { margin-bottom: 0; }
 
-    /* KATEGORI GRID */
     .kat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .kat-card {
-      background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px; padding: 24px; transition: all 0.25s;
     }
+    .kat-card:hover { border-color: rgba(96,165,250,0.4); background: rgba(96,165,250,0.06); transform: translateY(-2px); }
     .kat-icon { font-size: 2rem; margin-bottom: 10px; }
-    .kat-nama { font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
-    .kat-range { font-size: 0.8rem; color: #2563eb; font-weight: 600; margin-bottom: 10px; }
+    .kat-nama { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 2px; }
+    .kat-range { font-size: 0.8rem; color: #22d3ee; font-weight: 600; margin-bottom: 10px; }
     .kat-jumlah {
-      display: inline-block; background: #eff6ff; color: #2563eb;
+      display: inline-block; background: rgba(96,165,250,0.12); color: #60a5fa;
       font-size: 0.75rem; font-weight: 600; padding: 3px 9px; border-radius: 20px; margin-bottom: 10px;
     }
-    .kat-desc { font-size: 0.82rem; color: #6b7280; line-height: 1.5; }
+    .kat-desc { font-size: 0.82rem; color: #64748b; line-height: 1.5; }
 
-    /* METODOLOGI */
     .metod-list { display: flex; flex-direction: column; gap: 16px; }
     .metod-item {
-      background: white; border: 1px solid #e5e7eb; border-radius: 12px;
-      padding: 20px 24px; display: flex; gap: 20px; align-items: flex-start;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px; padding: 20px 24px;
+      display: flex; gap: 20px; align-items: flex-start; transition: border-color 0.2s;
     }
-    .metod-nomor {
-      font-size: 1.5rem; font-weight: 800; color: #dbeafe;
-      min-width: 40px; line-height: 1;
-    }
-    .metod-judul { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
-    .metod-isi { font-size: 0.85rem; color: #4b5563; line-height: 1.6; }
+    .metod-item:hover { border-color: rgba(167,139,250,0.3); }
+    .metod-nomor { font-size: 1.5rem; font-weight: 800; color: rgba(167,139,250,0.3); min-width: 40px; line-height: 1; }
+    .metod-judul { font-size: 0.95rem; font-weight: 700; color: #e2e8f0; margin-bottom: 6px; }
+    .metod-isi { font-size: 0.85rem; color: #64748b; line-height: 1.6; }
 
-    /* STATS */
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
     .stat-box {
-      background: white; border: 1px solid #e5e7eb; border-radius: 12px;
-      padding: 20px; text-align: center;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px; padding: 20px; text-align: center; transition: border-color 0.2s;
     }
-    .stat-num { font-size: 2rem; font-weight: 800; color: #2563eb; line-height: 1; margin-bottom: 4px; }
-    .stat-lbl { font-size: 0.78rem; color: #6b7280; }
+    .stat-box:hover { border-color: rgba(96,165,250,0.3); }
+    .stat-num { font-size: 2rem; font-weight: 800; color: #60a5fa; line-height: 1; margin-bottom: 4px; }
+    .stat-lbl { font-size: 0.78rem; color: #64748b; }
 
-    /* TOOLS CTA */
     .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .tool-card {
-      background: white; border: 1px solid #e5e7eb; border-radius: 12px;
-      padding: 22px; text-decoration: none; color: inherit;
-      display: flex; gap: 16px; align-items: flex-start;
-      transition: box-shadow 0.2s, transform 0.2s;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px; padding: 22px; text-decoration: none; color: inherit;
+      display: flex; gap: 16px; align-items: flex-start; transition: all 0.25s;
     }
-    .tool-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .tool-card:hover { border-color: rgba(167,139,250,0.4); background: rgba(167,139,250,0.06); transform: translateY(-2px); }
     .tool-icon { font-size: 1.8rem; }
-    .tool-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
-    .tool-desc { font-size: 0.82rem; color: #6b7280; line-height: 1.4; }
+    .tool-title { font-size: 0.95rem; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
+    .tool-desc { font-size: 0.82rem; color: #64748b; line-height: 1.4; }
 
     @media (max-width: 640px) {
       .page-hero { padding: 36px 20px; }
