@@ -2,193 +2,361 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const reviews = [
+  // === PRODUKTIVITAS ===
   {
-    slug: "asus-vivobook-15",
+    slug: "produktivitas/lenovo-ideapad-slim3-14irh10-i5",
+    nama: "Lenovo IdeaPad Slim 3 14IRH10 Core i5",
+    harga: "Rp 10\u201311 Juta",
+    rating: 4.4,
+    kategori: "Produktivitas",
+    ringkasan: "Core i5-13420H, WUXGA 16:10, garansi 2 tahun + ADP, OHS + backlit. Paket produktivitas lengkap dari Lenovo.",
+  },
+  {
+    slug: "produktivitas/lenovo-ideapad-slim3-14arp10-r5",
+    nama: "Lenovo IdeaPad Slim 3 14ARP10 Ryzen 5",
+    harga: "Rp 10\u201311 Juta",
+    rating: 4.5,
+    kategori: "Produktivitas",
+    ringkasan: "Ryzen 5 7535HS, WUXGA 16:10, garansi 2 tahun + ADP, OHS + backlit. Paket produktivitas paling lengkap dari Lenovo.",
+  },
+  {
+    slug: "produktivitas/advan-pixwar-touch-r7-8745hs",
+    nama: "ADVAN Pixwar Touchscreen Ryzen 7 8745HS",
+    harga: "Rp 9\u201310 Juta",
+    rating: 4.3,
+    kategori: "Produktivitas",
+    ringkasan: "Satu-satunya laptop touchscreen di 9\u201310 jutaan. Ryzen 7 8745HS, Radeon 780M, 16GB LPDDR5-6400.",
+  },
+  {
+    slug: "produktivitas/advan-workplus-r7-7735hs",
+    nama: "Advan Workplus Ryzen 7 7735HS",
+    harga: "Rp 8\u20139 Juta",
+    rating: 4.3,
+    kategori: "Produktivitas",
+    ringkasan: "Ryzen 7 7735HS 8-core + Radeon 680M + WUXGA + 16GB LPDDR5. Step-up terbaik dari lini Workplus.",
+  },
+  {
+    slug: "produktivitas/advan-workplus-r5-6600h",
+    nama: "Advan Workplus Ryzen 5 6600H",
+    harga: "Rp 7\u20138 Juta",
+    rating: 4.1,
+    kategori: "Produktivitas",
+    ringkasan: "16GB RAM langsung, 58Wh, charger 100W Type-C di 7\u20138 jutaan. Brand lokal dengan spec kompetitif.",
+  },
+  {
+    slug: "produktivitas/advan-workplus-heritage-r5-7535hs",
+    nama: "Advan Workplus Heritage Ryzen 5 7535HS",
+    harga: "Rp 7\u20138 Juta",
+    rating: 4.5,
+    kategori: "Produktivitas",
+    ringkasan: "Ryzen 5 7535HS + WUXGA + baterai 60Wh + 100W Type-C. Spesifikasi laptop 10 jutaan di harga 7\u20138 jutaan.",
+  },
+  {
+    slug: "produktivitas/asus-expertbook-pm1403cda-r5-150",
+    nama: "ASUS ExpertBook PM1403CDA Ryzen 5 150",
+    harga: "Rp 10\u201311 Juta",
+    rating: 4.2,
+    kategori: "Produktivitas",
+    ringkasan: "Ryzen 5 150U (Zen 4), garansi 3 tahun, OHS bawaan, DDR5 upgradeable. Dukungan purna jual terlama di kelasnya.",
+  },
+  {
+    slug: "produktivitas/polytron-luxia-pro-ultra5-125h",
+    nama: "Polytron Luxia Pro Ultra 5 125H",
+    harga: "Rp 10\u201311 Juta",
+    rating: 4.3,
+    kategori: "Produktivitas",
+    ringkasan: "Intel Core Ultra 5 125H, layar 2.8K OLED 120Hz, brand lokal dengan layar premium.",
+  },
+  {
+    slug: "produktivitas/acer-aspire-go-14-ultra5-125h",
+    nama: "Acer Aspire Go 14 Ai Ultra 5 125H",
+    harga: "Rp 10\u201312 Juta",
+    rating: 4.4,
+    kategori: "Produktivitas",
+    ringkasan: "Core Ultra 5 125H, layar WUXGA 14 inch, Copilot key, efisiensi tinggi untuk kerja mobile.",
+  },
+  {
+    slug: "produktivitas/acer-aspire-lite-15-r7-8840hs",
+    nama: "Acer Aspire Lite 15 Ryzen 7 8840HS",
+    harga: "Rp 11\u201312 Juta",
+    rating: 4.5,
+    kategori: "Produktivitas",
+    ringkasan: "Ryzen 7 8840HS + Radeon 780M, layar FHD 15 inch + numpad, OHS, sRGB 100%. Produktivitas premium.",
+  },
+  {
+    slug: "produktivitas/acer-aspire-lite-15-r5-8640hs",
+    nama: "Acer Aspire Lite 15 R5-8640HS",
+    harga: "Rp 9\u201310 Juta",
+    rating: 4.3,
+    kategori: "Produktivitas",
+    ringkasan: "Ryzen 5 8640HS + Radeon 760M, layar FHD 15 inch + numpad, OHS bawaan, slot DDR5 untuk upgrade RAM.",
+  },
+  {
+    slug: "produktivitas/acer-aspire-lite-15-r5-7430u",
+    nama: "Acer Aspire Lite 15 R5-7430U",
+    harga: "Rp 7\u20138 Juta",
+    rating: 4.2,
+    kategori: "Produktivitas",
+    ringkasan: "Ryzen 5 7430U, layar 15 inch + numpad, OHS bawaan, baterai 58Wh. Produktivitas lengkap di entry price.",
+  },
+  // === BUDGET ===
+  {
+    slug: "budget/advan-workmate-ultra-core-ultra5-115u",
+    nama: "Advan Workmate Ultra Core Ultra 5 115U",
+    harga: "Rp 7\u20138 Juta",
+    rating: 3.9,
+    kategori: "Budget",
+    ringkasan: "Core Ultra 5 115U + WUXGA 16:10 di 7\u20138 jutaan. Tipis dan efisien untuk mobilitas tinggi.",
+  },
+  {
+    slug: "budget/polytron-luxia-pro-i5-1235u",
+    nama: "Polytron Luxia Pro i5-1235U",
+    harga: "Rp 8\u20139 Juta",
+    rating: 4.2,
+    kategori: "Budget",
+    ringkasan: "Core i5-1235U, layar FHD, baterai 58Wh, RAM+SSD upgradeable. Value solid dari brand lokal.",
+  },
+  {
+    slug: "budget/lenovo-ideapad-slim3-14iru8-i3",
+    nama: "Lenovo IdeaPad Slim 3 14IRU8 Core i3",
+    harga: "Rp 7\u20138 Juta",
+    rating: 4.0,
+    kategori: "Budget",
+    ringkasan: "Core i3-1315U, garansi 2 tahun + ADP, OHS bawaan. Budget paling terpercaya dari Lenovo.",
+  },
+  {
+    slug: "budget/asus-vivobook-15",
     nama: "ASUS VivoBook 15",
     harga: "Rp 7.499.000",
     rating: 4.2,
     kategori: "Budget",
-    ringkasan: "Laptop budget terbaik untuk pelajar dan mahasiswa dengan performa harian yang solid.",
-    gambar: "/images/placeholder.jpg"
+    ringkasan: "Ryzen 5 7520U, layar FHD 15 inch ringan, garansi resmi ASUS. Budget 15 inch pilihan pelajar.",
   },
   {
-    slug: "lenovo-ideapad-slim-5",
-    nama: "Lenovo IdeaPad Slim 5",
-    harga: "Rp 9.999.000",
-    rating: 4.5,
-    kategori: "Mid-range",
-    ringkasan: "Desain tipis, baterai awet, cocok untuk kerja dan kuliah sehari-hari.",
-    gambar: "/images/placeholder.jpg"
+    slug: "budget/acer-aspire-go-14-i3-1315u",
+    nama: "ACER Aspire GO 14 i3-1315U",
+    harga: "Rp 7\u20138 Juta",
+    rating: 4.1,
+    kategori: "Budget",
+    ringkasan: "Intel Core i3-1315U 12th Gen, OHS bawaan, RAM upgradeable DDR4. Budget 14 inch praktis untuk pelajar.",
   },
   {
-    slug: "asus-rog-strix-g15",
-    nama: "ASUS ROG Strix G15",
-    harga: "Rp 18.999.000",
-    rating: 4.7,
+    slug: "budget/acer-aspire-lite-al14-42p",
+    nama: "ACER Aspire Lite AL14-42P",
+    harga: "Rp 6\u20137 Juta",
+    rating: 4.0,
+    kategori: "Budget",
+    ringkasan: "Ryzen 3 5300U, baterai 58Wh, bonus OHS. Budget 14 inch yang praktis dengan baterai awet.",
+  },
+  {
+    slug: "budget/polytron-luxia-i3-1215",
+    nama: "POLYTRON Luxia i3 1215",
+    harga: "Rp 6\u20137 Juta",
+    rating: 4.0,
+    kategori: "Budget",
+    ringkasan: "Intel i3-1215U, baterai 57Wh, RAM+SSD upgradeable, garansi 2 tahun + ADP. Value solid di harga terendah.",
+  },
+  // === GAMING ===
+  {
+    slug: "gaming/asus-tuf-a16-fa608uh-rtx5050",
+    nama: "ASUS TUF A16 FA608UH RTX 5050",
+    harga: "Rp 19\u201320 Juta",
+    rating: 4.6,
     kategori: "Gaming",
-    ringkasan: "Monster gaming dengan GPU RTX 4060 dan layar 165Hz yang memanjakan mata.",
-    gambar: "/images/placeholder.jpg"
+    ringkasan: "Ryzen AI 7 260 + RTX 5050, layar 165Hz QHD, MUX Switch. Gaming laptop paling baru di lini TUF.",
+  },
+  {
+    slug: "gaming/asus-tuf-gaming-a16",
+    nama: "ASUS TUF Gaming A16",
+    harga: "Rp 16.999.000",
+    rating: 4.4,
+    kategori: "Gaming",
+    ringkasan: "Ryzen 7 7445HS + RTX 4050, layar 165Hz, baterai 90Wh. Paket gaming all-rounder terbaik dari ASUS.",
+  },
+  {
+    slug: "gaming/acer-nitro-v15-5050",
+    nama: "Acer Nitro V15 RTX 5050",
+    harga: "Rp 15\u201316 Juta",
+    rating: 4.3,
+    kategori: "Gaming",
+    ringkasan: "Core i5-13420H + RTX 5050 di 15\u201316 jutaan. GPU generasi baru, harga kompetitif.",
+  },
+  {
+    slug: "gaming/colorful-evol-p15-rtx5050",
+    nama: "Colorful Evol P15 RTX 5050",
+    harga: "Rp 15\u201316 Juta",
+    rating: 4.3,
+    kategori: "Gaming",
+    ringkasan: "Core i5-13420H + RTX 5050, layar 144Hz 100% sRGB. Alternatif gaming menarik dari brand Colorful.",
+  },
+  {
+    slug: "gaming/acer-nitro-lite-nl16",
+    nama: "Acer Nitro Lite NL16",
+    harga: "Rp 12\u201313 Juta",
+    rating: 4.2,
+    kategori: "Gaming",
+    ringkasan: "Intel Core 5 210H + RTX 3050, layar 144Hz. Entry gaming paling terjangkau dari Acer Nitro.",
+  },
+  {
+    slug: "gaming/acer-aspire-7-pro-a715",
+    nama: "Acer Aspire 7 Pro A715",
+    harga: "Rp 11\u201312 Juta",
+    rating: 4.1,
+    kategori: "Gaming",
+    ringkasan: "Core i5-13420H + RTX 3050, layar FHD 144Hz. Gaming entry-level yang paling terjangkau di database.",
   },
 ];
+
+const stats = [
+  { angka: "25", label: "Laptop Diulas" },
+  { angka: "3", label: "Kategori" },
+  { angka: "9", label: "Brand" },
+  { angka: "6\u201320 Jt", label: "Rentang Harga" },
+];
+
+const kategoriBadgeColor: Record<string, string> = {
+  Produktivitas: "#eff6ff",
+  Budget: "#f0fdf4",
+  Gaming: "#fef3c7",
+};
+const kategoriBadgeText: Record<string, string> = {
+  Produktivitas: "#2563eb",
+  Budget: "#16a34a",
+  Gaming: "#b45309",
+};
 ---
 
-<BaseLayout title="Home">
+<BaseLayout title="Home" description="Review laptop Indonesia jujur & terpercaya — 25 laptop dari budget hingga gaming">
   <style>
-    /* HERO */
-    .hero {
-      background: linear-gradient(135deg, #1e40af, #2563eb);
-      color: white;
-      padding: 64px 40px;
-      border-radius: 16px;
-      text-align: center;
-      margin-bottom: 48px;
-    }
-
-    .hero h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .hero p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      max-width: 500px;
-      margin: 0 auto 24px;
-    }
-
-    .hero-btn {
-      background: white;
-      color: #2563eb;
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-weight: 600;
-      text-decoration: none;
-      font-size: 1rem;
-      display: inline-block;
-      transition: transform 0.2s;
-    }
-
-    .hero-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    /* SECTION TITLE */
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 24px;
-      color: #111;
-    }
-
-    /* REVIEW GRID */
-    .review-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 24px;
-      margin-bottom: 48px;
-    }
-
-    .review-card {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #e5e7eb;
-      transition: box-shadow 0.2s, transform 0.2s;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-
-    .review-card:hover {
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      transform: translateY(-4px);
-    }
-
-    .card-img {
-      width: 100%;
-      height: 180px;
-      background: #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-    }
-
-    .card-body {
-      padding: 20px;
-    }
-
-    .card-badge {
-      background: #eff6ff;
-      color: #2563eb;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 20px;
-      display: inline-block;
-      margin-bottom: 10px;
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .card-desc {
-      font-size: 0.875rem;
-      color: #6b7280;
-      margin-bottom: 16px;
-    }
-
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .card-price {
-      font-weight: 700;
-      color: #059669;
-      font-size: 1rem;
-    }
-
-    .card-rating {
-      background: #fef9c3;
-      color: #92400e;
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 20px;
+    .hero { background: linear-gradient(135deg, #1e40af, #2563eb); color: white; padding: 56px 40px; border-radius: 16px; text-align: center; margin-bottom: 40px; }
+    .hero h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 12px; }
+    .hero p { font-size: 1.05rem; opacity: 0.9; max-width: 520px; margin: 0 auto 24px; }
+    .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero-btn { background: white; color: #2563eb; padding: 11px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 0.95rem; display: inline-block; transition: transform 0.2s; }
+    .hero-btn:hover { transform: translateY(-2px); }
+    .hero-btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.6); padding: 11px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 0.95rem; display: inline-block; transition: all 0.2s; }
+    .hero-btn-outline:hover { background: rgba(255,255,255,0.15); border-color: white; }
+    .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+    .stat-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; text-align: center; }
+    .stat-angka { font-size: 1.8rem; font-weight: 800; color: #2563eb; line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 0.8rem; color: #6b7280; font-weight: 500; }
+    .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+    .section-title { font-size: 1.4rem; font-weight: 700; color: #111; }
+    .section-link { font-size: 0.875rem; color: #2563eb; text-decoration: none; font-weight: 500; }
+    .section-link:hover { text-decoration: underline; }
+    .kategori-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+    .kat-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px 20px; text-align: center; text-decoration: none; color: inherit; transition: box-shadow 0.2s, transform 0.2s; }
+    .kat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-3px); }
+    .kat-icon { font-size: 2rem; margin-bottom: 8px; }
+    .kat-name { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .kat-count { font-size: 0.8rem; color: #6b7280; }
+    .review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 20px; margin-bottom: 48px; }
+    .review-card { background: white; border-radius: 12px; border: 1px solid #e5e7eb; transition: box-shadow 0.2s, transform 0.2s; text-decoration: none; color: inherit; display: block; }
+    .review-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.09); transform: translateY(-3px); }
+    .card-top { height: 120px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border-radius: 12px 12px 0 0; }
+    .card-body { padding: 16px; }
+    .card-badge { font-size: 0.72rem; font-weight: 600; padding: 3px 9px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+    .card-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+    .card-desc { font-size: 0.8rem; color: #6b7280; margin-bottom: 12px; line-height: 1.4; }
+    .card-footer { display: flex; justify-content: space-between; align-items: center; }
+    .card-price { font-weight: 700; color: #059669; font-size: 0.9rem; }
+    .card-rating { background: #fef9c3; color: #92400e; font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
+    .cta-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .cta-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; text-decoration: none; color: inherit; transition: box-shadow 0.2s, transform 0.2s; display: block; }
+    .cta-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-3px); }
+    .cta-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .cta-title { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .cta-desc { font-size: 0.82rem; color: #6b7280; }
+    @media (max-width: 640px) {
+      .hero { padding: 40px 20px; }
+      .hero h1 { font-size: 1.8rem; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .kategori-grid { grid-template-columns: 1fr; }
+      .cta-bar { grid-template-columns: 1fr; }
     }
   </style>
 
-  <!-- HERO -->
   <section class="hero">
-    <h1>Review Laptop Jujur & Terpercaya</h1>
-    <p>Temukan laptop yang tepat sesuai kebutuhan dan budget kamu.</p>
-    <a href="/review" class="hero-btn">Lihat Semua Review →</a>
+    <h1>Review Laptop Indonesia \U0001F1EE\U0001F1E9</h1>
+    <p>Panduan jujur memilih laptop sesuai kebutuhan dan budget — dari pelajar sampai gamer.</p>
+    <div class="hero-btns">
+      <a href="/review" class="hero-btn">Lihat Semua Review \u2192</a>
+      <a href="/compare" class="hero-btn-outline">Bandingkan Laptop</a>
+    </div>
   </section>
 
-  <!-- REVIEW TERBARU -->
+  <div class="stats-bar">
+    {stats.map(s => (
+      <div class="stat-card">
+        <div class="stat-angka">{s.angka}</div>
+        <div class="stat-label">{s.label}</div>
+      </div>
+    ))}
+  </div>
+
   <section>
-    <h2 class="section-title">Review Terbaru</h2>
+    <div class="section-header">
+      <h2 class="section-title">Jelajahi Kategori</h2>
+    </div>
+    <div class="kategori-grid">
+      <a href="/review?kategori=Budget" class="kat-card">
+        <div class="kat-icon">\U0001F4B0</div>
+        <div class="kat-name">Budget</div>
+        <div class="kat-count">7 laptop \u00B7 Rp 6\u20139 Juta</div>
+      </a>
+      <a href="/review?kategori=Produktivitas" class="kat-card">
+        <div class="kat-icon">\U0001F4BC</div>
+        <div class="kat-name">Produktivitas</div>
+        <div class="kat-count">12 laptop \u00B7 Rp 7\u201312 Juta</div>
+      </a>
+      <a href="/review?kategori=Gaming" class="kat-card">
+        <div class="kat-icon">\U0001F3AE</div>
+        <div class="kat-name">Gaming</div>
+        <div class="kat-count">6 laptop \u00B7 Rp 11\u201320 Juta</div>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-header">
+      <h2 class="section-title">Semua Review ({reviews.length} Laptop)</h2>
+      <a href="/review" class="section-link">Filter lengkap \u2192</a>
+    </div>
     <div class="review-grid">
       {reviews.map((laptop) => (
         <a href={`/review/${laptop.slug}`} class="review-card">
-          <div class="card-img">💻</div>
+          <div class="card-top">\U0001F4BB</div>
           <div class="card-body">
-            <span class="card-badge">{laptop.kategori}</span>
+            <span class="card-badge" style={`background:${kategoriBadgeColor[laptop.kategori]};color:${kategoriBadgeText[laptop.kategori]}`}>
+              {laptop.kategori}
+            </span>
             <div class="card-title">{laptop.nama}</div>
             <div class="card-desc">{laptop.ringkasan}</div>
             <div class="card-footer">
               <span class="card-price">{laptop.harga}</span>
-              <span class="card-rating">⭐ {laptop.rating}/5</span>
+              <span class="card-rating">\u2B50 {laptop.rating}/5</span>
             </div>
           </div>
         </a>
       ))}
+    </div>
+  </section>
+
+  <section>
+    <div class="section-header">
+      <h2 class="section-title">Tools Perbandingan</h2>
+    </div>
+    <div class="cta-bar">
+      <a href="/compare" class="cta-card">
+        <div class="cta-icon">\U0001F4CA</div>
+        <div class="cta-title">Tabel Perbandingan</div>
+        <div class="cta-desc">Bandingkan semua 25 laptop side-by-side. Sortir dan filter per kolom.</div>
+      </a>
+      <a href="/h2h" class="cta-card">
+        <div class="cta-icon">\u2694\uFE0F</div>
+        <div class="cta-title">Head-to-Head</div>
+        <div class="cta-desc">Pilih 2 laptop, bandingkan spesifikasi + data benchmark secara detail.</div>
+      </a>
     </div>
   </section>
 </BaseLayout>

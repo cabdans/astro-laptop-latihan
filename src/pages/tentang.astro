@@ -1,0 +1,253 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const kategoris = [
+  {
+    icon: "💰",
+    nama: "Budget",
+    range: "Rp 6–9 Juta",
+    deskripsi: "Laptop untuk pelajar dan mahasiswa yang butuh perangkat handal tanpa menguras kantong. Fokus pada value for money.",
+    jumlah: 7,
+  },
+  {
+    icon: "💼",
+    nama: "Produktivitas",
+    range: "Rp 7–12 Juta",
+    deskripsi: "Laptop untuk kerja, kuliah, dan tugas kreatif ringan. Prioritas: layar nyaman, baterai awet, dan performa konsisten.",
+    jumlah: 12,
+  },
+  {
+    icon: "🎮",
+    nama: "Gaming",
+    range: "Rp 11–20 Juta",
+    deskripsi: "Laptop dengan GPU dedicated (RTX 3050–RTX 5050) untuk gaming, rendering, dan workload berat.",
+    jumlah: 6,
+  },
+];
+
+const metodologiItems = [
+  {
+    nomor: "01",
+    judul: "Spesifikasi Terverifikasi",
+    isi: "Data spesifikasi diambil dari halaman resmi brand, unboxing terpercaya, dan review media Indonesia. Tidak mengandalkan listing toko yang sering tidak akurat.",
+  },
+  {
+    nomor: "02",
+    judul: "Benchmark dari NanoReview & Passmark",
+    isi: "Skor CPU menggunakan data NanoReview (Nano Score, Power Efficiency) dan Passmark (Single/Multi-Thread) dari database terverifikasi — bukan hasil synthetic test by-request.",
+  },
+  {
+    nomor: "03",
+    judul: "Penilaian Berdasarkan Value",
+    isi: "Rating mempertimbangkan harga jual di Indonesia, bukan spesifikasi mentah. Laptop dengan harga lebih rendah tapi spek setara bisa mendapat rating lebih tinggi.",
+  },
+  {
+    nomor: "04",
+    judul: "Fokus Pasar Indonesia",
+    isi: "Semua harga dalam Rupiah berdasarkan harga ritel resmi di Indonesia. Laptop yang tidak tersedia di pasar Indonesia tidak masuk database.",
+  },
+];
+---
+
+<BaseLayout title="Tentang" description="Tentang AstroLaptop — website review laptop Indonesia yang jujur dan terverifikasi">
+  <style>
+    .page-hero {
+      background: linear-gradient(135deg, #1e3a5f, #1e40af);
+      color: white;
+      padding: 52px 40px;
+      border-radius: 16px;
+      margin-bottom: 48px;
+    }
+    .page-hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
+    .page-hero p { font-size: 1rem; opacity: 0.88; max-width: 560px; line-height: 1.6; }
+
+    /* SECTION */
+    .section { margin-bottom: 52px; }
+    .section-title {
+      font-size: 1.3rem; font-weight: 700; color: #111;
+      margin-bottom: 20px; padding-bottom: 10px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    /* ABOUT CARD */
+    .about-card {
+      background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 28px;
+    }
+    .about-card p { color: #374151; line-height: 1.75; margin-bottom: 14px; }
+    .about-card p:last-child { margin-bottom: 0; }
+
+    /* KATEGORI GRID */
+    .kat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .kat-card {
+      background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px;
+    }
+    .kat-icon { font-size: 2rem; margin-bottom: 10px; }
+    .kat-nama { font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+    .kat-range { font-size: 0.8rem; color: #2563eb; font-weight: 600; margin-bottom: 10px; }
+    .kat-jumlah {
+      display: inline-block; background: #eff6ff; color: #2563eb;
+      font-size: 0.75rem; font-weight: 600; padding: 3px 9px; border-radius: 20px; margin-bottom: 10px;
+    }
+    .kat-desc { font-size: 0.82rem; color: #6b7280; line-height: 1.5; }
+
+    /* METODOLOGI */
+    .metod-list { display: flex; flex-direction: column; gap: 16px; }
+    .metod-item {
+      background: white; border: 1px solid #e5e7eb; border-radius: 12px;
+      padding: 20px 24px; display: flex; gap: 20px; align-items: flex-start;
+    }
+    .metod-nomor {
+      font-size: 1.5rem; font-weight: 800; color: #dbeafe;
+      min-width: 40px; line-height: 1;
+    }
+    .metod-judul { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+    .metod-isi { font-size: 0.85rem; color: #4b5563; line-height: 1.6; }
+
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .stat-box {
+      background: white; border: 1px solid #e5e7eb; border-radius: 12px;
+      padding: 20px; text-align: center;
+    }
+    .stat-num { font-size: 2rem; font-weight: 800; color: #2563eb; line-height: 1; margin-bottom: 4px; }
+    .stat-lbl { font-size: 0.78rem; color: #6b7280; }
+
+    /* TOOLS CTA */
+    .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .tool-card {
+      background: white; border: 1px solid #e5e7eb; border-radius: 12px;
+      padding: 22px; text-decoration: none; color: inherit;
+      display: flex; gap: 16px; align-items: flex-start;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .tool-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .tool-icon { font-size: 1.8rem; }
+    .tool-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .tool-desc { font-size: 0.82rem; color: #6b7280; line-height: 1.4; }
+
+    @media (max-width: 640px) {
+      .page-hero { padding: 36px 20px; }
+      .page-hero h1 { font-size: 1.6rem; }
+      .kat-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .tools-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <h1>🖥️ Tentang AstroLaptop</h1>
+    <p>Panduan memilih laptop Indonesia yang jujur, terverifikasi, dan berfokus pada nilai terbaik untuk uangmu.</p>
+  </div>
+
+  <!-- APA ITU ASTROLAPTOP -->
+  <section class="section">
+    <h2 class="section-title">Apa itu AstroLaptop?</h2>
+    <div class="about-card">
+      <p>
+        AstroLaptop adalah website review dan perbandingan laptop yang berfokus pada pasar Indonesia.
+        Tujuannya sederhana: membantu pelajar, mahasiswa, dan pekerja menemukan laptop yang paling sesuai
+        kebutuhan dan budget mereka — tanpa harus membaca puluhan artikel yang membingungkan.
+      </p>
+      <p>
+        Semua data spesifikasi dan harga diambil dari sumber resmi dan terverifikasi. Data benchmark CPU
+        menggunakan database NanoReview dan Passmark sehingga perbandingan performa lebih objektif
+        dibanding sekadar membandingkan angka GHz atau jumlah core.
+      </p>
+      <p>
+        Website ini dibangun dengan Astro (Static Site Generator) dan di-deploy ke Vercel untuk akses
+        yang cepat tanpa perlu database backend.
+      </p>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section">
+    <h2 class="section-title">Database Laptop</h2>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-num">25</div>
+        <div class="stat-lbl">Laptop Diulas</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">3</div>
+        <div class="stat-lbl">Kategori</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">9</div>
+        <div class="stat-lbl">Brand</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">9</div>
+        <div class="stat-lbl">Data Benchmark CPU</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KATEGORI -->
+  <section class="section">
+    <h2 class="section-title">Kategori Review</h2>
+    <div class="kat-grid">
+      {kategoris.map(k => (
+        <div class="kat-card">
+          <div class="kat-icon">{k.icon}</div>
+          <div class="kat-nama">{k.nama}</div>
+          <div class="kat-range">{k.range}</div>
+          <span class="kat-jumlah">{k.jumlah} laptop</span>
+          <p class="kat-desc">{k.deskripsi}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- METODOLOGI -->
+  <section class="section">
+    <h2 class="section-title">Metodologi Review</h2>
+    <div class="metod-list">
+      {metodologiItems.map(m => (
+        <div class="metod-item">
+          <div class="metod-nomor">{m.nomor}</div>
+          <div>
+            <div class="metod-judul">{m.judul}</div>
+            <div class="metod-isi">{m.isi}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="section">
+    <h2 class="section-title">Tools Tersedia</h2>
+    <div class="tools-grid">
+      <a href="/review" class="tool-card">
+        <div class="tool-icon">🔍</div>
+        <div>
+          <div class="tool-title">Review & Filter</div>
+          <div class="tool-desc">Lihat semua 25 laptop dengan filter kategori, CPU, GPU, RAM, sRGB, dan rentang harga.</div>
+        </div>
+      </a>
+      <a href="/compare" class="tool-card">
+        <div class="tool-icon">📊</div>
+        <div>
+          <div class="tool-title">Tabel Perbandingan</div>
+          <div class="tool-desc">Tabel semua laptop dengan kolom Score CPU. Sortir ascending/descending per kolom.</div>
+        </div>
+      </a>
+      <a href="/h2h" class="tool-card">
+        <div class="tool-icon">⚔️</div>
+        <div>
+          <div class="tool-title">Head-to-Head</div>
+          <div class="tool-desc">Pilih 2 laptop dan bandingkan spek + benchmark secara detail. Otomatis hitung pemenang.</div>
+        </div>
+      </a>
+      <a href="/" class="tool-card">
+        <div class="tool-icon">🏠</div>
+        <div>
+          <div class="tool-title">Homepage</div>
+          <div class="tool-desc">Ringkasan semua laptop dalam satu halaman — termasuk shortcut per kategori.</div>
+        </div>
+      </a>
+    </div>
+  </section>
+</BaseLayout>
