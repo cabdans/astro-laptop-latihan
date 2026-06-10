@@ -517,4 +517,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       ulB.innerHTML = prosB.length ? prosB.map(p => '<li>' + p + '</li>').join('') : '<li style="color:#475569;font-style:italic">Tidak unggul di kategori ini</li>';
 
       const banner = document.getElementById('winner-banner');
-      if (winsA > winsB) banner.textContent = '🏆 ' + a.nama + ' unggul di lebih banyak kategori (' + 
+      if (winsA > winsB) banner.textContent = '🏆 ' + a.nama + ' unggul di lebih banyak kategori (' + winsA + ' vs ' + winsB + ')';
+      else if (winsB > winsA) banner.textContent = '🏆 ' + b.nama + ' unggul di lebih banyak kategori (' + winsB + ' vs ' + winsA + ')';
+      else banner.textContent = '🤝 Kedua laptop seimbang (' + winsA + ' vs ' + winsB + ')';
+    }
+
+    document.getElementById('sel-a').addEventListener('change', render);
+    document.getElementById('sel-b').addEventListener('change', render);
+    render();
+  </script>
+</BaseLayout>
