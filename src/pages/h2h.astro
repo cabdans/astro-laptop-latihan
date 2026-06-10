@@ -119,21 +119,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     /* Draw */
     .spec-table td.draw { color: #94a3b8; }
 
-    /* Win A — blue glow left border */
-    .spec-table td.win-a {
-      background: rgba(96,165,250,0.10);
-      font-weight: 700; color: #bfdbfe;
-      border-left: 3px solid rgba(96,165,250,0.7);
-      position: relative;
-    }
-    /* Win B — purple glow left border */
+    /* Win — green highlight */
+    .spec-table td.win-a,
     .spec-table td.win-b {
-      background: rgba(167,139,250,0.10);
-      font-weight: 700; color: #ddd6fe;
-      border-left: 3px solid rgba(167,139,250,0.7);
-      position: relative;
+      background: rgba(52,211,153,0.12);
+      font-weight: 700; color: #6ee7b7;
+      border-left: 3px solid rgba(52,211,153,0.6);
     }
-    .win-icon { font-size: 0.75rem; margin-left: 6px; opacity: 0.8; }
+    .win-icon { display: none; }
 
     .badge-gpu { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; background: rgba(251,191,36,0.15); color: #fbbf24; }
     .badge-cpu-intel { background: rgba(96,165,250,0.12); color: #60a5fa; display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; }
@@ -410,8 +403,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     function cpuBadge(cpu, merk) {
       const cls = merk === 'Intel' ? 'badge-cpu-intel' : 'badge-cpu-amd';
-      return '<span class="' + cls + '">' + merk + '</span> ' + cpu;
+      const model = cpu.replace(/^(Intel|AMD)\s+/i, '');
+      return '<span class="' + cls + '">' + merk + '</span> ' + model;
     }
+
+    function parseWh(s) { const m = s.match(/(\d+)/); return m ? parseInt(m[1]) : 0; }
+    function parseKg(s) { const m = s.match(/([\d.]+)/); return m ? parseFloat(m[1]) : 999; }
+    function parseTgp(s) { const m = s.replace(/[±~]/g,'').match(/(\d+)/); return m ? parseInt(m[1]) : 0; }
+    function ramRank(r) { return r==='DDR5'||r==='LPDDR5X'||r==='LPDDR5' ? 2 : r==='DDR4'||r==='LPDDR4X' ? 1 : 0; }
 
     function gpuBadge(gpu) {
       return gpu === 'Integrated'
@@ -454,18 +453,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ['row-equal', 'Layar', a.layar, b.layar, null, null],
         ['row-higher', 'Refresh Rate', a.layarHz + ' Hz', b.layarHz + ' Hz', a.layarHz, b.layarHz],
         ['row-higher', '100% sRGB', srgbBadge(a.srgb), srgbBadge(b.srgb), a.srgb?1:0, b.srgb?1:0],
-        ['row-equal', 'Baterai', a.baterai, b.baterai, null, null],
+        ['row-higher', 'Baterai', a.baterai, b.baterai, parseWh(a.baterai), parseWh(b.baterai)],
         ['section', 'Hardware', '', '', null, null],
         ['row-equal', 'CPU', cpuBadge(a.cpu, a.cpuMerk), cpuBadge(b.cpu, b.cpuMerk), null, null],
         ['row-higher', 'GPU', gpuBadge(a.gpu), gpuBadge(b.gpu), a.gpuNum, b.gpuNum],
-        ['row-equal', 'RAM', a.ram, b.ram, null, null],
+        ['row-higher', 'Tipe RAM', a.ram, b.ram, ramRank(a.ram), ramRank(b.ram)],
         ['row-higher', 'Kapasitas RAM', a.ramSize + ' GB', b.ramSize + ' GB', a.ramSize, b.ramSize],
         ['section', 'Fisik & Garansi', '', '', null, null],
-        ['row-equal', 'Bobot', a.berat, b.berat, null, null],
+        ['row-lower', 'Bobot', a.berat, b.berat, parseKg(a.berat), parseKg(b.berat)],
         ['row-equal', 'Garansi', a.garansi, b.garansi, null, null],
         ['row-equal', 'OS', a.os, b.os, null, null],
         ['row-equal', 'TDP (CPU)', a.tdp||'—', b.tdp||'—', null, null],
-        ['row-equal', 'TGP (GPU)', a.tgp||'—', b.tgp||'—', null, null],
+        ['row-higher', 'TGP (GPU)', a.tgp||'—', b.tgp||'—', parseTgp(a.tgp||'0'), parseTgp(b.tgp||'0')],
         ['section', 'Benchmark CPU', '', '', null, null],
         ['row-higher', 'NanoReview Score', benchCell(bA,'nano').html, benchCell(bB,'nano').html, benchCell(bA,'nano').num, benchCell(bB,'nano').num],
         ['row-higher', 'Power Efficiency', benchCell(bA,'eff').html, benchCell(bB,'eff').html, benchCell(bA,'eff').num, benchCell(bB,'eff').num],
