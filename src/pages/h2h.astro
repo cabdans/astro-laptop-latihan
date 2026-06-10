@@ -466,6 +466,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ['row-equal', 'Layar', a.layar, b.layar, null, null],
         ['row-higher', 'Refresh Rate', a.layarHz + ' Hz', b.layarHz + ' Hz', a.layarHz, b.layarHz],
         ['row-higher', '100% sRGB', srgbBadge(a.srgb), srgbBadge(b.srgb), a.srgb?1:0, b.srgb?1:0],
+        ['row-equal', 'Baterai / Charger', batteryChargerBadge(a), batteryChargerBadge(b), null, null],
         ['section', 'Hardware', '', '', null, null],
         ['row-equal', 'CPU', cpuBadge(a.cpu, a.cpuMerk), cpuBadge(b.cpu, b.cpuMerk), null, null],
         ['row-higher', 'GPU', gpuBadge(a.gpu), gpuBadge(b.gpu), a.gpuNum, b.gpuNum],
