@@ -416,6 +416,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       const isTypeC = c.includes('Type-C');
       return c + (isTypeC ? ' <span style="color:#22d3ee;font-size:0.75rem;font-weight:700">⚡USB-C</span>' : '');
     }
+    function batteryChargerBadge(l) {
+      const bat = l.baterai || '—';
+      const chg = l.charger || '—';
+      const typec = chg.includes('Type-C') ? ' <span style="color:#22d3ee;font-size:0.75rem;font-weight:700">⚡USB-C</span>' : '';
+      const chgNum = chg.replace(' Type-C','');
+      return bat + ' <span style="color:#64748b;font-size:0.85rem">/ ' + chgNum + '</span>' + typec;
+    }
 
     function gpuBadge(gpu) {
       return gpu === 'Integrated'
@@ -458,8 +465,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ['row-equal', 'Layar', a.layar, b.layar, null, null],
         ['row-higher', 'Refresh Rate', a.layarHz + ' Hz', b.layarHz + ' Hz', a.layarHz, b.layarHz],
         ['row-higher', '100% sRGB', srgbBadge(a.srgb), srgbBadge(b.srgb), a.srgb?1:0, b.srgb?1:0],
-        ['row-higher', 'Baterai', a.baterai, b.baterai, parseWh(a.baterai), parseWh(b.baterai)],
-        ['row-higher', 'Charger', chargerBadge(a.charger), chargerBadge(b.charger), parseTgp(a.charger||'0'), parseTgp(b.charger||'0')],
+        ['row-higher', 'Baterai / Charger', batteryChargerBadge(a), batteryChargerBadge(b), parseWh(a.baterai), parseWh(b.baterai)],
         ['section', 'Hardware', '', '', null, null],
         ['row-equal', 'CPU', cpuBadge(a.cpu, a.cpuMerk), cpuBadge(b.cpu, b.cpuMerk), null, null],
         ['row-higher', 'GPU', gpuBadge(a.gpu), gpuBadge(b.gpu), a.gpuNum, b.gpuNum],
