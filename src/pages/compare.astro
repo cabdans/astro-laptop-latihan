@@ -103,6 +103,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .badge-gpu.rtx5050 { background: rgba(52,211,153,0.12); color: #34d399; }
     .badge-gpu.rtx4050 { background: rgba(96,165,250,0.12); color: #60a5fa; }
     .badge-gpu.rtx3050 { background: rgba(251,191,36,0.12); color: #fbbf24; }
+    .badge-gpu.rtx5060 { background: rgba(167,139,250,0.15); color: #a78bfa; }
 
     .badge-cpu { font-size: 0.8rem; white-space: nowrap; }
     .badge-amd { background: rgba(239,68,68,0.15); color: #f87171; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
@@ -153,6 +154,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <label>GPU</label>
       <select id="f-gpu">
         <option value="">Semua GPU</option>
+        <option value="RTX 5060">RTX 5060</option>
         <option value="RTX 5050">RTX 5050</option>
         <option value="RTX 4050">RTX 4050</option>
         <option value="RTX 3050">RTX 3050</option>
@@ -192,6 +194,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <select id="f-kategori">
         <option value="">Semua</option>
         <option value="gaming">Gaming</option>
+        <option value="high-gaming">High Gaming</option>
         <option value="produktivitas">Produktivitas / Office</option>
         <option value="budget">Budget</option>
       </select>
@@ -584,6 +587,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td class="harga-cell">Rp 16–17 Jt</td>
         </tr>
 
+        <tr data-harga="19" data-gpu="RTX 5050" data-cpu="AMD" data-ram="DDR5" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/lenovo-loq-15ahp10">Lenovo LOQ 15AHP10 RTX 5050</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 250</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>15" FHD 144Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">56</span></td>
+          <td class="harga-cell">Langka</td>
+        </tr>
+
+        <tr data-harga="18.5" data-gpu="RTX 5050" data-cpu="AMD" data-ram="DDR5" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/axioo-pongo-755-r7255">Axioo Pongo 755 R7 255 RTX 5050</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 255</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WUXGA 165Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">58</span></td>
+          <td class="harga-cell">Rp 18–19 Jt</td>
+        </tr>
+
         <tr data-harga="21.5" data-gpu="RTX 5050" data-cpu="AMD" data-ram="DDR5" data-srgb="ya" data-kategori="gaming">
           <td class="td-nama"><a href="/review/gaming/asus-tuf-a16-fa608uh-rtx5050">ASUS TUF A16 FA608UH RTX 5050</a></td>
           <td class="td-merk">ASUS</td>
@@ -594,6 +621,54 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td class="check">✅</td>
           <td class="score-cell"><span class="score-badge">61</span></td>
           <td class="harga-cell">Rp 21–22 Jt</td>
+        </tr>
+
+        <tr data-harga="23.5" data-gpu="RTX 5050" data-cpu="AMD" data-ram="DDR5" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/lenovo-loq-15ahp11">Lenovo LOQ 15AHP11 R7 250 RTX 5050</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 250</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>15" WUXGA 165Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">56</span></td>
+          <td class="harga-cell">Rp 23–24 Jt</td>
+        </tr>
+
+        <tr data-harga="19.5" data-gpu="RTX 5050" data-cpu="AMD" data-ram="DDR5" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/axioo-pongo-755-x72">Axioo Pongo 755-X72 R7 255 RTX 5050</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 255</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" FHD+ 165Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">58</span></td>
+          <td class="harga-cell">Rp 19–20 Jt</td>
+        </tr>
+
+        <tr data-harga="22.5" data-gpu="RTX 5060" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/gaming/axioo-pongo-765">Axioo Pongo 765 i7-13620H RTX 5060</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-13620H</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WUXGA 165Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">55</span></td>
+          <td class="harga-cell">Rp 22–23 Jt</td>
+        </tr>
+
+        <tr data-harga="22.5" data-gpu="RTX 5060" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/gaming/axioo-pongo-765-v2">Axioo Pongo 765 V2 i7-13700H RTX 5060</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-13700H</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WUXGA 165Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">60</span></td>
+          <td class="harga-cell">Rp 22–23 Jt</td>
         </tr>
 
         <tr data-harga="22.5" data-gpu="RTX 5050" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="gaming">
