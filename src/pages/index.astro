@@ -383,8 +383,14 @@ const kategoriBadgeText: Record<string, string> = {
     .hero-disclaimer { font-size: 0.82rem; margin-top: 18px; line-height: 1.55; max-width: 440px; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.35); border-radius: 8px; padding: 10px 14px; color: #fde68a; }
     .hero-disclaimer a { color: #fbbf24; font-weight: 600; text-decoration: underline; }
 
+    /* STATS WRAPPER */
+    .stats-wrapper { display: grid; grid-template-columns: 200px 1fr 200px; gap: 20px; align-items: center; margin-bottom: 40px; }
+    .stats-photo { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .stats-photo img { width: 200px; height: 200px; object-fit: cover; border-radius: 14px; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .stats-photo-caption { font-size: 0.78rem; color: #94a3b8; font-style: italic; text-align: center; }
+
     /* STATS */
-    .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+    .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
     .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 20px; text-align: center; transition: border-color 0.2s; }
     .stat-card:hover { border-color: rgba(96,165,250,0.3); }
     .stat-angka { font-size: 1.8rem; font-weight: 800; color: #60a5fa; line-height: 1; margin-bottom: 4px; }
@@ -449,8 +455,11 @@ const kategoriBadgeText: Record<string, string> = {
       .hero-text { padding: 36px 24px; }
       .hero h1 { font-size: 1.9rem; }
       .hero-img { width: 100%; height: 220px; }
+      .stats-wrapper { grid-template-columns: 1fr; }
+      .stats-photo { display: none; }
       .stats-bar { grid-template-columns: repeat(2, 1fr); }
       .kategori-grid { grid-template-columns: 1fr; }
+      .kat-card:last-child { grid-column: 1; }
       .cta-bar { grid-template-columns: 1fr; }
     }
   </style>
@@ -470,13 +479,23 @@ const kategoriBadgeText: Record<string, string> = {
     </div>
   </section>
 
-  <div class="stats-bar">
-    {stats.map(s => (
-      <div class="stat-card">
-        <div class="stat-angka">{s.angka}</div>
-        <div class="stat-label">{s.label}</div>
-      </div>
-    ))}
+  <div class="stats-wrapper">
+    <div class="stats-photo">
+      <img src="/astrolaptop-photo.jpeg" alt="AstroLaptop" />
+      <span class="stats-photo-caption">AstroLaptop</span>
+    </div>
+    <div class="stats-bar">
+      {stats.map(s => (
+        <div class="stat-card">
+          <div class="stat-angka">{s.angka}</div>
+          <div class="stat-label">{s.label}</div>
+        </div>
+      ))}
+    </div>
+    <div class="stats-photo">
+      <img src="/mbg-photo.jpeg" alt="MBG" />
+      <span class="stats-photo-caption">MBG</span>
+    </div>
   </div>
 
   <section>
