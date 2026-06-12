@@ -323,7 +323,7 @@ const stats = [
   { angka: "39", label: "Laptop Diulas" },
   { angka: "4", label: "Kategori" },
   { angka: "9", label: "Brand" },
-  { angka: "6–20 Jt", label: "Rentang Harga" },
+  { angka: "6–26 Jt", label: "Rentang Harga" },
 ];
 
 const kategoriBadgeColor: Record<string, string> = {
@@ -380,8 +380,8 @@ const kategoriBadgeText: Record<string, string> = {
       font-size: 0.95rem; display: inline-block; transition: all 0.2s;
     }
     .hero-btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.7); }
-    .hero-disclaimer { font-size: 0.75rem; opacity: 0.6; margin-top: 16px; line-height: 1.5; max-width: 420px; }
-    .hero-disclaimer a { color: #93c5fd; text-decoration: underline; }
+    .hero-disclaimer { font-size: 0.82rem; margin-top: 18px; line-height: 1.55; max-width: 440px; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.35); border-radius: 8px; padding: 10px 14px; color: #fde68a; }
+    .hero-disclaimer a { color: #fbbf24; font-weight: 600; text-decoration: underline; }
 
     /* STATS */
     .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
@@ -398,6 +398,7 @@ const kategoriBadgeText: Record<string, string> = {
 
     /* KATEGORI */
     .kategori-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+    .kat-card:last-child { grid-column: 2; }
     .kat-card {
       background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
       border-radius: 12px; padding: 28px 20px; text-align: center;
