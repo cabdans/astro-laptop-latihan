@@ -384,10 +384,11 @@ const kategoriBadgeText: Record<string, string> = {
     .hero-disclaimer a { color: #fbbf24; font-weight: 600; text-decoration: underline; }
 
     /* STATS WRAPPER */
-    .stats-wrapper { display: grid; grid-template-columns: 200px 1fr 200px; gap: 20px; align-items: center; margin-bottom: 40px; }
-    .stats-photo { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-    .stats-photo img { width: 200px; height: 200px; object-fit: cover; border-radius: 14px; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-    .stats-photo-caption { font-size: 0.78rem; color: #94a3b8; font-style: italic; text-align: center; }
+    .stats-wrapper { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+    .stats-photos-row { display: grid; grid-template-columns: 200px 1fr 200px; gap: 20px; align-items: flex-end; }
+    .stats-photo { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .stats-photo img { width: 200px; height: 200px; object-fit: cover; border-radius: 14px 14px 0 0; border: 2px solid rgba(34,197,94,0.5); border-bottom: none; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .stats-photo-caption { font-size: 0.78rem; font-weight: 700; text-align: center; width: 200px; background: rgba(34,197,94,0.2); border: 2px solid rgba(34,197,94,0.5); border-top: none; border-radius: 0 0 10px 10px; padding: 6px 10px; color: #4ade80; letter-spacing: 0.02em; }
 
     /* STATS */
     .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
@@ -455,8 +456,7 @@ const kategoriBadgeText: Record<string, string> = {
       .hero-text { padding: 36px 24px; }
       .hero h1 { font-size: 1.9rem; }
       .hero-img { width: 100%; height: 220px; }
-      .stats-wrapper { grid-template-columns: 1fr; }
-      .stats-photo { display: none; }
+      .stats-photos-row { display: none; }
       .stats-bar { grid-template-columns: repeat(2, 1fr); }
       .kategori-grid { grid-template-columns: 1fr; }
       .kat-card:last-child { grid-column: 1; }
@@ -480,9 +480,16 @@ const kategoriBadgeText: Record<string, string> = {
   </section>
 
   <div class="stats-wrapper">
-    <div class="stats-photo">
-      <img src="/astrolaptop-photo.jpeg" alt="AstroLaptop" />
-      <span class="stats-photo-caption">AstroLaptop</span>
+    <div class="stats-photos-row">
+      <div class="stats-photo">
+        <img src="/astrolaptop-photo.jpeg" alt="AstroLaptop" />
+        <span class="stats-photo-caption">AstroLaptop</span>
+      </div>
+      <div></div>
+      <div class="stats-photo">
+        <img src="/mbg-photo.jpeg" alt="MY MBG GUE" />
+        <span class="stats-photo-caption">MY MBG GUE</span>
+      </div>
     </div>
     <div class="stats-bar">
       {stats.map(s => (
@@ -491,10 +498,6 @@ const kategoriBadgeText: Record<string, string> = {
           <div class="stat-label">{s.label}</div>
         </div>
       ))}
-    </div>
-    <div class="stats-photo">
-      <img src="/mbg-photo.jpeg" alt="MBG" />
-      <span class="stats-photo-caption">MBG</span>
     </div>
   </div>
 
