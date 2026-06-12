@@ -178,7 +178,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <button class="filter-btn" data-min="0" data-max="8">Di bawah 8 Jt</button>
       <button class="filter-btn" data-min="8" data-max="10">8–10 Jt</button>
       <button class="filter-btn" data-min="10" data-max="12">10–12 Jt</button>
-      <button class="filter-btn" data-min="12" data-max="999">12 Jt ke atas</button>
+      <button class="filter-btn" data-min="12" data-max="15">12–15 Jt</button>
+      <button class="filter-btn" data-min="15" data-max="18">15–18 Jt</button>
+      <button class="filter-btn" data-min="18" data-max="21">18–21 Jt</button>
+      <button class="filter-btn" data-min="21" data-max="24">21–24 Jt</button>
+      <button class="filter-btn" data-min="24" data-max="999">24 Jt ke atas</button>
     </div>
   </div>
   <div class="filter-row">
@@ -190,6 +194,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <button class="filter-btn gpu-btn" data-gpu="RTX 3050">RTX 3050</button>
       <button class="filter-btn gpu-btn" data-gpu="RTX 4050">RTX 4050</button>
       <button class="filter-btn gpu-btn" data-gpu="RTX 5050">RTX 5050</button>
+      <button class="filter-btn gpu-btn" data-gpu="RTX 5060">RTX 5060</button>
     </div>
   </div>
 
@@ -463,106 +468,4 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     function gpuBadge(gpu) {
       return gpu === 'Integrated'
-        ? '<span style="color:#6b7280">Integrated</span>'
-        : '<span class="badge-gpu">' + gpu + '</span>';
-    }
-
-    function srgbBadge(v) {
-      return v ? '<span class="check">✅ Ada</span>' : '<span class="dash">—</span>';
-    }
-
-    function render() {
-      const a = laptops.find(l => l.id === selectedA);
-      const b = laptops.find(l => l.id === selectedB);
-      if (!a || !b || a.id === b.id) {
-        placeholder.style.display = '';
-        compareWrap.classList.remove('show');
-        placeholder.textContent = (a && b && a.id===b.id) ? 'Pilih dua laptop yang berbeda.' : 'Pilih dua laptop di atas untuk melihat perbandingan spesifikasi lengkap.';
-        return;
-      }
-      placeholder.style.display = 'none';
-      compareWrap.classList.add('show');
-
-      document.getElementById('name-a').textContent = a.nama;
-      document.getElementById('price-a').textContent = a.harga;
-      document.getElementById('name-b').textContent = b.nama;
-      document.getElementById('price-b').textContent = b.harga;
-
-      const bA = getBench(a.cpu), bB = getBench(b.cpu);
-
-      // Section headers + data rows
-      // [type, label, htmlA, htmlB, numA, numB]
-      // type: 'section' | 'row-equal' | 'row-higher' | 'row-lower'
-      const rows = [
-        ['section', 'Identitas', '', '', null, null],
-        ['row-equal', 'Kategori', a.kategori, b.kategori, null, null],
-        ['row-equal', 'Merk', a.merk, b.merk, null, null],
-        ['row-lower', 'Harga', a.harga, b.harga, a.hargaNum, b.hargaNum],
-        ['section', 'Layar & Baterai', '', '', null, null],
-        ['row-equal', 'Layar', a.layar, b.layar, null, null],
-        ['row-higher', 'Refresh Rate', a.layarHz + ' Hz', b.layarHz + ' Hz', a.layarHz, b.layarHz],
-        ['row-higher', '100% sRGB', srgbBadge(a.srgb), srgbBadge(b.srgb), a.srgb?1:0, b.srgb?1:0],
-        ['row-equal', 'Baterai / Charger', batteryChargerBadge(a), batteryChargerBadge(b), null, null],
-        ['section', 'Hardware', '', '', null, null],
-        ['row-equal', 'CPU', cpuBadge(a.cpu, a.cpuMerk), cpuBadge(b.cpu, b.cpuMerk), null, null],
-        ['row-higher', 'GPU', gpuBadge(a.gpu), gpuBadge(b.gpu), a.gpuNum, b.gpuNum],
-        ['row-higher', 'Tipe RAM', a.ram, b.ram, ramRank(a.ram), ramRank(b.ram)],
-        ['row-higher', 'Kapasitas RAM', a.ramSize + ' GB', b.ramSize + ' GB', a.ramSize, b.ramSize],
-        ['row-higher', 'Upgrade', upgradeBadge(a.upgrade||'Tidak'), upgradeBadge(b.upgrade||'Tidak'), a.upgradeNum||0, b.upgradeNum||0],
-        ['row-equal', 'Cooling', a.cooling||'No Data', b.cooling||'No Data', null, null],
-        ['section', 'Fisik & Garansi', '', '', null, null],
-        ['row-lower', 'Bobot', a.berat, b.berat, parseKg(a.berat), parseKg(b.berat)],
-        ['row-equal', 'Garansi', a.garansi, b.garansi, null, null],
-        ['row-equal', 'OS', a.os, b.os, null, null],
-        ['row-equal', 'TDP (CPU)', a.tdp||'—', b.tdp||'—', null, null],
-        ['row-higher', 'TGP (GPU)', a.tgp||'—', b.tgp||'—', parseTgp(a.tgp||'0'), parseTgp(b.tgp||'0')],
-        ['section', 'Benchmark CPU', '', '', null, null],
-        ['row-higher', 'NanoReview Score', benchCell(bA,'nano').html, benchCell(bB,'nano').html, benchCell(bA,'nano').num, benchCell(bB,'nano').num],
-        ['row-higher', 'Power Efficiency', benchCell(bA,'eff').html, benchCell(bB,'eff').html, benchCell(bA,'eff').num, benchCell(bB,'eff').num],
-        ['row-higher', 'Passmark Single-Thread', benchCell(bA,'pmS').html, benchCell(bB,'pmS').html, benchCell(bA,'pmS').num, benchCell(bB,'pmS').num],
-        ['row-higher', 'Passmark Multi-Thread', benchCell(bA,'pmM').html, benchCell(bB,'pmM').html, benchCell(bA,'pmM').num, benchCell(bB,'pmM').num],
-      ];
-
-      let winsA = 0, winsB = 0;
-      const prosA = [], prosB = [];
-      const tbody = document.getElementById('spec-tbody');
-      tbody.innerHTML = '';
-
-      rows.forEach(([type, label, vA, vB, numA, numB]) => {
-        if (type === 'section') {
-          tbody.innerHTML += '<tr class="section-row"><td colspan="3">' + label + '</td></tr>';
-          return;
-        }
-        let clsA = 'draw', clsB = 'draw', iconA = '', iconB = '';
-        if (type !== 'row-equal' && numA !== null && numB !== null) {
-          if (numA !== numB) {
-            const aWins = type === 'row-higher' ? numA > numB : numA < numB;
-            if (aWins) { clsA = 'win-a'; iconA = '<span class="win-icon">🏆</span>'; winsA++; prosA.push(label); }
-            else { clsB = 'win-b'; iconB = '<span class="win-icon">🏆</span>'; winsB++; prosB.push(label); }
-          }
-        }
-        tbody.innerHTML += '<tr><td>' + label + '</td><td class="' + clsA + '">' + vA + iconA + '</td><td class="' + clsB + '">' + vB + iconB + '</td></tr>';
-      });
-
-      // Update win counters in header
-      document.getElementById('wins-a').textContent = '🏆 ' + winsA + ' unggul';
-      document.getElementById('wins-b').textContent = '🏆 ' + winsB + ' unggul';
-
-      document.getElementById('verdict-name-a').textContent = a.nama;
-      document.getElementById('verdict-name-b').textContent = b.nama;
-      const ulA = document.getElementById('verdict-pros-a');
-      const ulB = document.getElementById('verdict-pros-b');
-      ulA.innerHTML = prosA.length ? prosA.map(p => '<li>' + p + '</li>').join('') : '<li style="color:#475569;font-style:italic">Tidak unggul di kategori ini</li>';
-      ulB.innerHTML = prosB.length ? prosB.map(p => '<li>' + p + '</li>').join('') : '<li style="color:#475569;font-style:italic">Tidak unggul di kategori ini</li>';
-
-      const banner = document.getElementById('winner-banner');
-      if (winsA > winsB) banner.textContent = '🏆 ' + a.nama + ' unggul di lebih banyak kategori (' + winsA + ' vs ' + winsB + ')';
-      else if (winsB > winsA) banner.textContent = '🏆 ' + b.nama + ' unggul di lebih banyak kategori (' + winsB + ' vs ' + winsA + ')';
-      else banner.textContent = '🤝 Kedua laptop seimbang (' + winsA + ' vs ' + winsB + ')';
-    }
-
-    document.getElementById('sel-a').addEventListener('change', render);
-    document.getElementById('sel-b').addEventListener('change', render);
-    render();
-  </script>
-</BaseLayout>
+        ? '<span style="co
