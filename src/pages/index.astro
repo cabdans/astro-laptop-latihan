@@ -380,6 +380,8 @@ const kategoriBadgeText: Record<string, string> = {
       font-size: 0.95rem; display: inline-block; transition: all 0.2s;
     }
     .hero-btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.7); }
+    .hero-disclaimer { font-size: 0.75rem; opacity: 0.6; margin-top: 16px; line-height: 1.5; max-width: 420px; }
+    .hero-disclaimer a { color: #93c5fd; text-decoration: underline; }
 
     /* STATS */
     .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
@@ -460,6 +462,7 @@ const kategoriBadgeText: Record<string, string> = {
         <a href="/review" class="hero-btn">Lihat Semua Review →</a>
         <a href="/compare" class="hero-btn-outline">Bandingkan Laptop</a>
       </div>
+      <p class="hero-disclaimer">⚠️ Data ~90% akurat. Ada mismatch atau data kurang sinkron? Mohon maaf & lapor ke <a href="https://www.tiktok.com/@astrolaptop" target="_blank" rel="noopener">TikTok/AstroLaptop</a></p>
     </div>
     <div class="hero-img">
       <img src="/astrolaptop-mascot.png" alt="AstroLaptop Mascot" />
@@ -493,7 +496,12 @@ const kategoriBadgeText: Record<string, string> = {
       <a href="/review?kategori=Gaming" class="kat-card">
         <div class="kat-icon">🎮</div>
         <div class="kat-name">Gaming</div>
-        <div class="kat-count">6 laptop · Rp 11–20 Juta</div>
+        <div class="kat-count">18 laptop · Rp 12–26 Juta</div>
+      </a>
+      <a href="/review?kategori=High Gaming" class="kat-card">
+        <div class="kat-icon">🔥</div>
+        <div class="kat-name">High Gaming</div>
+        <div class="kat-count">2 laptop · Rp 22–23 Juta</div>
       </a>
     </div>
   </section>
