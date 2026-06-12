@@ -383,15 +383,8 @@ const kategoriBadgeText: Record<string, string> = {
     .hero-disclaimer { font-size: 0.82rem; margin-top: 18px; line-height: 1.55; max-width: 440px; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.35); border-radius: 8px; padding: 10px 14px; color: #fde68a; }
     .hero-disclaimer a { color: #fbbf24; font-weight: 600; text-decoration: underline; }
 
-    /* STATS WRAPPER */
-    .stats-wrapper { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
-    .stats-photos-row { display: flex; gap: 16px; align-items: flex-end; }
-    .stats-photo { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 0; }
-    .stats-photo img { width: 100%; height: auto; display: block; border-radius: 14px 14px 0 0; border: 2px solid rgba(34,197,94,0.5); border-bottom: none; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-    .stats-photo-caption { font-size: 0.85rem; font-weight: 700; text-align: center; width: 100%; box-sizing: border-box; background: rgba(34,197,94,0.2); border: 2px solid rgba(34,197,94,0.5); border-top: none; border-radius: 0 0 10px 10px; padding: 8px 10px; color: #4ade80; letter-spacing: 0.02em; }
-
     /* STATS */
-    .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
     .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 20px; text-align: center; transition: border-color 0.2s; }
     .stat-card:hover { border-color: rgba(96,165,250,0.3); }
     .stat-angka { font-size: 1.8rem; font-weight: 800; color: #60a5fa; line-height: 1; margin-bottom: 4px; }
@@ -456,7 +449,6 @@ const kategoriBadgeText: Record<string, string> = {
       .hero-text { padding: 36px 24px; }
       .hero h1 { font-size: 1.9rem; }
       .hero-img { width: 100%; height: 220px; }
-      .stats-photos-row { display: none; }
       .stats-bar { grid-template-columns: repeat(2, 1fr); }
       .kategori-grid { grid-template-columns: 1fr; }
       .kat-card:last-child { grid-column: 1; }
@@ -479,25 +471,13 @@ const kategoriBadgeText: Record<string, string> = {
     </div>
   </section>
 
-  <div class="stats-wrapper">
-    <div class="stats-photos-row">
-      <div class="stats-photo">
-        <img src="/astrolaptop-photo.jpeg" alt="AstroLaptop" />
-        <span class="stats-photo-caption">AstroLaptop</span>
+  <div class="stats-bar">
+    {stats.map(s => (
+      <div class="stat-card">
+        <div class="stat-angka">{s.angka}</div>
+        <div class="stat-label">{s.label}</div>
       </div>
-      <div class="stats-photo">
-        <img src="/mbg-photo.jpeg" alt="MY MBG GUE" />
-        <span class="stats-photo-caption">MY MBG GUE</span>
-      </div>
-    </div>
-    <div class="stats-bar">
-      {stats.map(s => (
-        <div class="stat-card">
-          <div class="stat-angka">{s.angka}</div>
-          <div class="stat-label">{s.label}</div>
-        </div>
-      ))}
-    </div>
+    ))}
   </div>
 
   <section>
