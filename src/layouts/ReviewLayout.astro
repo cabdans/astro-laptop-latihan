@@ -246,8 +246,30 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
       }
       .pros li, .cons li { margin-bottom: 5px; }
 
-      /* ── BENCHMARK OVERRIDES (warna teks) ── */
-      .artikel-konten span[style*="color:#374151"] { color: #94a3b8 !important; }
+      /* ── BENCHMARK OVERRIDES untuk dark theme ── */
+      /* Label teks */
+      .artikel-konten [style*="color:#374151"] { color: #cbd5e1 !important; }
+      /* Badge score sekunder (abu di light theme) */
+      .artikel-konten [style*="background:#e5e7eb"][style*="padding:2px"] {
+        background: rgba(96,165,250,0.15) !important;
+        color: #e2e8f0 !important;
+        border-color: rgba(96,165,250,0.3) !important;
+      }
+      /* Track progress bar */
+      .artikel-konten [style*="background:#e5e7eb"][style*="height:6px"] {
+        background: rgba(255,255,255,0.1) !important;
+      }
+      /* Fill progress bar */
+      .artikel-konten [style*="background:#1e3a8a"] {
+        background: linear-gradient(90deg, #3b82f6, #60a5fa) !important;
+      }
+      /* Wrapper benchmark */
+      .artikel-konten [style*="display:grid"][style*="gap:16px"] {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px;
+        padding: 20px !important;
+      }
 
       /* ── SIDEBAR ── */
       .sidebar { position: sticky; top: 76px; align-self: start; }
