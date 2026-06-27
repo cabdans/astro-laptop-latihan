@@ -181,143 +181,8 @@ const laptops = [
   .results-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+    gap: 16px;
   }
-
-  /* Laptop result card */
-  .rcard {
-    background: rgba(10,10,42,0.85);
-    border: 1px solid rgba(96,165,250,0.12);
-    border-radius: 14px;
-    overflow: hidden;
-    transition: border-color 0.3s, transform 0.3s;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-  }
-  .rcard:hover {
-    border-color: rgba(96,165,250,0.4);
-    transform: translateY(-3px);
-  }
-  .rcard-img {
-    position: relative;
-    height: 110px;
-    overflow: hidden;
-  }
-  .rcard-img img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s;
-  }
-  .rcard:hover .rcard-img img {
-    transform: scale(1.05);
-  }
-  .rcard-img-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(2,2,14,0.85), rgba(2,2,14,0.2));
-  }
-  .rcard-kat {
-    position: absolute;
-    top: 8px; left: 10px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 3px 8px;
-    border-radius: 4px;
-    background: rgba(0,0,0,0.55);
-    color: #93c5fd;
-    border: 1px solid rgba(147,197,253,0.3);
-  }
-  .rcard-body {
-    padding: 14px 16px 16px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    gap: 8px;
-  }
-  .rcard-nama {
-    font-size: 0.88rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.3;
-  }
-  .rcard-specs {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-  .rcard-spec {
-    font-size: 0.77rem;
-    color: var(--muted);
-  }
-  .rcard-spec span {
-    color: #94a3b8;
-    font-weight: 500;
-  }
-  .rcard-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 2px;
-  }
-  .badge {
-    font-size: 0.69rem;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 4px;
-  }
-  .badge-srgb {
-    background: rgba(52,211,153,0.15);
-    color: #34d399;
-    border: 1px solid rgba(52,211,153,0.3);
-  }
-  .badge-gpu {
-    background: rgba(167,139,250,0.15);
-    color: #a78bfa;
-    border: 1px solid rgba(167,139,250,0.3);
-  }
-  .badge-ram {
-    background: rgba(251,191,36,0.1);
-    color: #fbbf24;
-    border: 1px solid rgba(251,191,36,0.25);
-  }
-  .badge-lokal {
-    background: rgba(249,115,22,0.1);
-    color: #fb923c;
-    border: 1px solid rgba(249,115,22,0.25);
-  }
-  .rcard-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: auto;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-  .rcard-harga {
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--primary);
-  }
-  .rcard-harga.langka {
-    color: #fbbf24;
-    font-size: 0.75rem;
-  }
-  .rcard-link {
-    font-size: 0.75rem;
-    color: var(--muted);
-  }
-
-  .empty-state {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--muted);
-  }
-  .empty-state p { margin: 0 0 8px; font-size: 0.95rem; }
-  .empty-state small { font-size: 0.82rem; color: #64748b; }
 
   @media (max-width: 900px) {
     .results-grid { grid-template-columns: repeat(2, 1fr); }
@@ -325,11 +190,7 @@ const laptops = [
   @media (max-width: 600px) {
     .filter-bar { padding: 16px; }
     .chip { font-size: 0.8rem; padding: 7px 13px; }
-    .results-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-    .rcard-img { height: 80px; }
-    .rcard-body { padding: 10px 12px 12px; gap: 6px; }
-    .rcard-nama { font-size: 0.8rem; }
-    .rcard-spec { font-size: 0.72rem; }
+    .results-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
   }
   @media (max-width: 400px) {
     .results-grid { grid-template-columns: 1fr; }
@@ -424,14 +285,6 @@ const laptops = [
 </div>
 
 <script define:vars={{ laptops }}>
-  // Image mapping per category
-  const katImg = {
-    'Budget': '/nasa-earth-night.jpg',
-    'Produktivitas': '/nasa-galaxy.jpg',
-    'Gaming': '/nasa-nebula.jpg',
-    'High Gaming': '/nasa-ngc248.jpg',
-  };
-
   // State
   const state = { budget: null, ram: null, editing: null, performa: null, brand: null };
 
@@ -475,34 +328,62 @@ const laptops = [
     return state.budget || state.ram || state.editing || state.performa || state.brand;
   }
 
-  // Build card HTML
-  function buildCard(l, isFallback) {
-    const img = katImg[l.kategori] || '/nasa-galaxy.jpg';
+  // Warna aksen per kategori
+  const katColor = {
+    'Budget':       '#60a5fa',
+    'Produktivitas':'#a78bfa',
+    'Gaming':       '#f97316',
+    'High Gaming':  '#ef4444',
+  };
+
+  // Build card HTML — fully inline styles (Astro scoped CSS tidak berlaku pada innerHTML)
+  function buildCard(l) {
+    const accent = katColor[l.kategori] || '#60a5fa';
     const badges = [];
-    if (l.srgb) badges.push(`<span class="badge badge-srgb">100% sRGB</span>`);
-    if (l.gpuDed) badges.push(`<span class="badge badge-gpu">GPU Dedicated</span>`);
-    if (l.ramUp) badges.push(`<span class="badge badge-ram">RAM Upgradeable</span>`);
-    if (l.lokal) badges.push(`<span class="badge badge-lokal">Brand Lokal</span>`);
+    if (l.srgb)   badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.3);">✓ 100% sRGB</span>`);
+    if (l.gpuDed) badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.3);">GPU Dedicated</span>`);
+    if (l.ramUp)  badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);">RAM Upgradeable</span>`);
+    if (l.lokal)  badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(249,115,22,0.1);color:#fb923c;border:1px solid rgba(249,115,22,0.25);">Brand Lokal</span>`);
+
+    const hargaColor = l.hMin === 0 ? '#fbbf24' : '#60a5fa';
 
     return `
-      <a class="rcard" href="/review/${l.slug}">
-        <div class="rcard-img">
-          <img src="${img}" alt="${l.kategori}" loading="lazy">
-          <div class="rcard-img-overlay"></div>
-          <span class="rcard-kat">${l.kategori}</span>
-        </div>
-        <div class="rcard-body">
-          <div class="rcard-nama">${l.nama}</div>
-          <div class="rcard-specs">
-            <div class="rcard-spec">🖥️ <span>${l.cpu}</span></div>
-            <div class="rcard-spec">🎮 <span>${l.gpu}</span></div>
-            <div class="rcard-spec">💾 <span>${l.ram}</span></div>
+      <a href="/review/${l.slug}" style="
+        display:flex;flex-direction:column;
+        background:rgba(10,10,42,0.85);
+        border:1px solid rgba(96,165,250,0.15);
+        border-top:3px solid ${accent};
+        border-radius:14px;overflow:hidden;
+        text-decoration:none;
+        transition:border-color 0.25s,transform 0.25s;
+      " onmouseover="this.style.borderColor='${accent}';this.style.transform='translateY(-3px)'"
+         onmouseout="this.style.borderColor='rgba(96,165,250,0.15)';this.style.transform='none'">
+        <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1;">
+
+          <!-- Kategori -->
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:${accent};">${l.kategori}</span>
           </div>
-          ${badges.length ? `<div class="rcard-badges">${badges.join('')}</div>` : ''}
-          <div class="rcard-footer">
-            <span class="rcard-harga${l.hMin === 0 ? ' langka' : ''}">${l.harga}</span>
-            <span class="rcard-link">Lihat review →</span>
+
+          <!-- Nama laptop -->
+          <div style="font-size:0.9rem;font-weight:700;color:#e2e8f0;line-height:1.35;">${l.nama}</div>
+
+          <!-- Spesifikasi -->
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="font-size:0.76rem;color:#94a3b8;">🖥️ ${l.cpu}</div>
+            <div style="font-size:0.76rem;color:#94a3b8;">🎮 ${l.gpu}</div>
+            <div style="font-size:0.76rem;color:#94a3b8;">💾 ${l.ram}</div>
           </div>
+
+          <!-- Badges -->
+          ${badges.length ? `<div style="display:flex;flex-wrap:wrap;gap:5px;">${badges.join('')}</div>` : ''}
+
+          <!-- Footer: harga + link -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:0.83rem;font-weight:700;color:${hargaColor};">${l.harga}</span>
+            <span style="font-size:0.75rem;color:#64748b;">Lihat review →</span>
+          </div>
+
         </div>
       </a>`;
   }
@@ -524,7 +405,7 @@ const laptops = [
     if (matched.length > 0) {
       fallbackNote.style.display = 'none';
       header.innerHTML = `<strong>${matched.length} laptop</strong> cocok dengan pilihanmu`;
-      grid.innerHTML = matched.map(l => buildCard(l, false)).join('');
+      grid.innerHTML = matched.map(l => buildCard(l)).join('');
     } else {
       // Fallback: tampilkan 3 laptop dengan skor tertinggi
       const scored = laptops
@@ -534,7 +415,7 @@ const laptops = [
 
       fallbackNote.style.display = 'block';
       header.innerHTML = `Tidak ada laptop yang cocok 100% — menampilkan <strong>${scored.length} yang paling mendekati</strong>`;
-      grid.innerHTML = scored.map(l => buildCard(l, true)).join('');
+      grid.innerHTML = scored.map(l => buildCard(l)).join('');
     }
   }
 
