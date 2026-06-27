@@ -215,12 +215,12 @@ const reviews = [
     slug: "gaming/lenovo-loq-15ahp10",
     nama: "Lenovo LOQ 15AHP10 RTX 5050",
     model: "LOQ 15AHP10",
-    harga: "Langka",
+    harga: "Rp 20 Juta",
     rating: 4.2,
     kategori: "Gaming",
     tanggal: "12 Juni 2025",
-    ringkasan: "Ryzen AI 7 250 / R5 220 + RTX 5050 100W TGP, layar FHD 144Hz 100% sRGB, garansi 2 Tahun + ADP. Stok langka.",
-    tags: ["RTX 5050", "100W TGP", "2Y+ADP", "AMD Ryzen AI", "Langka"]
+    ringkasan: "Ryzen AI 7 250 / R5 220 + RTX 5050 100W TGP, layar FHD 144Hz 100% sRGB, garansi 2 Tahun + ADP.",
+    tags: ["RTX 5050", "100W TGP", "2Y+ADP", "AMD Ryzen AI", "144Hz"]
   },
   {
     slug: "gaming/lenovo-loq-15irx10-i7",
@@ -435,11 +435,11 @@ const reviews = [
 
 const kategoris = ["Semua", "Gaming", "High Gaming", "Produktivitas", "Budget"];
 
-const katImg: Record<string, string> = {
-  'Budget':        '/nasa-earth-night.jpg',
-  'Produktivitas': '/nasa-galaxy.jpg',
-  'Gaming':        '/nasa-nebula.jpg',
-  'High Gaming':   '/nasa-ngc248.jpg',
+const katColor: Record<string, string> = {
+  'Budget':        '#60a5fa',
+  'Produktivitas': '#a78bfa',
+  'Gaming':        '#f97316',
+  'High Gaming':   '#ef4444',
 };
 ---
 
@@ -492,34 +492,18 @@ const katImg: Record<string, string> = {
     .review-item {
       background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
       border-radius: 12px; padding: 16px 20px;
-      display: grid; grid-template-columns: 110px 1fr auto;
+      display: grid; grid-template-columns: 1fr auto;
       gap: 18px; align-items: center;
       text-decoration: none; color: inherit; transition: all 0.25s;
     }
     @media (max-width: 768px) {
-      .review-item { grid-template-columns: 80px 1fr; }
-      .item-right { grid-column: 2; }
+      .review-item { grid-template-columns: 1fr; }
+      .item-right { text-align: left; display: flex; gap: 12px; align-items: center; }
     }
     .review-item:hover {
       border-color: rgba(96,165,250,0.35); transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(96,165,250,0.08);
     }
-    @media (max-width: 480px) {
-      .review-item { grid-template-columns: 1fr; }
-      .item-img { width: 100%; height: 140px; }
-    }
-
-    .item-img {
-      width: 110px; height: 76px;
-      border-radius: 8px; overflow: hidden; flex-shrink: 0;
-      background: rgba(255,255,255,0.05);
-    }
-    .item-img img {
-      width: 100%; height: 100%; object-fit: cover;
-      display: block; opacity: 0.85;
-      transition: opacity 0.2s;
-    }
-    .review-item:hover .item-img img { opacity: 1; }
     .item-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
     .badge { background: rgba(96,165,250,0.12); color: #60a5fa; font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
     .badge-gaming { background: rgba(251,191,36,0.12); color: #fbbf24; }
@@ -558,10 +542,7 @@ const katImg: Record<string, string> = {
   <!-- DAFTAR REVIEW -->
   <div class="review-list">
     {reviews.map((laptop) => (
-      <a href={`/review/${laptop.slug}`} class="review-item" data-kategori={laptop.kategori}>
-        <div class="item-img">
-          <img src={katImg[laptop.kategori] ?? '/nasa-milkyway.jpg'} alt={laptop.kategori} loading="lazy" />
-        </div>
+      <a href={`/review/${laptop.slug}`} class="review-item" data-kategori={laptop.kategori} style={`border-left: 3px solid ${katColor[laptop.kategori] ?? '#60a5fa'}`}>
         <div class="item-left">
           <div class="item-meta">
             <span class={`badge ${laptop.kategori === "Gaming" ? "badge-gaming" : laptop.kategori === "High Gaming" ? "badge-highgaming" : ""}`}>
