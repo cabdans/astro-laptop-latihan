@@ -206,6 +206,52 @@ const { title, description = "Review laptop jujur untuk semua kebutuhan dan budg
       html[data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg); }
       html[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(37,99,235,0.25); }
 
+      /* ── LIGHT MODE: fix hardcoded dark elements ─────────────── */
+      /* Filter bars di rekomendasi */
+      html[data-theme="light"] .filter-bar {
+        background: rgba(255,255,255,0.85) !important;
+        border-color: rgba(37,99,235,0.15) !important;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.07) !important;
+      }
+      html[data-theme="light"] .filter-bar.has-selection {
+        border-color: rgba(37,99,235,0.4) !important;
+      }
+      html[data-theme="light"] .chip {
+        background: rgba(0,0,0,0.05) !important;
+        border-color: rgba(0,0,0,0.12) !important;
+        color: var(--text-muted) !important;
+      }
+      html[data-theme="light"] .chip.active {
+        background: rgba(37,99,235,0.12) !important;
+        border-color: rgba(37,99,235,0.5) !important;
+        color: var(--primary) !important;
+      }
+      html[data-theme="light"] .chip:hover:not(.active) {
+        background: rgba(37,99,235,0.07) !important;
+        border-color: rgba(37,99,235,0.25) !important;
+      }
+      /* Card laptop hasil filter */
+      html[data-theme="light"] #results .laptop-card,
+      html[data-theme="light"] .result-card {
+        background: rgba(255,255,255,0.9) !important;
+        border-color: rgba(0,0,0,0.1) !important;
+        color: var(--text) !important;
+      }
+      /* Compare & H2H table area */
+      html[data-theme="light"] .compare-card,
+      html[data-theme="light"] .h2h-card {
+        background: rgba(255,255,255,0.85) !important;
+        border-color: rgba(0,0,0,0.1) !important;
+      }
+      /* Hero gradient text fix di light mode */
+      html[data-theme="light"] .rekomen-hero h1 {
+        background: linear-gradient(135deg, #1e293b, #2563eb, #7c3aed) !important;
+        background-size: 200% auto !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+      }
+
       /* ── THEME TRANSITION OVERLAY + SUN ORB ────────────────── */
       #theme-overlay {
         position: fixed; inset: 0; z-index: 9999;
