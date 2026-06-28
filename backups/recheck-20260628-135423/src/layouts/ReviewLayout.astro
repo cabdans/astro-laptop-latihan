@@ -1,0 +1,410 @@
+---
+export interface Props {
+  title: string;
+  harga: string;
+  rating: number;
+  kategori: string;
+  tanggal: string;
+  ringkasan: string;
+}
+
+const { title, harga, rating, kategori, tanggal, ringkasan } = Astro.props;
+
+const bintang = Math.round(rating);
+
+// Gambar hero per kategori
+const heroBg: Record<string, string> = {
+  'Budget':      '/nasa-earth-night.jpg',
+  'Produktivitas': '/nasa-galaxy.jpg',
+  'Gaming':      '/nasa-nebula.jpg',
+  'High Gaming': '/nasa-ngc248.jpg',
+};
+const bg = heroBg[kategori] ?? '/nasa-milkyway.jpg';
+
+// Warna badge per kategori
+const badgeColor: Record<string, string> = {
+  'Budget':       '#16a34a',
+  'Produktivitas':'#2563eb',
+  'Gaming':       '#b45309',
+  'High Gaming':  '#9333ea',
+};
+const bColor = badgeColor[kategori] ?? '#2563eb';
+---
+
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={ringkasan} />
+    <title>Review {title} — AstroLaptop</title>
+    <style>
+      *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        background: #02020e;
+        color: #e2e8f0;
+        line-height: 1.7;
+        min-height: 100vh;
+      }
+
+      /* ── NAV ── */
+      nav {
+        background: rgba(2,2,14,0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(96,165,250,0.15);
+        padding: 0 24px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .nav-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 60px;
+      }
+      .nav-logo {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #60a5fa;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .nav-links { display: flex; gap: 20px; list-style: none; }
+      .nav-links a {
+        text-decoration: none;
+        color: #94a3b8;
+        font-size: 0.92rem;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover { color: #e2e8f0; }
+
+      /* ── HERO BANNER ── */
+      .review-hero {
+        position: relative;
+        height: 280px;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+      }
+      .review-hero-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        filter: brightness(0.45) saturate(1.2);
+      }
+      .review-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(2,2,14,1) 0%,
+          rgba(2,2,14,0.6) 50%,
+          rgba(2,2,14,0.1) 100%
+        );
+      }
+      .review-hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px 32px;
+        width: 100%;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 4px 14px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: white;
+      }
+      .review-hero-content h1 {
+        font-size: 1.9rem;
+        font-weight: 800;
+        line-height: 1.2;
+        color: #f1f5f9;
+        text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+        margin-bottom: 6px;
+      }
+      .meta { font-size: 0.82rem; color: #94a3b8; }
+
+      /* ── LAYOUT ── */
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 24px 64px;
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 32px;
+      }
+      @media (max-width: 768px) {
+        .container { grid-template-columns: 1fr; }
+        .review-hero { height: 200px; }
+        .review-hero-content h1 { font-size: 1.4rem; }
+      }
+
+      /* ── RINGKASAN ── */
+      .ringkasan {
+        font-size: 1rem;
+        color: #cbd5e1;
+        background: rgba(96,165,250,0.07);
+        border-left: 3px solid #3b82f6;
+        padding: 14px 18px;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 28px;
+        line-height: 1.7;
+      }
+
+      /* ── RATING ── */
+      .rating-box {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 14px;
+        padding: 24px;
+        text-align: center;
+        margin-bottom: 28px;
+        backdrop-filter: blur(8px);
+      }
+      .rating-angka {
+        font-size: 3.8rem;
+        font-weight: 800;
+        color: #60a5fa;
+        line-height: 1;
+        text-shadow: 0 0 30px rgba(96,165,250,0.4);
+      }
+      .rating-bintang { font-size: 1.4rem; margin: 8px 0; }
+      .rating-label { color: #64748b; font-size: 0.82rem; }
+
+      /* ── ARTIKEL KONTEN ── */
+      .artikel-konten h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 28px 0 14px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        color: #e2e8f0;
+      }
+      .artikel-konten p { margin-bottom: 14px; color: #94a3b8; }
+
+      /* ── TABEL SPEK ── */
+      .spek-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 28px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+      .spek-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
+      .spek-table tr:last-child { border-bottom: none; }
+      .spek-table tr:nth-child(even) { background: rgba(255,255,255,0.03); }
+      .spek-table tr:nth-child(odd)  { background: rgba(255,255,255,0.01); }
+      .spek-table td {
+        padding: 11px 16px;
+        font-size: 0.875rem;
+      }
+      .spek-table td:first-child {
+        font-weight: 600;
+        color: #94a3b8;
+        width: 40%;
+      }
+      .spek-table td:last-child { color: #e2e8f0; }
+
+      /* ── PROS CONS ── */
+      .pros-cons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 28px;
+      }
+      @media (max-width: 500px) { .pros-cons { grid-template-columns: 1fr; } }
+
+      .pros, .cons {
+        background: rgba(255,255,255,0.04);
+        border-radius: 12px;
+        padding: 18px;
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+      .pros { border-top: 3px solid #059669; }
+      .cons { border-top: 3px solid #dc2626; }
+      .pros h3 { color: #34d399; margin-bottom: 10px; font-size: 0.95rem; }
+      .cons h3 { color: #f87171; margin-bottom: 10px; font-size: 0.95rem; }
+      .pros ul, .cons ul {
+        padding-left: 18px;
+        font-size: 0.875rem;
+        color: #94a3b8;
+      }
+      .pros li, .cons li { margin-bottom: 5px; }
+
+      /* ── BENCHMARK OVERRIDES untuk dark theme ── */
+      /* Label teks */
+      .artikel-konten [style*="color:#374151"] { color: #cbd5e1 !important; }
+      /* Badge score sekunder (abu di light theme) */
+      .artikel-konten [style*="background:#e5e7eb"][style*="padding:2px"] {
+        background: rgba(96,165,250,0.15) !important;
+        color: #e2e8f0 !important;
+        border-color: rgba(96,165,250,0.3) !important;
+      }
+      /* Track progress bar */
+      .artikel-konten [style*="background:#e5e7eb"][style*="height:6px"] {
+        background: rgba(255,255,255,0.1) !important;
+      }
+      /* Fill progress bar */
+      .artikel-konten [style*="background:#1e3a8a"] {
+        background: linear-gradient(90deg, #3b82f6, #60a5fa) !important;
+      }
+      /* Wrapper benchmark */
+      .artikel-konten [style*="display:grid"][style*="gap:16px"] {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px;
+        padding: 20px !important;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar { position: sticky; top: 76px; align-self: start; }
+
+      .sidebar-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 14px;
+        padding: 22px;
+        margin-bottom: 16px;
+        backdrop-filter: blur(8px);
+      }
+      .sidebar-card h3 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 14px;
+        color: #e2e8f0;
+      }
+      .harga-display {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #34d399;
+        margin-bottom: 16px;
+        line-height: 1.2;
+      }
+      .btn-beli {
+        display: block;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        text-align: center;
+        padding: 13px;
+        border-radius: 8px;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+        transition: opacity 0.2s;
+        box-shadow: 0 0 20px rgba(59,130,246,0.3);
+      }
+      .btn-beli:hover { opacity: 0.85; }
+      .btn-beli-secondary {
+        display: block;
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: white;
+        text-align: center;
+        padding: 11px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: opacity 0.2s;
+      }
+      .btn-beli-secondary:hover { opacity: 0.85; }
+      .disclaimer { font-size: 0.72rem; color: #475569; margin-top: 8px; text-align: center; }
+
+      .sidebar-card p { font-size: 0.875rem; color: #94a3b8; line-height: 1.6; }
+
+      /* ── FOOTER ── */
+      footer {
+        background: rgba(0,0,0,0.4);
+        border-top: 1px solid rgba(255,255,255,0.06);
+        color: #475569;
+        text-align: center;
+        padding: 24px;
+        font-size: 0.82rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">🚀 AstroLaptop</a>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/review">Review</a></li>
+          <li><a href="/compare">Perbandingan</a></li>
+          <li><a href="/h2h">H2H</a></li>
+          <li><a href="/tentang">Tentang</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- HERO BANNER -->
+    <div class="review-hero">
+      <div class="review-hero-bg" style={`background-image: url('${bg}');`}></div>
+      <div class="review-hero-overlay"></div>
+      <div class="review-hero-content">
+        <span class="badge" style={`background:${bColor};`}>{kategori}</span>
+        <h1>Review {title}</h1>
+        <div class="meta">Diterbitkan: {tanggal}</div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="container">
+      <article>
+        <div class="ringkasan">{ringkasan}</div>
+
+        <!-- RATING -->
+        <div class="rating-box">
+          <div class="rating-angka">{rating}</div>
+          <div class="rating-bintang">
+            {Array.from({length: 5}).map((_, i) => (
+              <span>{i < bintang ? '⭐' : '☆'}</span>
+            ))}
+          </div>
+          <div class="rating-label">Skor keseluruhan dari 5</div>
+        </div>
+
+        <div class="artikel-konten">
+          <slot />
+        </div>
+      </article>
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-card">
+          <h3>💰 Harga</h3>
+          <div class="harga-display">{harga}</div>
+          <a href="#" class="btn-beli">🛒 Beli di Tokopedia</a>
+          <a href="#" class="btn-beli-secondary">🛍️ Beli di Shopee</a>
+          <p class="disclaimer">*Link afiliasi — harga dapat berubah</p>
+        </div>
+
+        <div class="sidebar-card">
+          <h3>⚡ Ringkasan Cepat</h3>
+          <p>✅ Cocok untuk pelajar & mahasiswa</p>
+          <p style="margin-top: 8px;">⚠️ Tidak ideal untuk gaming berat</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <p>© 2025 AstroLaptop · Review laptop jujur untuk semua kalangan</p>
+    </footer>
+  </body>
+</html>

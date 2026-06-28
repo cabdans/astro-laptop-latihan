@@ -66,7 +66,7 @@ const laptops = [
     margin: 0 0 10px;
   }
   .rekomen-hero p {
-    color: var(--text-muted);
+    color: var(--muted);
     font-size: 1rem;
     margin: 0;
   }
@@ -123,7 +123,7 @@ const laptops = [
     border-radius: 999px;
     border: 1px solid rgba(255,255,255,0.12);
     background: rgba(255,255,255,0.04);
-    color: var(--text-muted);
+    color: var(--muted);
     font-size: 0.84rem;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -146,7 +146,7 @@ const laptops = [
     border-radius: 999px;
     border: 1px solid rgba(255,255,255,0.15);
     background: transparent;
-    color: var(--text-muted);
+    color: var(--muted);
     font-size: 0.84rem;
     cursor: pointer;
     transition: all 0.2s;
@@ -164,7 +164,7 @@ const laptops = [
   }
   .results-header {
     font-size: 0.95rem;
-    color: var(--text-muted);
+    color: var(--muted);
     margin-bottom: 20px;
     padding-left: 4px;
   }
@@ -414,44 +414,28 @@ const laptops = [
     'High Gaming':  '#ef4444',
   };
 
-  // Deteksi tema aktif (light/dark) — dipakai agar inline styles card theme-aware
-  function isLightTheme() {
-    return document.documentElement.getAttribute('data-theme') === 'light';
-  }
-
   // Build card HTML — fully inline styles (Astro scoped CSS tidak berlaku pada innerHTML)
-  // FIX P1: warna inline kini menyesuaikan light/dark mode (sebelumnya selalu dark).
   function buildCard(l) {
     const accent = katColor[l.kategori] || '#60a5fa';
-    const light = isLightTheme();
-    // Token warna per tema
-    const cardBg      = light ? 'rgba(255,255,255,0.92)' : 'rgba(10,10,42,0.85)';
-    const cardBorder  = light ? 'rgba(0,0,0,0.1)'        : 'rgba(96,165,250,0.15)';
-    const nameColor   = light ? '#1e293b'                : '#e2e8f0';
-    const specColor   = light ? '#475569'                : '#94a3b8';
-    const footerLine  = light ? 'rgba(0,0,0,0.08)'       : 'rgba(255,255,255,0.06)';
-    const seeColor    = light ? '#64748b'                : '#64748b';
-    const cardShadow  = light ? 'box-shadow:0 2px 12px rgba(0,0,0,0.07);' : '';
-
     const badges = [];
-    if (l.srgb)   badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(52,211,153,0.15);color:${light ? '#059669' : '#34d399'};border:1px solid rgba(52,211,153,0.3);">✓ 100% sRGB</span>`);
-    if (l.gpuDed) badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,0.15);color:${light ? '#7c3aed' : '#a78bfa'};border:1px solid rgba(167,139,250,0.3);">GPU Dedicated</span>`);
-    if (l.ramUp)  badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(251,191,36,0.12);color:${light ? '#b45309' : '#fbbf24'};border:1px solid rgba(251,191,36,0.25);">RAM Upgradeable</span>`);
-    if (l.lokal)  badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(249,115,22,0.12);color:${light ? '#c2410c' : '#fb923c'};border:1px solid rgba(249,115,22,0.25);">Brand Lokal</span>`);
+    if (l.srgb)   badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.3);">✓ 100% sRGB</span>`);
+    if (l.gpuDed) badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.3);">GPU Dedicated</span>`);
+    if (l.ramUp)  badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);">RAM Upgradeable</span>`);
+    if (l.lokal)  badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(249,115,22,0.1);color:#fb923c;border:1px solid rgba(249,115,22,0.25);">Brand Lokal</span>`);
 
-    const hargaColor = l.hMin === 0 ? (light ? '#d97706' : '#fbbf24') : (light ? '#2563eb' : '#60a5fa');
+    const hargaColor = l.hMin === 0 ? '#fbbf24' : '#60a5fa';
 
     return `
       <a href="/review/${l.slug}" style="
         display:flex;flex-direction:column;
-        background:${cardBg};
-        border:1px solid ${cardBorder};
+        background:rgba(10,10,42,0.85);
+        border:1px solid rgba(96,165,250,0.15);
         border-top:3px solid ${accent};
         border-radius:14px;overflow:hidden;
-        text-decoration:none;${cardShadow}
+        text-decoration:none;
         transition:border-color 0.25s,transform 0.25s;
       " onmouseover="this.style.borderColor='${accent}';this.style.transform='translateY(-3px)'"
-         onmouseout="this.style.borderColor='${cardBorder}';this.style.transform='none'">
+         onmouseout="this.style.borderColor='rgba(96,165,250,0.15)';this.style.transform='none'">
         <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1;">
 
           <!-- Kategori -->
@@ -460,25 +444,25 @@ const laptops = [
           </div>
 
           <!-- Nama laptop -->
-          <div style="font-size:0.9rem;font-weight:700;color:${nameColor};line-height:1.35;">${l.nama}</div>
+          <div style="font-size:0.9rem;font-weight:700;color:#e2e8f0;line-height:1.35;">${l.nama}</div>
 
           <!-- Spesifikasi -->
           <div style="display:flex;flex-direction:column;gap:4px;">
-            <div style="font-size:0.76rem;color:${specColor};">🖥️ ${l.cpu}</div>
-            <div style="font-size:0.76rem;color:${specColor};">🎮 ${l.gpu}</div>
-            <div style="font-size:0.76rem;color:${specColor};">💾 ${l.ram}</div>
-            ${state.performa === 'gaming' && l.gpuTgp ? `<div style="font-size:0.76rem;color:${light ? '#ea580c' : '#f97316'};">⚡ TGP: ${l.gpuTgp}W · VRAM: ${l.gpuVram}GB</div>` : ''}
-            ${state.performa === 'berat' && l.pmMulti ? `<div style="font-size:0.76rem;color:${light ? '#7c3aed' : '#a78bfa'};">📊 Passmark Multi: ${l.pmMulti.toLocaleString('id-ID')}</div>` : ''}
-            ${state.performa === 'ringan' && l.bobot ? `<div style="font-size:0.76rem;color:${light ? '#059669' : '#34d399'};">⚖️ Bobot: ±${l.bobot} kg</div>` : ''}
+            <div style="font-size:0.76rem;color:#94a3b8;">🖥️ ${l.cpu}</div>
+            <div style="font-size:0.76rem;color:#94a3b8;">🎮 ${l.gpu}</div>
+            <div style="font-size:0.76rem;color:#94a3b8;">💾 ${l.ram}</div>
+            ${state.performa === 'gaming' && l.gpuTgp ? `<div style="font-size:0.76rem;color:#f97316;">⚡ TGP: ${l.gpuTgp}W · VRAM: ${l.gpuVram}GB</div>` : ''}
+            ${state.performa === 'berat' && l.pmMulti ? `<div style="font-size:0.76rem;color:#a78bfa;">📊 Passmark Multi: ${l.pmMulti.toLocaleString('id-ID')}</div>` : ''}
+            ${state.performa === 'ringan' && l.bobot ? `<div style="font-size:0.76rem;color:#34d399;">⚖️ Bobot: ±${l.bobot} kg</div>` : ''}
           </div>
 
           <!-- Badges -->
           ${badges.length ? `<div style="display:flex;flex-wrap:wrap;gap:5px;">${badges.join('')}</div>` : ''}
 
           <!-- Footer: harga + link -->
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px;border-top:1px solid ${footerLine};">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);">
             <span style="font-size:0.83rem;font-weight:700;color:${hargaColor};">${l.harga}</span>
-            <span style="font-size:0.75rem;color:${seeColor};">Lihat review →</span>
+            <span style="font-size:0.75rem;color:#64748b;">Lihat review →</span>
           </div>
 
         </div>
@@ -545,11 +529,6 @@ const laptops = [
     document.querySelectorAll('.filter-bar').forEach(b => b.classList.remove('has-selection'));
     render();
   });
-
-  // Re-render hasil saat tema berubah agar warna card (inline styles) ikut menyesuaikan
-  new MutationObserver(() => {
-    if (hasAnyFilter()) render();
-  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // Init
   render();
