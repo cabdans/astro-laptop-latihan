@@ -322,7 +322,7 @@ const reviews = [
 const stats = [
   { angka: "39", label: "Laptop Diulas" },
   { angka: "4", label: "Kategori" },
-  { angka: "9", label: "Brand" },
+  { angka: "8", label: "Brand" },
   { angka: "6–26 Jt", label: "Rentang Harga" },
 ];
 
@@ -637,7 +637,7 @@ const kategoriBadgeText: Record<string, string> = {
     </div>
     <div class="kategori-grid">
       <a href="/review?kategori=Budget" class="kat-card reveal">
-        <div class="kat-bg" style="background-image:url('/nasa-earth-night.jpg');"></div>
+        <div class="kat-bg" style={`background:${catColor['Budget']};`}></div>
         <div class="kat-overlay"></div>
         <div class="kat-content">
           <span class="kat-icon">💰</span>
@@ -646,7 +646,7 @@ const kategoriBadgeText: Record<string, string> = {
         </div>
       </a>
       <a href="/review?kategori=Produktivitas" class="kat-card reveal">
-        <div class="kat-bg" style="background-image:url('/nasa-galaxy.jpg');"></div>
+        <div class="kat-bg" style={`background:${catColor['Produktivitas']};`}></div>
         <div class="kat-overlay"></div>
         <div class="kat-content">
           <span class="kat-icon">💼</span>
@@ -655,7 +655,7 @@ const kategoriBadgeText: Record<string, string> = {
         </div>
       </a>
       <a href="/review?kategori=Gaming" class="kat-card reveal">
-        <div class="kat-bg" style="background-image:url('/nasa-nebula.jpg');"></div>
+        <div class="kat-bg" style={`background:${catColor['Gaming']};`}></div>
         <div class="kat-overlay"></div>
         <div class="kat-content">
           <span class="kat-icon">🎮</span>
@@ -664,7 +664,7 @@ const kategoriBadgeText: Record<string, string> = {
         </div>
       </a>
       <a href="/review?kategori=High Gaming" class="kat-card reveal">
-        <div class="kat-bg" style="background-image:url('/nasa-ngc248.jpg');"></div>
+        <div class="kat-bg" style={`background:${catColor['High Gaming']};`}></div>
         <div class="kat-overlay"></div>
         <div class="kat-content">
           <span class="kat-icon">🔥</span>
@@ -712,7 +712,7 @@ const kategoriBadgeText: Record<string, string> = {
       <a href="/compare" class="cta-card reveal">
         <div class="cta-icon">📊</div>
         <div class="cta-title">Tabel Perbandingan</div>
-        <div class="cta-desc">Bandingkan semua 26 laptop side-by-side. Sortir dan filter per kolom.</div>
+        <div class="cta-desc">Bandingkan semua 39 laptop side-by-side. Sortir dan filter per kolom.</div>
       </a>
       <a href="/h2h" class="cta-card reveal">
         <div class="cta-icon">⚔️</div>

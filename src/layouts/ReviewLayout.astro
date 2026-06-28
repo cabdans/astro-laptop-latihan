@@ -13,10 +13,12 @@ const { title, harga, rating, kategori, tanggal, ringkasan } = Astro.props;
 const bintang = Math.round(rating);
 
 // Gambar hero per kategori
+// FIX: '/nasa-galaxy.jpg' & '/nasa-nebula.jpg' adalah file 0-byte (rusak) sehingga
+// hero 30 dari 39 halaman review kosong. Dialihkan ke aset valid yang ada di /public.
 const heroBg: Record<string, string> = {
   'Budget':      '/nasa-earth-night.jpg',
-  'Produktivitas': '/nasa-galaxy.jpg',
-  'Gaming':      '/nasa-nebula.jpg',
+  'Produktivitas': '/nasa-milkyway.jpg',
+  'Gaming':      '/nasa-lagoon.jpg',
   'High Gaming': '/nasa-ngc248.jpg',
 };
 const bg = heroBg[kategori] ?? '/nasa-milkyway.jpg';
@@ -37,6 +39,13 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={ringkasan} />
     <title>Review {title} — AstroLaptop</title>
+    <script is:inline>
+      /* Terapkan tema tersimpan sebelum paint: cegah flash, samakan dgn halaman lain */
+      (function(){
+        if(localStorage.getItem('theme')==='light')
+          document.documentElement.setAttribute('data-theme','light');
+      })();
+    </script>
     <style>
       *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -247,24 +256,26 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
       .pros li, .cons li { margin-bottom: 5px; }
 
       /* ── BENCHMARK OVERRIDES untuk dark theme ── */
+      /* Hanya berlaku di dark mode; di light mode, inline styles asli (yang memang
+         didesain untuk latar terang) dibiarkan tampil apa adanya. */
       /* Label teks */
-      .artikel-konten [style*="color:#374151"] { color: #cbd5e1 !important; }
+      html:not([data-theme="light"]) .artikel-konten [style*="color:#374151"] { color: #cbd5e1 !important; }
       /* Badge score sekunder (abu di light theme) */
-      .artikel-konten [style*="background:#e5e7eb"][style*="padding:2px"] {
+      html:not([data-theme="light"]) .artikel-konten [style*="background:#e5e7eb"][style*="padding:2px"] {
         background: rgba(96,165,250,0.15) !important;
         color: #e2e8f0 !important;
         border-color: rgba(96,165,250,0.3) !important;
       }
       /* Track progress bar */
-      .artikel-konten [style*="background:#e5e7eb"][style*="height:6px"] {
+      html:not([data-theme="light"]) .artikel-konten [style*="background:#e5e7eb"][style*="height:6px"] {
         background: rgba(255,255,255,0.1) !important;
       }
       /* Fill progress bar */
-      .artikel-konten [style*="background:#1e3a8a"] {
+      html:not([data-theme="light"]) .artikel-konten [style*="background:#1e3a8a"] {
         background: linear-gradient(90deg, #3b82f6, #60a5fa) !important;
       }
       /* Wrapper benchmark */
-      .artikel-konten [style*="display:grid"][style*="gap:16px"] {
+      html:not([data-theme="light"]) .artikel-konten [style*="display:grid"][style*="gap:16px"] {
         background: rgba(255,255,255,0.03);
         border: 1px solid rgba(255,255,255,0.08);
         border-radius: 12px;
@@ -336,6 +347,84 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
         padding: 24px;
         font-size: 0.82rem;
       }
+
+      /* ── THEME TOGGLE (pill) ── */
+      .theme-toggle {
+        display: flex; align-items: center; gap: 6px;
+        background: rgba(251,191,36,0.13);
+        border: 1.5px solid rgba(251,191,36,0.5);
+        border-radius: 22px; height: 34px; padding: 0 13px;
+        color: #fbbf24; cursor: pointer; font: inherit;
+        font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em;
+        white-space: nowrap; transition: all 0.25s;
+      }
+      .theme-toggle:hover {
+        background: rgba(251,191,36,0.24);
+        border-color: rgba(251,191,36,0.85); color: #fde68a;
+      }
+      .tt-icon { font-size: 0.95rem; line-height: 1; }
+      html:not([data-theme="light"]) .icon-moon,
+      html:not([data-theme="light"]) .label-moon { display: none; }
+      html[data-theme="light"] .icon-sun,
+      html[data-theme="light"] .label-sun { display: none; }
+
+      /* =========================================================
+         LIGHT MODE OVERRIDES (FIX 5.8: sebelumnya halaman review
+         selalu dark dan mengabaikan tema yang dipilih user)
+         ========================================================= */
+      html[data-theme="light"] body { background: #f0f4ff; color: #1e293b; }
+      html[data-theme="light"] nav {
+        background: rgba(240,244,255,0.9);
+        border-bottom-color: rgba(37,99,235,0.15);
+      }
+      html[data-theme="light"] .nav-logo { color: #2563eb; }
+      html[data-theme="light"] .nav-links a { color: #475569; }
+      html[data-theme="light"] .nav-links a:hover { color: #1e293b; }
+      html[data-theme="light"] .theme-toggle {
+        background: rgba(37,99,235,0.1); border-color: rgba(37,99,235,0.4); color: #2563eb;
+      }
+      html[data-theme="light"] .theme-toggle:hover {
+        background: rgba(37,99,235,0.2); border-color: rgba(37,99,235,0.75); color: #1d4ed8;
+      }
+      html[data-theme="light"] .review-hero-overlay {
+        background: linear-gradient(to top,
+          rgba(240,244,255,1) 0%, rgba(240,244,255,0.55) 50%, rgba(240,244,255,0.1) 100%);
+      }
+      html[data-theme="light"] .review-hero-content h1 { color: #1e293b; text-shadow: 0 2px 14px rgba(255,255,255,0.6); }
+      html[data-theme="light"] .meta { color: #475569; }
+      html[data-theme="light"] .ringkasan {
+        background: rgba(37,99,235,0.07); color: #1e293b; border-left-color: #2563eb;
+      }
+      html[data-theme="light"] .rating-box {
+        background: #ffffff; border-color: rgba(0,0,0,0.1);
+      }
+      html[data-theme="light"] .rating-angka { color: #2563eb; text-shadow: none; }
+      html[data-theme="light"] .rating-label { color: #64748b; }
+      html[data-theme="light"] .artikel-konten h2 {
+        color: #1e293b; border-bottom-color: rgba(0,0,0,0.1);
+      }
+      html[data-theme="light"] .artikel-konten p { color: #475569; }
+      html[data-theme="light"] .spek-table { border-color: rgba(0,0,0,0.1); }
+      html[data-theme="light"] .spek-table tr { border-bottom-color: rgba(0,0,0,0.06); }
+      html[data-theme="light"] .spek-table tr:nth-child(even) { background: rgba(0,0,0,0.03); }
+      html[data-theme="light"] .spek-table tr:nth-child(odd)  { background: rgba(0,0,0,0.01); }
+      html[data-theme="light"] .spek-table td:first-child { color: #475569; }
+      html[data-theme="light"] .spek-table td:last-child  { color: #1e293b; }
+      html[data-theme="light"] .pros, html[data-theme="light"] .cons {
+        background: #ffffff; border-color: rgba(0,0,0,0.08);
+      }
+      html[data-theme="light"] .pros ul, html[data-theme="light"] .cons ul { color: #475569; }
+      html[data-theme="light"] .sidebar-card {
+        background: #ffffff; border-color: rgba(0,0,0,0.1);
+      }
+      html[data-theme="light"] .sidebar-card h3 { color: #1e293b; }
+      html[data-theme="light"] .sidebar-card p { color: #475569; }
+      html[data-theme="light"] .harga-display { color: #059669; }
+      html[data-theme="light"] .disclaimer { color: #64748b; }
+      html[data-theme="light"] footer {
+        background: rgba(220,230,255,0.6);
+        border-top-color: rgba(0,0,0,0.06); color: #64748b;
+      }
     </style>
   </head>
   <body>
@@ -343,13 +432,19 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
     <nav>
       <div class="nav-inner">
         <a href="/" class="nav-logo">🚀 AstroLaptop</a>
-        <ul class="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/review">Review</a></li>
-          <li><a href="/compare">Perbandingan</a></li>
-          <li><a href="/h2h">H2H</a></li>
-          <li><a href="/tentang">Tentang</a></li>
-        </ul>
+        <div style="display:flex;align-items:center;gap:18px;">
+          <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/review">Review</a></li>
+            <li><a href="/compare">Perbandingan</a></li>
+            <li><a href="/h2h">H2H</a></li>
+            <li><a href="/tentang">Tentang</a></li>
+          </ul>
+          <button class="theme-toggle" id="themeToggle" aria-label="Ganti tema terang/gelap">
+            <span class="tt-icon icon-sun">☀️</span><span class="theme-label label-sun">Sunrise</span>
+            <span class="tt-icon icon-moon">🌙</span><span class="theme-label label-moon">Sunset</span>
+          </button>
+        </div>
       </div>
     </nav>
 
@@ -406,5 +501,24 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
     <footer>
       <p>© 2025 AstroLaptop · Review laptop jujur untuk semua kalangan</p>
     </footer>
+
+    <script>
+      /* Theme toggle light/dark, sinkron dengan localStorage 'theme' */
+      (function () {
+        const root = document.documentElement;
+        const btn  = document.getElementById('themeToggle');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+          const isLight = root.getAttribute('data-theme') === 'light';
+          if (isLight) {
+            root.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'dark');
+          } else {
+            root.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

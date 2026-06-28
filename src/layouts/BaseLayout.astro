@@ -692,7 +692,8 @@ const { title, description = "Review laptop jujur untuk semua kebutuhan dan budg
           setTimeout(() => applyTheme(going), 380);
         });
 
-        overlay.addEventListener('animationend', () => {
+        overlay.addEventListener('animationend', (e) => {
+          if (e.target !== overlay) return; /* abaikan bubble animasi dari sun-orb */
           overlay.className = '';
         });
       })();
