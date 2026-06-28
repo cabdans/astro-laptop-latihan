@@ -326,11 +326,11 @@ const stats = [
   { angka: "6–26 Jt", label: "Rentang Harga" },
 ];
 
-const catImg: Record<string, string> = {
-  'Budget':        '/nasa-earth-night.jpg',
-  'Produktivitas': '/nasa-galaxy.jpg',
-  'Gaming':        '/nasa-nebula.jpg',
-  'High Gaming':   '/nasa-ngc248.jpg',
+const catColor: Record<string, string> = {
+  'Budget':        'linear-gradient(135deg,#1e3a5f 0%,#0f2040 100%)',
+  'Produktivitas': 'linear-gradient(135deg,#2e1a5f 0%,#1a0f40 100%)',
+  'Gaming':        'linear-gradient(135deg,#5f2e0f 0%,#401a08 100%)',
+  'High Gaming':   'linear-gradient(135deg,#5f0f0f 0%,#400808 100%)',
 };
 const catEmoji: Record<string, string> = {
   'Budget': '💰', 'Produktivitas': '💼', 'Gaming': '🎮', 'High Gaming': '🔥',
@@ -523,21 +523,16 @@ const kategoriBadgeText: Record<string, string> = {
       box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 20px rgba(96,165,250,0.08);
     }
     .card-top {
-      height: 130px; background-size: cover; background-position: center;
+      height: 90px;
       display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden;
     }
     .card-top-img {
       position: absolute; inset: 0;
-      background-size: cover; background-position: center;
       filter: brightness(0.45) saturate(1.15);
-      transition: filter 0.3s, transform 0.4s;
+      transition: opacity 0.3s;
     }
-    .review-card:hover .card-top-img { filter: brightness(0.6); transform: scale(1.05); }
-    .card-top-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to bottom, rgba(2,2,14,0.1), rgba(2,2,14,0.6));
-    }
+    .review-card:hover .card-top-img { opacity: 0.85; }
     .card-emoji { font-size: 2rem; position: relative; z-index: 1; }
     .card-body { padding: 15px; }
     .card-badge {
@@ -690,8 +685,7 @@ const kategoriBadgeText: Record<string, string> = {
       {reviews.map((laptop) => (
         <a href={`/review/${laptop.slug}`} class="review-card reveal">
           <div class="card-top">
-            <div class="card-top-img" style={`background-image:url('${catImg[laptop.kategori] ?? '/nasa-milkyway.jpg'}');`}></div>
-            <div class="card-top-overlay"></div>
+            <div class="card-top-img" style={`background:${catColor[laptop.kategori] ?? 'linear-gradient(135deg,#1e3a5f,#0f2040)'};`}></div>
             <span class="card-emoji">{catEmoji[laptop.kategori] ?? '💻'}</span>
           </div>
           <div class="card-body">
