@@ -206,23 +206,46 @@ const { title, description = "Review laptop jujur untuk semua kebutuhan dan budg
       html[data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg); }
       html[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(37,99,235,0.25); }
 
-      /* ── THEME TRANSITION OVERLAY ────────────────────────── */
+      /* ── THEME TRANSITION OVERLAY + SUN ORB ────────────────── */
       #theme-overlay {
         position: fixed; inset: 0; z-index: 9999;
-        pointer-events: none; opacity: 0;
+        pointer-events: none; opacity: 0; overflow: hidden;
       }
-      @keyframes sunrise-anim {
-        0%   { opacity: 0; background: radial-gradient(ellipse 160% 80% at 50% 115%, #ff9500 0%, #ff5500 25%, #2a1540 55%, #050510 100%); }
-        25%  { opacity: 1; }
-        70%  { opacity: 0.9; background: radial-gradient(ellipse 160% 80% at 50% 88%, #ffe066 0%, #ffb347 30%, #93c5fd 65%, #e8f0ff 100%); }
-        100% { opacity: 0; }
+      .sun-orb {
+        position: absolute;
+        left: 50%; transform: translateX(-50%);
+        width: 80px; height: 80px; border-radius: 50%;
+        background: radial-gradient(circle at 38% 32%, #fff9c4 0%, #ffd700 40%, #ff8c00 100%);
+        box-shadow: 0 0 50px 20px rgba(255,200,0,0.75), 0 0 100px 40px rgba(255,140,0,0.35);
       }
-      @keyframes sunset-anim {
-        0%   { opacity: 0; background: radial-gradient(ellipse 160% 80% at 50% 88%, #ffe066 0%, #ff7043 25%, #6a1a7a 55%, #050510 100%); }
-        25%  { opacity: 1; }
-        70%  { opacity: 0.9; background: radial-gradient(ellipse 160% 80% at 50% 115%, #ff4500 0%, #8b008b 30%, #1a0a2e 65%, #050510 100%); }
-        100% { opacity: 0; }
+      /* Sunrise: langit gelap → fajar → terang, matahari naik dari bawah */
+      @keyframes sunrise-bg {
+        0%   { opacity:0; background:linear-gradient(to top,#c2410c 0%,#831843 18%,#1e1b4b 45%,#050510 100%); }
+        12%  { opacity:1; }
+        78%  { opacity:0.85; background:linear-gradient(to top,#fde68a 0%,#7dd3fc 35%,#e0f2fe 70%,#f0f8ff 100%); }
+        100% { opacity:0; }
       }
+      @keyframes sunrise-sun {
+        0%   { bottom:-100px; opacity:0.7; transform:translateX(-50%) scale(0.8); }
+        15%  { opacity:1; }
+        100% { bottom:44%; opacity:1; transform:translateX(-50%) scale(1); }
+      }
+      /* Sunset: langit terang → senja → gelap, matahari turun ke bawah */
+      @keyframes sunset-bg {
+        0%   { opacity:0; background:linear-gradient(to top,#fde68a 0%,#7dd3fc 35%,#e0f2fe 70%,#f0f8ff 100%); }
+        12%  { opacity:1; }
+        78%  { opacity:0.9; background:linear-gradient(to top,#c2410c 0%,#831843 18%,#1e1b4b 45%,#050510 100%); }
+        100% { opacity:0; }
+      }
+      @keyframes sunset-sun {
+        0%   { bottom:44%; opacity:1; transform:translateX(-50%) scale(1); }
+        80%  { opacity:0.7; }
+        100% { bottom:-100px; opacity:0; transform:translateX(-50%) scale(0.8); }
+      }
+      #theme-overlay.sunrise { animation:sunrise-bg 1.1s ease-in-out forwards; }
+      #theme-overlay.sunrise .sun-orb { animation:sunrise-sun 1.1s ease-in-out forwards; }
+      #theme-overlay.sunset  { animation:sunset-bg  1.1s ease-in-out forwards; }
+      #theme-overlay.sunset  .sun-orb { animation:sunset-sun  1.1s ease-in-out forwards; }
     </style>
 
     <style>
@@ -265,48 +288,57 @@ const { title, description = "Review laptop jujur untuk semua kebutuhan dan budg
         background: rgba(96,165,250,0.08);
       }
 
-      /* Theme toggle button */
+      /* Theme toggle — pill shape */
       .theme-toggle {
-        background: rgba(251,191,36,0.12);
-        border: 1.5px solid rgba(251,191,36,0.45);
-        border-radius: 50%;
-        width: 42px; height: 42px;
+        background: rgba(251,191,36,0.13);
+        border: 1.5px solid rgba(251,191,36,0.5);
+        border-radius: 24px;
+        height: 38px;
+        padding: 0 14px 0 10px;
+        gap: 7px;
         cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
+        display: flex; align-items: center;
         color: #fbbf24;
         transition: all 0.25s;
-        flex-shrink: 0; margin-right: 8px; padding: 0;
-        box-shadow: 0 0 12px rgba(251,191,36,0.25), inset 0 0 8px rgba(251,191,36,0.08);
+        flex-shrink: 0; margin-right: 8px;
+        box-shadow: 0 0 14px rgba(251,191,36,0.28);
         animation: sun-pulse 2.8s ease-in-out infinite;
+        white-space: nowrap;
       }
       @keyframes sun-pulse {
-        0%, 100% { box-shadow: 0 0 10px rgba(251,191,36,0.25), inset 0 0 8px rgba(251,191,36,0.08); }
-        50%       { box-shadow: 0 0 22px rgba(251,191,36,0.55), inset 0 0 12px rgba(251,191,36,0.15); }
+        0%, 100% { box-shadow: 0 0 10px rgba(251,191,36,0.22); }
+        50%       { box-shadow: 0 0 24px rgba(251,191,36,0.55); }
       }
       .theme-toggle:hover {
-        background: rgba(251,191,36,0.22);
-        border-color: rgba(251,191,36,0.8);
+        background: rgba(251,191,36,0.24);
+        border-color: rgba(251,191,36,0.85);
         color: #fde68a;
-        transform: scale(1.1) rotate(20deg);
-        box-shadow: 0 0 28px rgba(251,191,36,0.6);
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(251,191,36,0.6);
+      }
+      .theme-label {
+        font-size: 0.78rem; font-weight: 600;
+        letter-spacing: 0.04em;
       }
       /* Light mode: tombol jadi biru bulan */
       html[data-theme="light"] .theme-toggle {
         background: rgba(37,99,235,0.1);
-        border-color: rgba(37,99,235,0.35);
+        border-color: rgba(37,99,235,0.4);
         color: #2563eb;
-        box-shadow: 0 0 12px rgba(37,99,235,0.15);
+        box-shadow: 0 0 12px rgba(37,99,235,0.18);
         animation: none;
       }
       html[data-theme="light"] .theme-toggle:hover {
-        background: rgba(37,99,235,0.18);
-        border-color: rgba(37,99,235,0.7);
+        background: rgba(37,99,235,0.2);
+        border-color: rgba(37,99,235,0.75);
         color: #1d4ed8;
-        transform: scale(1.1);
-        box-shadow: 0 0 20px rgba(37,99,235,0.35);
+        transform: scale(1.05);
+        box-shadow: 0 0 22px rgba(37,99,235,0.35);
       }
-      html:not([data-theme="light"]) .icon-moon { display: none; }
-      html[data-theme="light"] .icon-sun { display: none; }
+      html:not([data-theme="light"]) .icon-moon,
+      html:not([data-theme="light"]) .label-moon { display: none; }
+      html[data-theme="light"] .icon-sun,
+      html[data-theme="light"] .label-sun { display: none; }
 
       /* Hamburger button */
       .nav-toggle {
@@ -393,14 +425,14 @@ const { title, description = "Review laptop jujur untuk semua kebutuhan dan budg
   </head>
   <body>
 
-    <div id="theme-overlay"></div>
+    <div id="theme-overlay"><div class="sun-orb" id="sun-orb"></div></div>
 
     <nav>
       <div class="nav-inner">
         <a href="/" class="nav-logo">🚀 AstroLaptop</a>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle tema">
-          <!-- Sun: tampil saat dark mode -->
-          <svg class="icon-sun" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Sun + label: tampil saat dark mode -->
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="5"/>
             <line x1="12" y1="1" x2="12" y2="3"/>
             <line x1="12" y1="21" x2="12" y2="23"/>
@@ -411,10 +443,12 @@ const { title, description = "Review laptop jujur untuk semua kebutuhan dan budg
             <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
           </svg>
-          <!-- Moon: tampil saat light mode -->
-          <svg class="icon-moon" width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
+          <span class="theme-label label-sun">Sunrise</span>
+          <!-- Moon + label: tampil saat light mode -->
+          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
           </svg>
+          <span class="theme-label label-moon">Sunset</span>
         </button>
         <button class="nav-toggle" id="navToggle" aria-label="Menu">
           <span></span>
@@ -603,17 +637,17 @@ const { title, description = "Review laptop jujur untuk semua kebutuhan dan budg
           const isLight = root.getAttribute('data-theme') === 'light';
           const going   = isLight ? 'dark' : 'light';
 
-          /* Reset & trigger overlay animation */
-          overlay.style.animation = 'none';
-          void overlay.offsetHeight; /* force reflow */
-          overlay.style.animation = (isLight ? 'sunset-anim' : 'sunrise-anim') + ' 0.85s ease-in-out forwards';
+          /* Reset class, force reflow, apply new class */
+          overlay.className = '';
+          void overlay.offsetHeight;
+          overlay.className = isLight ? 'sunset' : 'sunrise';
 
           /* Switch theme at animation midpoint */
-          setTimeout(() => applyTheme(going), 280);
+          setTimeout(() => applyTheme(going), 380);
         });
 
         overlay.addEventListener('animationend', () => {
-          overlay.style.animation = 'none';
+          overlay.className = '';
         });
       })();
     </script>
