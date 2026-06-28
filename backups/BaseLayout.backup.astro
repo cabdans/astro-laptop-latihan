@@ -1,0 +1,410 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = "Review laptop jujur untuk semua kebutuhan dan budget." } = Astro.props;
+---
+
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} — AstroLaptop</title>
+    <style is:global>
+      /* ── SPACE THEME VARIABLES ───────────────────────────────── */
+      :root {
+        --bg:           #050510;
+        --bg-surface:   #0a0a1e;
+        --bg-card:      rgba(255,255,255,0.04);
+        --bg-card-h:    rgba(255,255,255,0.08);
+        --border:       rgba(255,255,255,0.09);
+        --border-glow:  rgba(96,165,250,0.35);
+        --primary:      #60a5fa;
+        --primary-d:    #3b82f6;
+        --accent:       #a78bfa;
+        --gold:         #fbbf24;
+        --cyan:         #22d3ee;
+        --green:        #34d399;
+        --text:         #e2e8f0;
+        --text-muted:   #94a3b8;
+        --text-dim:     #64748b;
+      }
+
+      /* ── RESET + BASE ────────────────────────────────────────── */
+      *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      /* ── GLOBAL CARD OVERRIDES (all pages) ───────────────────── */
+      .stat-card, .kat-card, .review-card, .cta-card,
+      .about-card, .stat-box, .metod-item, .tool-card,
+      .filters, .filter-card, .badge-card {
+        background: var(--bg-card) !important;
+        border-color: var(--border) !important;
+        color: var(--text) !important;
+      }
+      .stat-card:hover, .kat-card:hover, .review-card:hover,
+      .cta-card:hover, .tool-card:hover {
+        background: var(--bg-card-h) !important;
+        border-color: var(--border-glow) !important;
+        box-shadow: 0 0 24px rgba(96,165,250,0.1) !important;
+      }
+      .card-top { background: rgba(255,255,255,0.05) !important; }
+      .card-desc, .kat-count, .cta-desc, .about-card p,
+      .kat-desc, .metod-isi, .tool-desc, .stat-label { color: var(--text-muted) !important; }
+      .stat-angka, .stat-num { color: var(--primary) !important; }
+      .card-price { color: var(--green) !important; }
+      .card-rating { background: rgba(251,191,36,0.15) !important; color: var(--gold) !important; }
+      .section-title { color: var(--text) !important; border-color: var(--border) !important; }
+      .section-link { color: var(--primary) !important; }
+      .kat-range { color: var(--cyan) !important; }
+      .kat-nama, .tool-title, .metod-judul, .card-name { color: var(--text) !important; }
+      .metod-nomor { color: rgba(167,139,250,0.3) !important; }
+      .kat-jumlah { background: rgba(96,165,250,0.12) !important; color: var(--primary) !important; }
+
+      /* ── FORMS ───────────────────────────────────────────────── */
+      select, input[type=text], input[type=search], input[type=number] {
+        background: rgba(255,255,255,0.06) !important;
+        color: var(--text) !important;
+        border-color: var(--border) !important;
+      }
+      select option { background: #0a0a1e; color: var(--text); }
+
+      /* ── TABLES ──────────────────────────────────────────────── */
+      table { border-color: var(--border) !important; }
+      th { background: rgba(255,255,255,0.06) !important; color: var(--text-muted) !important; }
+      td { color: var(--text) !important; border-color: var(--border) !important; }
+      tr:hover td { background: rgba(255,255,255,0.04) !important; }
+
+      /* ── SCROLL REVEAL ──────────────────────────────────────── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(22px);
+        transition: opacity 0.55s ease, transform 0.55s ease;
+      }
+      .reveal.visible { opacity: 1; transform: none; }
+
+      /* ── TOUCH ACTIVE STATES ─────────────────────────────────── */
+      @media (hover: none) {
+        .hero-btn:active, .hero-btn-outline:active { transform: scale(0.96); opacity: 0.85; }
+        .kat-card:active, .review-card:active, .cta-card:active, .review-item:active {
+          background: rgba(96,165,250,0.08) !important;
+          border-color: rgba(96,165,250,0.3) !important;
+          transform: scale(0.985);
+        }
+        .filter-btn:active { background: rgba(96,165,250,0.15) !important; color: #60a5fa !important; }
+      }
+
+      /* ── PAGE HERO (tentang, review, etc.) ───────────────────── */
+      .page-hero {
+        background: linear-gradient(135deg, rgba(91,33,182,0.5), rgba(29,78,216,0.5), rgba(6,182,212,0.3)) !important;
+        border: 1px solid rgba(96,165,250,0.2);
+        position: relative;
+        overflow: hidden;
+      }
+      .page-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 80% 50%, rgba(167,139,250,0.15), transparent 60%);
+        pointer-events: none;
+      }
+      .page-hero h1, .page-hero p { position: relative; z-index: 1; }
+
+      /* ── SCROLLBAR ───────────────────────────────────────────── */
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: var(--bg); }
+      ::-webkit-scrollbar-thumb { background: rgba(96,165,250,0.3); border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(96,165,250,0.6); }
+
+      /* ── LINKS ───────────────────────────────────────────────── */
+      a { color: var(--primary); }
+    </style>
+    <style>
+      /* ── NAVBAR ──────────────────────────────────────────────── */
+      nav {
+        background: rgba(5,5,16,0.88);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(96,165,250,0.18);
+        padding: 0 24px;
+        position: sticky;
+        top: 0;
+        z-index: 200;
+      }
+      .nav-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 60px;
+      }
+      .nav-logo {
+        font-size: 1.22rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        text-shadow: 0 0 24px rgba(96,165,250,0.6);
+        transition: text-shadow 0.3s;
+      }
+      .nav-logo:hover { text-shadow: 0 0 32px rgba(96,165,250,0.9); }
+      .nav-links {
+        display: flex;
+        gap: 4px;
+        list-style: none;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        padding: 6px 14px;
+        border-radius: 20px;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--primary);
+        border-color: rgba(96,165,250,0.3);
+        background: rgba(96,165,250,0.08);
+      }
+
+      /* ── MAIN ────────────────────────────────────────────────── */
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ── FOOTER ──────────────────────────────────────────────── */
+      footer {
+        background: rgba(5,5,16,0.95);
+        border-top: 1px solid rgba(96,165,250,0.12);
+        color: var(--text-dim);
+        text-align: center;
+        padding: 32px 24px;
+        margin-top: 80px;
+        font-size: 0.875rem;
+        position: relative;
+        z-index: 1;
+      }
+      footer a { color: var(--primary); text-decoration: none; }
+      .footer-stars {
+        font-size: 1.2rem;
+        letter-spacing: 0.3em;
+        display: block;
+        margin-bottom: 10px;
+        opacity: 0.6;
+      }
+      .nasa-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.72rem;
+        color: var(--text-dim);
+        margin-top: 8px;
+        opacity: 0.7;
+      }
+
+      @media (max-width: 640px) {
+        .nav-links { gap: 0; }
+        .nav-links a { padding: 5px 10px; font-size: 0.82rem; }
+        .nav-logo { font-size: 1rem; }
+        main { padding: 20px 16px; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <nav>
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">🚀 AstroLaptop</a>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/review">Review</a></li>
+          <li><a href="/compare">Perbandingan</a></li>
+          <li><a href="/h2h">H2H</a></li>
+          <li><a href="/tentang">Tentang</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>
+      <span class="footer-stars">✦ ✦ ✦ ✦ ✦</span>
+      <p>© 2025 AstroLaptop · Review laptop jujur untuk semua kalangan</p>
+      <div class="nasa-badge">🌌 Space visuals terinspirasi NASA APOD</div>
+    </footer>
+
+    <script>
+      /* ── SCROLL REVEAL ─────────────────────────────────────── */
+      (function () {
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              obs.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.08 });
+
+        // Stagger cards within the same grid parent
+        document.querySelectorAll(".reveal").forEach((el, i) => {
+          const parent = el.parentElement;
+          const siblings = parent ? [...parent.querySelectorAll(".reveal")] : [];
+          const idx = siblings.indexOf(el);
+          if (idx > 0) el.style.transitionDelay = `${Math.min(idx * 0.08, 0.4)}s`;
+          obs.observe(el);
+        });
+
+        // Stats counter animation
+        document.querySelectorAll(".stat-angka").forEach((el) => {
+          const raw = el.textContent.trim();
+          const num = parseInt(raw);
+          if (isNaN(num) || String(num) !== raw) return;
+          const cObs = new IntersectionObserver((entries) => {
+            if (!entries[0].isIntersecting) return;
+            cObs.disconnect();
+            const dur = 1200;
+            let start = null;
+            (function step(ts) {
+              if (!start) start = ts;
+              const p = Math.min((ts - start) / dur, 1);
+              el.textContent = Math.floor(p * num);
+              if (p < 1) requestAnimationFrame(step);
+              else el.textContent = num;
+            })(performance.now());
+          }, { threshold: 0.5 });
+          cObs.observe(el);
+        });
+      })();
+    </script>
+
+    <script>
+      /* ── STARFIELD CANVAS ──────────────────────────────────── */
+      (function () {
+        const canvas = document.createElement("canvas");
+        canvas.style.cssText =
+          "position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;";
+        document.body.insertBefore(canvas, document.body.firstChild);
+        const ctx = canvas.getContext("2d");
+
+        let W, H, stars = [];
+
+        const STAR_COLORS = [
+          [255, 255, 255],   // white
+          [147, 197, 253],   // blue
+          [196, 181, 253],   // purple
+          [253, 230, 138],   // gold
+          [167, 243, 208],   // green
+        ];
+
+        function resize() {
+          W = canvas.width = window.innerWidth;
+          H = canvas.height = window.innerHeight;
+        }
+
+        function initStars() {
+          stars = [];
+          // Tiny background stars
+          for (let i = 0; i < 500; i++) {
+            const c = STAR_COLORS[0];
+            stars.push({ x: Math.random() * W, y: Math.random() * H,
+              r: Math.random() * 0.6 + 0.2, base: Math.random() * 0.5 + 0.1,
+              phase: Math.random() * Math.PI * 2, spd: Math.random() * 0.6 + 0.2,
+              c, glow: false });
+          }
+          // Medium colored stars
+          for (let i = 0; i < 100; i++) {
+            const c = STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)];
+            stars.push({ x: Math.random() * W, y: Math.random() * H,
+              r: Math.random() * 1.0 + 0.6, base: Math.random() * 0.6 + 0.2,
+              phase: Math.random() * Math.PI * 2, spd: Math.random() * 0.4 + 0.1,
+              c, glow: false });
+          }
+          // Bright glowing stars
+          for (let i = 0; i < 18; i++) {
+            const c = STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)];
+            stars.push({ x: Math.random() * W, y: Math.random() * H,
+              r: Math.random() * 1.4 + 1.2, base: 0.85,
+              phase: Math.random() * Math.PI * 2, spd: Math.random() * 0.2 + 0.05,
+              c, glow: true });
+          }
+        }
+
+        /* Static nebula clouds (drawn once per frame, very subtle) */
+        const NEBULAE = [
+          { cx: 0.15, cy: 0.25, rx: 0.45, ry: 0.3,  rgb: "91,33,182",  a: 0.055 },
+          { cx: 0.85, cy: 0.75, rx: 0.40, ry: 0.35, rgb: "29,78,216",  a: 0.06  },
+          { cx: 0.55, cy: 0.15, rx: 0.30, ry: 0.25, rgb: "6,182,212",  a: 0.04  },
+          { cx: 0.05, cy: 0.85, rx: 0.28, ry: 0.22, rgb: "124,58,237", a: 0.035 },
+          { cx: 0.75, cy: 0.35, rx: 0.22, ry: 0.2,  rgb: "220,38,38",  a: 0.025 },
+        ];
+
+        function drawNebulae() {
+          NEBULAE.forEach(({ cx, cy, rx, ry, rgb, a }) => {
+            const gx = ctx.createRadialGradient(
+              cx * W, cy * H, 0, cx * W, cy * H, Math.max(rx * W, ry * H)
+            );
+            gx.addColorStop(0,   `rgba(${rgb},${a})`);
+            gx.addColorStop(0.5, `rgba(${rgb},${a * 0.4})`);
+            gx.addColorStop(1,   "transparent");
+            ctx.fillStyle = gx;
+            ctx.fillRect(0, 0, W, H);
+          });
+        }
+
+        let frame = 0;
+        function draw() {
+          frame++;
+          ctx.clearRect(0, 0, W, H);
+          drawNebulae();
+
+          for (const s of stars) {
+            s.phase += s.spd * 0.008;
+            const op = s.base * (0.5 + 0.5 * Math.sin(s.phase));
+            const [r, g, b] = s.c;
+
+            if (s.glow) {
+              const gl = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 5);
+              gl.addColorStop(0, `rgba(${r},${g},${b},${op * 0.6})`);
+              gl.addColorStop(1, "transparent");
+              ctx.fillStyle = gl;
+              ctx.beginPath();
+              ctx.arc(s.x, s.y, s.r * 5, 0, Math.PI * 2);
+              ctx.fill();
+            }
+
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${r},${g},${b},${op})`;
+            ctx.fill();
+          }
+
+          requestAnimationFrame(draw);
+        }
+
+        window.addEventListener("resize", () => { resize(); initStars(); });
+        resize();
+        initStars();
+        draw();
+      })();
+    </script>
+  </body>
+</html>

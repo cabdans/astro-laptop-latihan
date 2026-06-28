@@ -1,0 +1,625 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const reviews = [
+  {
+    slug: "produktivitas/lenovo-ideapad-slim3-14irh10-i5",
+    nama: "Lenovo IdeaPad Slim 3 14IRH10 Core i5",
+    model: "14IRH10",
+    harga: "Rp 10–11 Juta",
+    rating: 4.4,
+    kategori: "Produktivitas",
+    tanggal: "6 Juni 2025",
+    ringkasan: "Varian Intel dari IdeaPad Slim 3 — Core i5-13420H, WUXGA 16:10, garansi 2 tahun + ADP, OHS + backlit. Paket sama lengkapnya dengan varian AMD.",
+    tags: ["Core i5", "WUXGA", "2Y+ADP", "OHS", "Backlit"]
+  },
+  {
+    slug: "produktivitas/lenovo-ideapad-slim3-14arp10-r5",
+    nama: "Lenovo IdeaPad Slim 3 14ARP10 Ryzen 5",
+    model: "14ARP10",
+    harga: "Rp 10–11 Juta",
+    rating: 4.5,
+    kategori: "Produktivitas",
+    tanggal: "6 Juni 2025",
+    ringkasan: "Ryzen 5 7535HS, WUXGA 16:10, garansi 2 tahun + ADP, OHS + backlit keyboard. Paket produktivitas paling lengkap dari Lenovo di 10–11 jutaan.",
+    tags: ["Ryzen 5", "WUXGA", "2Y+ADP", "OHS", "Backlit"]
+  },
+  {
+    slug: "produktivitas/advan-pixwar-touch-r7-8745hs",
+    nama: "ADVAN Pixwar Touchscreen Ryzen 7 8745HS",
+    model: "Pixwar",
+    harga: "Rp 9–10 Juta",
+    rating: 4.3,
+    kategori: "Produktivitas",
+    tanggal: "6 Juni 2025",
+    ringkasan: "Satu-satunya laptop touchscreen di 9–10 jutaan. Ryzen 7 8745HS, Radeon 780M, 16GB LPDDR5-6400, layar 15\" FHD sentuh, garansi 2 tahun.",
+    tags: ["Touchscreen", "Ryzen 7 8745HS", "Radeon 780M", "LPDDR5-6400", "15 inci"]
+  },
+  {
+    slug: "produktivitas/advan-workplus-r7-7735hs",
+    nama: "Advan Workplus Ryzen 7 7735HS",
+    model: "Workplus R7",
+    harga: "Rp 8–9 Juta",
+    rating: 4.3,
+    kategori: "Produktivitas",
+    tanggal: "6 Juni 2025",
+    ringkasan: "Ryzen 7 7735HS 8-core + Radeon 680M + WUXGA + 16GB LPDDR5 + cooling 3 heatpipe. Step-up terbaik dari lini Workplus di 8–9 jutaan.",
+    tags: ["Ryzen 7 7735HS", "8 Core", "WUXGA", "Radeon 680M", "100W Type-C"]
+  },
+  {
+    slug: "budget/advan-workmate-ultra-core-ultra5-115u",
+    nama: "Advan Workmate Ultra Core Ultra 5 115U",
+    model: "Workmate Ultra",
+    harga: "Rp 7–8 Juta",
+    rating: 3.9,
+    kategori: "Budget",
+    tanggal: "6 Juni 2025",
+    ringkasan: "Core Ultra 5 115U + WUXGA 16:10 di 7–8 jutaan. Tipis dan efisien, tapi baterai 45Wh dan charger 45W jadi kelemahan utama.",
+    tags: ["Core Ultra 5", "WUXGA", "Type-C", "Tipis", "Intel AI"]
+  },
+  {
+    slug: "produktivitas/advan-workplus-r5-6600h",
+    nama: "Advan Workplus Ryzen 5 6600H",
+    model: "Workplus",
+    harga: "Rp 7–8 Juta",
+    rating: 4.1,
+    kategori: "Produktivitas",
+    tanggal: "6 Juni 2025",
+    ringkasan: "16GB RAM langsung, 58Wh, charger 100W Type-C di 7–8 jutaan. Saudara Workplus Heritage dengan RAM lebih besar tapi CPU lebih lama dan layar FHD.",
+    tags: ["Ryzen 5 6600H", "16GB RAM", "58Wh", "Type-C", "Brand Lokal"]
+  },
+  {
+    slug: "produktivitas/advan-workplus-heritage-r5-7535hs",
+    nama: "Advan Workplus Heritage Ryzen 5 7535HS",
+    model: "Workplus Heritage",
+    harga: "Rp 7–8 Juta",
+    rating: 4.5,
+    kategori: "Produktivitas",
+    tanggal: "6 Juni 2025",
+    ringkasan: "Ryzen 5 7535HS + WUXGA + baterai 60Wh + 100W Type-C di harga 7–8 jutaan. Spesifikasi laptop 10 jutaan dengan harga budget.",
+    tags: ["Ryzen 5 7535HS", "WUXGA", "60Wh", "Type-C", "Brand Lokal"]
+  },
+  {
+    slug: "produktivitas/asus-expertbook-pm1403cda-r5-150",
+    nama: "ASUS ExpertBook PM1403CDA Ryzen 5 150",
+    model: "PM1403CDA",
+    harga: "Rp 10–11 Juta",
+    rating: 4.2,
+    kategori: "Produktivitas",
+    tanggal: "8 Juni 2025",
+    ringkasan: "Ryzen 5 150U (Zen 4), garansi 3 tahun, OHS bawaan, DDR5 upgradeable di 10–11 jutaan. Dukungan purna jual terlama di kelasnya.",
+    tags: ["Ryzen 5 150U", "Garansi 3 Tahun", "OHS", "DDR5", "ExpertBook"]
+  },
+  {
+    slug: "budget/polytron-luxia-pro-i5-1235u",
+    nama: "Polytron Luxia Pro i5-1235U",
+    model: "Luxia Pro",
+    harga: "Rp 8–9 Juta",
+    rating: 4.2,
+    kategori: "Budget",
+    tanggal: "8 Juni 2025",
+    ringkasan: "16GB LPDDR5, 100% sRGB, garansi 2 tahun + ADP di 8–9 jutaan. Layar akurat warna dan perlindungan lengkap dari Polytron.",
+    tags: ["Core i5-1235U", "16GB RAM", "100% sRGB", "ADP", "Brand Lokal"]
+  },
+  {
+    slug: "budget/lenovo-ideapad-slim3-14iru8-i3",
+    nama: "Lenovo IdeaPad Slim 3 14IRU8 Core i3",
+    model: "14IRU8",
+    harga: "Rp 7–8 Juta",
+    rating: 3.8,
+    kategori: "Budget",
+    tanggal: "6 Juni 2025",
+    ringkasan: "Laptop entry-level dengan backlit keyboard dan OHS bundled. Cocok untuk kebutuhan paling dasar dengan budget ketat di 7–8 jutaan.",
+    tags: ["Core i3", "Budget", "Backlit", "OHS", "Lenovo"]
+  },
+  {
+    slug: "produktivitas/polytron-luxia-pro-ultra5-125h",
+    nama: "Polytron Luxia Pro Ultra 5 125H",
+    model: "Luxia Pro",
+    harga: "Rp 10–11 Juta",
+    rating: 4.4,
+    kategori: "Produktivitas",
+    tanggal: "6 Juni 2025",
+    ringkasan: "Laptop lokal Polytron dengan Core Ultra 5 125H, 100% sRGB, garansi 2 tahun + ADP, charger Type-C. Perlindungan terbaik di kelasnya.",
+    tags: ["Core Ultra 5", "100% sRGB", "ADP", "Type-C", "Brand Lokal"]
+  },
+  {
+    slug: "produktivitas/acer-aspire-go-14-ultra5-125h",
+    nama: "Acer Aspire Go 14 Ai Ultra 5 125H",
+    model: "Aspire Go 14 Ai",
+    harga: "Rp 10–12 Juta",
+    rating: 4.4,
+    kategori: "Produktivitas",
+    tanggal: "6 Juni 2025",
+    ringkasan: "Core Ultra 5 125H, layar 14\" WUXGA 100% sRGB, 16GB DDR5, Office bundled. Laptop AI produktivitas portabel di 10–12 jutaan.",
+    tags: ["Core Ultra 5", "100% sRGB", "16GB DDR5", "OHS", "14 inci"]
+  },
+  {
+    slug: "produktivitas/acer-aspire-lite-15-r7-8840hs",
+    nama: "Acer Aspire Lite 15 Ryzen 7 8840HS",
+    model: "Aspire Lite 15",
+    harga: "Rp 11–12 Juta",
+    rating: 4.3,
+    kategori: "Produktivitas",
+    tanggal: "6 Juni 2025",
+    ringkasan: "Ryzen 7 8840HS + 16GB RAM + Office bundled + Numpad. Laptop produktivitas kencang untuk kerja dan kuliah serius.",
+    tags: ["Ryzen 7 8840HS", "16GB RAM", "OHS", "Numpad", "AMD"]
+  },
+  {
+    slug: "gaming/asus-tuf-a16-fa608uh-rtx5050",
+    nama: "ASUS TUF A16 FA608UH RTX 5050",
+    model: "FA608UH",
+    harga: "Rp 21–22 Juta",
+    rating: 4.7,
+    kategori: "Gaming",
+    tanggal: "5 Juni 2025",
+    ringkasan: "Paket paling lengkap di kelas RTX 5050 — baterai 90Wh terbesar, TGP 115W, adaptor 240W, layar 16\" WUXGA 165Hz, DDR5.",
+    tags: ["RTX 5050", "90Wh", "115W TGP", "WUXGA 165Hz", "DDR5"]
+  },
+  {
+    slug: "gaming/axioo-pongo-765",
+    nama: "Axioo Pongo 765 i7-13620H RTX 5060",
+    model: "Pongo 765",
+    harga: "Rp 22–23 Juta",
+    rating: 4.4,
+    kategori: "High Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "i7-13620H + RTX 5060 ±115W TGP, VRAM 8GB, layar 16\" WUXGA 165Hz 100% sRGB, garansi 3 Tahun + ADP.",
+    tags: ["RTX 5060", "High Gaming", "±115W TGP", "WUXGA 165Hz", "3Y+ADP"]
+  },
+  {
+    slug: "gaming/axioo-pongo-765-v2",
+    nama: "Axioo Pongo 765 V2 i7-13700H RTX 5060",
+    model: "Pongo 765 V2",
+    harga: "Rp 22–23 Juta",
+    rating: 4.4,
+    kategori: "High Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "i7-13700H 14 core + RTX 5060 ±115W TGP, VRAM 8GB, layar 16\" WUXGA 165Hz 100% sRGB, garansi 3 Tahun.",
+    tags: ["RTX 5060", "High Gaming", "i7-13700H", "14 Core", "WUXGA 165Hz"]
+  },
+  {
+    slug: "gaming/lenovo-loq-15ahp11",
+    nama: "Lenovo LOQ 15AHP11 R7 250 RTX 5050",
+    model: "LOQ 15AHP11",
+    harga: "Rp 23–24 Juta",
+    rating: 4.4,
+    kategori: "Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "Ryzen AI 7 250 + RTX 5050 115W TGP, layar WUXGA 165Hz 100% sRGB, bobot ±2.1 kg, adaptor 245W, garansi 2 Tahun + ADP.",
+    tags: ["RTX 5050", "115W TGP", "WUXGA 165Hz", "2.1 kg", "2Y+ADP"]
+  },
+  {
+    slug: "gaming/axioo-pongo-755-x72",
+    nama: "Axioo Pongo 755-X72 R7 255 RTX 5050",
+    model: "Pongo 755-X72",
+    harga: "Rp 19–20 Juta",
+    rating: 4.2,
+    kategori: "Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "Ryzen AI 7 255 + RTX 5050 up to 135W TGP — TGP tertinggi di kelas RTX 5050, layar 16\" FHD+ 165Hz 100% sRGB.",
+    tags: ["RTX 5050", "135W TGP", "FHD+ 165Hz", "Brand Lokal", "AMD"]
+  },
+  {
+    slug: "gaming/axioo-pongo-755-r7255",
+    nama: "Axioo Pongo 755 R7 255 RTX 5050",
+    model: "Pongo 755",
+    harga: "Rp 18–19 Juta",
+    rating: 4.2,
+    kategori: "Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "Ryzen AI 7 255 + RTX 5050 ±115W TGP, layar WUXGA 165Hz 100% sRGB, garansi 3 Tahun + ADP — terlama di kelasnya.",
+    tags: ["RTX 5050", "±115W TGP", "WUXGA 165Hz", "3Y+ADP", "Brand Lokal"]
+  },
+  {
+    slug: "gaming/lenovo-loq-15ahp10",
+    nama: "Lenovo LOQ 15AHP10 RTX 5050",
+    model: "LOQ 15AHP10",
+    harga: "Langka",
+    rating: 4.2,
+    kategori: "Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "Ryzen AI 7 250 / R5 220 + RTX 5050 100W TGP, layar FHD 144Hz 100% sRGB, garansi 2 Tahun + ADP. Stok langka.",
+    tags: ["RTX 5050", "100W TGP", "2Y+ADP", "AMD Ryzen AI", "Langka"]
+  },
+  {
+    slug: "gaming/lenovo-loq-15irx10-i7",
+    nama: "Lenovo LOQ 15IRX10 i7-13700HX RTX 5050",
+    model: "LOQ 15IRX10 i7",
+    harga: "Rp 25–26 Juta",
+    rating: 4.3,
+    kategori: "Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "i7-13700HX + RTX 5050 100W, layar FHD 144Hz 100% sRGB, DDR5 upgradeable, garansi 2 Tahun + ADP.",
+    tags: ["RTX 5050", "i7-13700HX", "100W TGP", "2Y+ADP", "DDR5"]
+  },
+  {
+    slug: "gaming/lenovo-loq-15irx10",
+    nama: "Lenovo LOQ 15IRX10 i5-13450HX RTX 5050",
+    model: "LOQ 15IRX10 i5",
+    harga: "Rp 22–23 Juta",
+    rating: 4.3,
+    kategori: "Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "i5-13450HX + RTX 5050 105W, layar FHD 144Hz 100% sRGB, HyperChamber cooling, garansi 2 Tahun + ADP.",
+    tags: ["RTX 5050", "105W TGP", "HyperChamber", "2Y+ADP", "DDR5"]
+  },
+  {
+    slug: "gaming/asus-gaming-v16-v3607vh",
+    nama: "ASUS Gaming V16 V3607VH Core 5 210H",
+    model: "V3607VH",
+    harga: "Rp 16–17 Juta",
+    rating: 4.2,
+    kategori: "Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "Core 5 210H + RTX 5050 ±75W, layar 16\" WUXGA 144Hz, bobot ringan ±1.95 kg, garansi 2 Tahun.",
+    tags: ["RTX 5050", "±75W TGP", "WUXGA 144Hz", "Core 5 210H", "Ringan"]
+  },
+  {
+    slug: "gaming/hp-victus-15-fa2717tx",
+    nama: "HP Victus 15 FA2717TX i5-13420H",
+    model: "Victus 15",
+    harga: "Rp 17–18 Juta",
+    rating: 4.1,
+    kategori: "Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "i5-13420H + RTX 4050 ±50W TGP, layar FHD 144Hz, garansi 2 Tahun + ADP.",
+    tags: ["RTX 4050", "±50W TGP", "144Hz", "2Y+ADP", "Intel"]
+  },
+  {
+    slug: "gaming/lenovo-loq-essential-15arp10e",
+    nama: "Lenovo LOQ Essential 15ARP10E R7",
+    model: "LOQ Essential",
+    harga: "Rp 16–17 Juta",
+    rating: 4.0,
+    kategori: "Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "Ryzen 7 7735HS + RTX 4050 ±65W TGP, layar FHD 144Hz 100% sRGB, bobot ringan ±1.80 kg, garansi 2 Tahun + ADP.",
+    tags: ["RTX 4050", "±65W TGP", "R7 7735HS", "2Y+ADP", "Ringan"]
+  },
+  {
+    slug: "gaming/colorful-evol-p15-he55d",
+    nama: "Colorful Evol P15 HE55D i5-12450H",
+    model: "Evol P15 HE55D",
+    harga: "Rp 15–16 Juta",
+    rating: 4.1,
+    kategori: "Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "i5-12450H + RTX 4050 ±105W–115W TGP, layar FHD 144Hz 100% sRGB, DDR5 upgradeable.",
+    tags: ["RTX 4050", "±115W TGP", "FHD 144Hz", "DDR5", "Colorful"]
+  },
+  {
+    slug: "gaming/lenovo-loq-15irx9",
+    nama: "Lenovo LOQ 15IRX9 i5-13450HX",
+    model: "LOQ 15IRX9",
+    harga: "Rp 15–16 Juta",
+    rating: 4.3,
+    kategori: "Gaming",
+    tanggal: "12 Juni 2025",
+    ringkasan: "i5-13450HX + RTX 3050 ±95W TGP, layar FHD 144Hz 100% sRGB, DDR5 upgradeable, garansi 2 Tahun + ADP.",
+    tags: ["RTX 3050", "±95W TGP", "2Y+ADP", "DDR5", "HX Series"]
+  },
+  {
+    slug: "gaming/acer-nitro-v15-5050",
+    nama: "Acer Nitro V15 RTX 5050 i5",
+    model: "Nitro V15",
+    harga: "Rp 17–18 Juta",
+    rating: 4.4,
+    kategori: "Gaming",
+    tanggal: "5 Juni 2025",
+    ringkasan: "i5-13420H + RTX 5050 ±75W, baterai besar 76Wh, layar FHD 180Hz 100% sRGB, garansi 2Y/3Y + ADP.",
+    tags: ["RTX 5050", "±75W TGP", "76Wh", "180Hz", "ADP Garansi"]
+  },
+  {
+    slug: "gaming/acer-nitro-v15-anv15-42",
+    nama: "Acer Nitro V15 ANV15-42 R7",
+    model: "ANV15-42",
+    harga: "Rp 17–18 Juta",
+    rating: 4.3,
+    kategori: "Gaming",
+    tanggal: "5 Juni 2025",
+    ringkasan: "R7 7445HS + RTX 4050 ±60W TGP, layar FHD 180Hz 100% sRGB, DDR5, garansi 2Y/3Y + ADP.",
+    tags: ["RTX 4050", "±60W TGP", "180Hz", "100% sRGB", "DDR5"]
+  },
+  {
+    slug: "gaming/colorful-evol-p15-rtx5050",
+    nama: "Colorful Evol P15 RTX 5050",
+    model: "Evol P15",
+    harga: "Rp 15–16 Juta",
+    rating: 4.6,
+    kategori: "Gaming",
+    tanggal: "5 Juni 2025",
+    ringkasan: "RTX 5050 8GB TGP 115W paling terjangkau di kelasnya. GPU generasi Blackwell terbaru dengan cooling 5 heatpipe + 4 exhaust.",
+    tags: ["RTX 5050", "115W TGP", "8GB VRAM", "DDR5", "Gen Terbaru"]
+  },
+  {
+    slug: "gaming/acer-nitro-lite-nl16",
+    nama: "Acer Nitro Lite NL16",
+    model: "NL16",
+    harga: "Rp 14–15 Juta",
+    rating: 4.5,
+    kategori: "Gaming",
+    tanggal: "5 Juni 2025",
+    ringkasan: "Ringan ±1.95kg, layar 16\" WUXGA 180Hz 100% sRGB, RTX 3050 55W TGP, charger 100W, garansi 2Y/3Y + ADP.",
+    tags: ["RTX 3050", "55W TGP", "180Hz", "100% sRGB", "DDR5"]
+  },
+  {
+    slug: "gaming/acer-aspire-7-pro-a715",
+    nama: "Acer Aspire 7 Pro A715",
+    model: "A715",
+    harga: "Rp 12–13 Juta",
+    rating: 4.4,
+    kategori: "Gaming",
+    tanggal: "5 Juni 2025",
+    ringkasan: "RTX 3050 TGP 75W, charger 150W, cooling 2 fan 4 heatpipe, garansi 2Y Part/3Y Svc + 1Y ADP.",
+    tags: ["RTX 3050", "75W TGP", "144Hz", "ADP Garansi"]
+  },
+  {
+    slug: "gaming/asus-tuf-gaming-a16",
+    nama: "ASUS TUF Gaming A16",
+    model: "FA607NUG",
+    harga: "Rp 16.999.000",
+    rating: 4.5,
+    kategori: "Gaming",
+    tanggal: "1 Juni 2025",
+    ringkasan: "RTX 4050 full power, layar 16:10 165Hz 100% sRGB. Pilihan solid untuk gamer dan kreator konten.",
+    tags: ["RTX 4050", "115W TGP", "165Hz", "DDR5", "16 inci"]
+  },
+  {
+    slug: "budget/asus-vivobook-15",
+    nama: "ASUS VivoBook 15",
+    model: "X1502ZA",
+    harga: "Rp 7.499.000",
+    rating: 4.2,
+    kategori: "Budget",
+    tanggal: "1 Juni 2025",
+    ringkasan: "Laptop budget terbaik untuk pelajar dan mahasiswa dengan performa harian yang solid.",
+    tags: ["Budget", "Ryzen 5", "FHD", "Ringan"]
+  },
+  {
+    slug: "produktivitas/acer-aspire-lite-15-r5-8640hs",
+    nama: "Acer Aspire Lite 15 R5-8640HS",
+    model: "Aspire Lite 15",
+    harga: "Rp 9–10 Juta",
+    rating: 4.3,
+    kategori: "Produktivitas",
+    tanggal: "8 Juni 2025",
+    ringkasan: "Ryzen 5 8640HS + Radeon 760M, layar FHD 15 inch + numpad, OHS bawaan, slot DDR5 untuk upgrade RAM. Produktivitas bertenaga di 9–10 jutaan.",
+    tags: ["Produktivitas", "Ryzen 5", "8640HS", "Numpad", "OHS", "Radeon 760M"]
+  },
+  {
+    slug: "produktivitas/acer-aspire-lite-15-r5-7430u",
+    nama: "Acer Aspire Lite 15 R5-7430U",
+    model: "Aspire Lite 15",
+    harga: "Rp 7–8 Juta",
+    rating: 4.2,
+    kategori: "Produktivitas",
+    tanggal: "8 Juni 2025",
+    ringkasan: "Ryzen 5 7430U, layar 15 inch + numpad, OHS bawaan, baterai 58Wh. Produktivitas lengkap di 7–8 jutaan.",
+    tags: ["Produktivitas", "Ryzen 5", "Numpad", "OHS", "15 inch"]
+  },
+  {
+    slug: "budget/acer-aspire-go-14-i3-1315u",
+    nama: "ACER Aspire GO 14 i3-1315U",
+    model: "Aspire GO 14",
+    harga: "Rp 7–8 Juta",
+    rating: 4.1,
+    kategori: "Budget",
+    tanggal: "8 Juni 2025",
+    ringkasan: "Intel Core i3-1315U 12th Gen, OHS (Microsoft Office) bawaan, RAM upgradeable DDR4. Budget 14 inch praktis untuk pelajar.",
+    tags: ["Budget", "Intel i3", "OHS", "12th Gen", "Upgradeable"]
+  },
+  {
+    slug: "budget/acer-aspire-lite-al14-42p",
+    nama: "ACER Aspire Lite AL14-42P",
+    model: "AL14-42P",
+    harga: "Rp 6–7 Juta",
+    rating: 4.0,
+    kategori: "Budget",
+    tanggal: "8 Juni 2025",
+    ringkasan: "Ryzen 3 5300U, baterai 58Wh, dan bonus OHS (Microsoft Office). Budget 14 inch yang praktis untuk pelajar.",
+    tags: ["Budget", "Ryzen 3", "OHS", "58Wh", "Upgradeable"]
+  },
+  {
+    slug: "budget/polytron-luxia-i3-1215",
+    nama: "POLYTRON Laptop Luxia i3 1215",
+    model: "Luxia i3",
+    harga: "Rp 6–7 Juta",
+    rating: 4.0,
+    kategori: "Budget",
+    tanggal: "8 Juni 2025",
+    ringkasan: "Laptop budget 14 inch dengan Intel i3-1215U, baterai besar 57Wh, RAM+SSD upgradeable, dan garansi 2 tahun + ADP. Value solid di 6–7 jutaan.",
+    tags: ["Budget", "Intel i3", "ADP", "Upgradeable", "57Wh"]
+  },
+];
+
+const kategoris = ["Semua", "Gaming", "High Gaming", "Produktivitas", "Budget"];
+
+const katImg: Record<string, string> = {
+  'Budget':        '/nasa-earth-night.jpg',
+  'Produktivitas': '/nasa-galaxy.jpg',
+  'Gaming':        '/nasa-nebula.jpg',
+  'High Gaming':   '/nasa-ngc248.jpg',
+};
+---
+
+<BaseLayout title="Review Laptop" description="Semua review laptop jujur dari AstroLaptop">
+  <style>
+    .page-header {
+      margin-bottom: 32px;
+      background:
+        linear-gradient(135deg, rgba(8,5,18,0.92) 0%, rgba(14,8,28,0.82) 40%, rgba(6,4,16,0.90) 100%),
+        url('/planet-merkuri.jpg') center/cover no-repeat;
+      border: 1px solid rgba(167,139,250,0.25);
+      border-radius: 16px; padding: 48px 40px; position: relative; overflow: hidden;
+      box-shadow: 0 0 60px rgba(167,139,250,0.10);
+    }
+    .page-header::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 40% 50%, rgba(167,139,250,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 25%, rgba(251,191,36,0.10) 0%, transparent 45%);
+    }
+    .page-header h1 {
+      font-size: 2rem; font-weight: 800; color: #e2e8f0; margin-bottom: 8px;
+      position: relative; z-index: 1;
+      text-shadow: 0 0 32px rgba(167,139,250,0.65);
+    }
+    .page-header p { color: rgba(255,255,255,0.7); position: relative; z-index: 1; }
+
+    .search-bar { margin-bottom: 16px; }
+    #review-search {
+      width: 100%; padding: 10px 16px; font-size: 0.95rem;
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+      background: rgba(255,255,255,0.05); color: #e2e8f0;
+      box-sizing: border-box; outline: none;
+    }
+    #review-search:focus { border-color: rgba(96,165,250,0.5); }
+    #review-search::placeholder { color: #475569; }
+
+    .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .filter-btn {
+      padding: 8px 18px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04);
+      font-size: 0.875rem; cursor: pointer; color: #94a3b8; transition: all 0.2s;
+      text-decoration: none; display: inline-block;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(96,165,250,0.15); color: #60a5fa; border-color: rgba(96,165,250,0.4);
+    }
+
+    .review-list { display: grid; gap: 20px; }
+    .review-item {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px; padding: 16px 20px;
+      display: grid; grid-template-columns: 110px 1fr auto;
+      gap: 18px; align-items: center;
+      text-decoration: none; color: inherit; transition: all 0.25s;
+    }
+    @media (max-width: 768px) {
+      .review-item { grid-template-columns: 80px 1fr; }
+      .item-right { grid-column: 2; }
+    }
+    .review-item:hover {
+      border-color: rgba(96,165,250,0.35); transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(96,165,250,0.08);
+    }
+    @media (max-width: 480px) {
+      .review-item { grid-template-columns: 1fr; }
+      .item-img { width: 100%; height: 140px; }
+    }
+
+    .item-img {
+      width: 110px; height: 76px;
+      border-radius: 8px; overflow: hidden; flex-shrink: 0;
+      background: rgba(255,255,255,0.05);
+    }
+    .item-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block; opacity: 0.85;
+      transition: opacity 0.2s;
+    }
+    .review-item:hover .item-img img { opacity: 1; }
+    .item-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+    .badge { background: rgba(96,165,250,0.12); color: #60a5fa; font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+    .badge-gaming { background: rgba(251,191,36,0.12); color: #fbbf24; }
+    .badge-highgaming { background: rgba(167,139,250,0.15); color: #a78bfa; }
+    .item-date { font-size: 0.8rem; color: #475569; }
+    .item-title { font-size: 1.15rem; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
+    .item-model { font-size: 0.8rem; color: #475569; margin-bottom: 8px; }
+    .item-desc { font-size: 0.875rem; color: #64748b; margin-bottom: 12px; }
+    .item-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag { background: rgba(255,255,255,0.06); color: #64748b; font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; }
+    .item-right { text-align: right; min-width: 120px; }
+    .item-price { font-size: 1.1rem; font-weight: 700; color: #34d399; margin-bottom: 8px; }
+    .item-rating { background: rgba(251,191,36,0.12); color: #fbbf24; font-size: 0.85rem; font-weight: 700; padding: 6px 12px; border-radius: 20px; display: inline-block; }
+    .total-count { color: #64748b; font-size: 0.9rem; margin-bottom: 16px; }
+  </style>
+
+  <div class="page-header">
+    <h1>📋 Semua Review Laptop</h1>
+    <p>Review jujur berdasarkan pengujian langsung, bukan sekadar spesifikasi kertas.</p>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-bar">
+    <input type="text" id="review-search" placeholder="Cari nama laptop, CPU, merk..." autocomplete="off" />
+  </div>
+
+  <!-- FILTER KATEGORI -->
+  <div class="filter-bar">
+    {kategoris.map((k) => (
+      <a href="#" class={`filter-btn ${k === "Semua" ? "active" : ""}`}>{k}</a>
+    ))}
+  </div>
+
+  <p class="total-count">{reviews.length} review tersedia</p>
+
+  <!-- DAFTAR REVIEW -->
+  <div class="review-list">
+    {reviews.map((laptop) => (
+      <a href={`/review/${laptop.slug}`} class="review-item" data-kategori={laptop.kategori}>
+        <div class="item-img">
+          <img src={katImg[laptop.kategori] ?? '/nasa-milkyway.jpg'} alt={laptop.kategori} loading="lazy" />
+        </div>
+        <div class="item-left">
+          <div class="item-meta">
+            <span class={`badge ${laptop.kategori === "Gaming" ? "badge-gaming" : laptop.kategori === "High Gaming" ? "badge-highgaming" : ""}`}>
+              {laptop.kategori}
+            </span>
+            <span class="item-date">{laptop.tanggal}</span>
+          </div>
+          <div class="item-title">{laptop.nama}</div>
+          <div class="item-model">{laptop.model}</div>
+          <div class="item-desc">{laptop.ringkasan}</div>
+          <div class="item-tags">
+            {laptop.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        </div>
+
+        <div class="item-right">
+          <div class="item-price">{laptop.harga}</div>
+          <div class="item-rating">⭐ {laptop.rating}/5</div>
+        </div>
+      </a>
+    ))}
+  </div>
+
+  <script>
+    const btns = document.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.review-item');
+    const countEl = document.querySelector('.total-count');
+    const searchInput = document.getElementById('review-search');
+    let activeKategori = 'Semua';
+
+    function applyFilter() {
+      const q = searchInput.value.toLowerCase().trim();
+      let visible = 0;
+      items.forEach(item => {
+        const kat = item.dataset.kategori;
+        const text = item.textContent.toLowerCase();
+        const matchKat = activeKategori === 'Semua' || kat === activeKategori;
+        const matchSearch = !q || text.includes(q);
+        const show = matchKat && matchSearch;
+        item.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      countEl.textContent = `${visible} review tersedia`;
+    }
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        activeKategori = btn.textContent.trim();
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilter();
+      });
+    });
+
+    searchInput.addEventListener('input', applyFilter);
+  </script>
+
+</BaseLayout>
