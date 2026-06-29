@@ -297,9 +297,9 @@ const laptops = [
     </div>
     <div class="filter-chips" data-group="performa">
       <button class="chip" data-val="ringan">🪶 Ringan & Awet Baterai</button>
-      <button class="chip" data-val="mid">⚖️ Performa</button>
+      <button class="chip" data-val="cpu">🖥️ CPU</button>
       <button class="chip" data-val="berat">🔥 Berat</button>
-      <button class="chip" data-val="gaming">🎮 Gaming</button>
+      <button class="chip" data-val="gpu">🎮 GPU</button>
     </div>
   </div>
 
@@ -353,8 +353,8 @@ const laptops = [
     if (state.editing === 'heavy' && (!l.srgb || !l.gpuDed)) return false;
     // Bar 4: Prioritas performa
     if (state.performa === 'ringan' && l.gpuDed) return false;
-    if (state.performa === 'gaming' && !l.gpuDed) return false;
-    // 'berat' dan 'mid': tidak ada hard filter tambahan
+    if (state.performa === 'gpu'    && !l.gpuDed) return false;
+    // 'cpu' dan 'berat': tidak ada hard filter tambahan
     if (state.brand === 'lokal' && !l.lokal) return false;
     if (state.brand === 'luar' && l.lokal) return false;
     return true;
@@ -367,9 +367,9 @@ const laptops = [
     if (!state.editing || state.editing === 'none') s++;
     else if (state.editing === 'light' && l.srgb) s++;
     else if (state.editing === 'heavy' && l.srgb && l.gpuDed) s++;
-    if (!state.performa || state.performa === 'mid') s++;
+    if (!state.performa || state.performa === 'cpu') s++;
     else if (state.performa === 'ringan' && !l.gpuDed) s++;
-    else if (state.performa === 'gaming' && l.gpuDed) s++;
+    else if (state.performa === 'gpu' && l.gpuDed) s++;
     else if (state.performa === 'berat' && l.pmMulti >= 18000) s++;
     if (!state.brand || state.brand === 'all') s++;
     else if (state.brand === 'lokal' && l.lokal) s++;
@@ -378,26 +378,43 @@ const laptops = [
   }
 
   // Sort hasil berdasarkan pilihan Bar 4
+  /* Efficiency score untuk mode Ringan & Awet Baterai.
+     Komponen (semua dari data yang sudah ada di project):
+     - Tidak ada GPU dedicated (+60)  → hemat daya paling signifikan
+     - GPU TGP tinggi (-0.45/Watt)    → makin boros listrik, makin rendah
+     - Bobot ringan (+12 per 0.1kg)   → chassis kecil biasanya baterai lebih awet
+     - pmMulti tinggi (+1/2000)       → proxy efisiensi CPU (performa per watt)
+  */
+  function efficiencyScore(l) {
+    let s = 0;
+    if (!l.gpuDed)    s += 60;
+    if (l.gpuTgp > 0) s -= l.gpuTgp * 0.45;
+    if (l.bobot > 0)  s += (3.2 - l.bobot) * 12;
+    if (l.pmMulti > 0) s += l.pmMulti / 2000;
+    return s;
+  }
+
   function sortByPerforma(list) {
     const p = state.performa;
-    if (p === 'gaming') {
-      // Prioritas: TGP GPU tertinggi → VRAM terbesar
+    if (p === 'gpu') {
+      // GPU mode: TGP tertinggi → VRAM terbesar
       return [...list].sort((a, b) =>
         b.gpuTgp !== a.gpuTgp ? b.gpuTgp - a.gpuTgp : b.gpuVram - a.gpuVram
       );
     }
-    if (p === 'berat') {
-      // Prioritas: Passmark Multi tertinggi (CPU terkuat)
+    if (p === 'cpu') {
+      // CPU mode: Passmark Multi-Thread tertinggi
       return [...list].sort((a, b) => b.pmMulti - a.pmMulti);
     }
+    if (p === 'berat') {
+      // Berat mode: gabungan CPU + GPU — cocok untuk beban berat (render, gaming+stream)
+      return [...list].sort((a, b) =>
+        (b.pmMulti + b.gpuTgp * 100) - (a.pmMulti + a.gpuTgp * 100)
+      );
+    }
     if (p === 'ringan') {
-      // Prioritas: bobot teringan — laptop tanpa bobot data diletakkan di belakang
-      return [...list].sort((a, b) => {
-        if (a.bobot && b.bobot) return a.bobot - b.bobot;
-        if (a.bobot) return -1;
-        if (b.bobot) return 1;
-        return b.pmMulti - a.pmMulti; // tiebreaker: CPU lebih efisien
-      });
+      // Ringan mode: efficiency score tertinggi (no-dGPU bonus, TGP penalty, bobot, pmMulti)
+      return [...list].sort((a, b) => efficiencyScore(b) - efficiencyScore(a));
     }
     return list;
   }
@@ -467,9 +484,10 @@ const laptops = [
             <div style="font-size:0.76rem;color:${specColor};">🖥️ ${l.cpu}</div>
             <div style="font-size:0.76rem;color:${specColor};">🎮 ${l.gpu}</div>
             <div style="font-size:0.76rem;color:${specColor};">💾 ${l.ram}</div>
-            ${state.performa === 'gaming' && l.gpuTgp ? `<div style="font-size:0.76rem;color:${light ? '#ea580c' : '#f97316'};">⚡ TGP: ${l.gpuTgp}W · VRAM: ${l.gpuVram}GB</div>` : ''}
-            ${state.performa === 'berat' && l.pmMulti ? `<div style="font-size:0.76rem;color:${light ? '#7c3aed' : '#a78bfa'};">📊 Passmark Multi: ${l.pmMulti.toLocaleString('id-ID')}</div>` : ''}
-            ${state.performa === 'ringan' && l.bobot ? `<div style="font-size:0.76rem;color:${light ? '#059669' : '#34d399'};">⚖️ Bobot: ±${l.bobot} kg</div>` : ''}
+            ${state.performa === 'gpu' && l.gpuTgp ? `<div style="font-size:0.76rem;color:${light ? '#ea580c' : '#f97316'};">⚡ TGP: ${l.gpuTgp}W · VRAM: ${l.gpuVram}GB</div>` : ''}
+            ${state.performa === 'cpu' && l.pmMulti ? `<div style="font-size:0.76rem;color:${light ? '#2563eb' : '#60a5fa'};">🖥️ Passmark Multi: ${l.pmMulti.toLocaleString('id-ID')}</div>` : ''}
+            ${state.performa === 'berat' && l.pmMulti ? `<div style="font-size:0.76rem;color:${light ? '#7c3aed' : '#a78bfa'};">📊 CPU+GPU Score: ${(l.pmMulti + l.gpuTgp * 100).toLocaleString('id-ID')}</div>` : ''}
+            ${state.performa === 'ringan' ? `<div style="font-size:0.76rem;color:${light ? '#059669' : '#34d399'};">${!l.gpuDed ? '🔋 Tanpa dGPU' : ''}${l.bobot ? (l.gpuDed ? '' : ' · ') + '⚖️ ' + l.bobot + ' kg' : ''}${l.pmMulti ? ' · eff: ' + Math.round(efficiencyScore(l)) : ''}</div>` : ''}
           </div>
 
           <!-- Badges -->
