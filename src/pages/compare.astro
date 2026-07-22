@@ -154,6 +154,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <label>GPU</label>
       <select id="f-gpu">
         <option value="">Semua GPU</option>
+        <option value="RTX 5080">RTX 5080</option>
+        <option value="RTX 5070 Ti">RTX 5070 Ti</option>
+        <option value="RTX 5070">RTX 5070</option>
         <option value="RTX 5060">RTX 5060</option>
         <option value="RTX 5050">RTX 5050</option>
         <option value="RTX 4050">RTX 4050</option>
@@ -205,7 +208,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </div>
 
-  <p class="result-info">Menampilkan <strong id="result-count">25</strong> laptop</p>
+  <p class="result-info">Menampilkan <strong id="result-count">61</strong> laptop</p>
 
   <!-- TABEL -->
   <div class="table-wrap">
@@ -698,6 +701,271 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <tr id="no-result" class="no-result">
           <td colspan="9">😕 Tidak ada laptop yang cocok dengan filter ini.</td>
         </tr>
+
+        <tr data-harga="22.5" data-gpu="RTX 5050" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-legion-5i-15irx10-i7-13650hx">Lenovo Legion 5i 15IRX10 i7-13650HX RTX 5050</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-13650HX</span></td>
+          <td><span class="badge-gpu">RTX 5050 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>15.6" WUXGA 165Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 22–23 Jt</td>
+        </tr>
+
+        <tr data-harga="25.0" data-gpu="RTX 5050" data-cpu="AMD" data-ram="LPDDR5X" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/asus-tuf-a14-fa401uh-rtx5050">ASUS TUF A14 FA401UH Ryzen AI 7 260 RTX 5050</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 260</span></td>
+          <td><span class="badge-gpu">RTX 5050 8GB</span></td>
+          <td><span class="badge-ram">LPDDR5X</span></td>
+          <td>14" WQXGA 165Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 25 Jt</td>
+        </tr>
+
+        <tr data-harga="25.0" data-gpu="RTX 5050" data-cpu="" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-legion-5i-15irx10-oled-rtx5050">Lenovo Legion 5i 15IRX10 OLED RTX 5050</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-cpu">Tidak tercantum</span></td>
+          <td><span class="badge-gpu">RTX 5050 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>15" WQXGA 165Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 25 Jt</td>
+        </tr>
+
+        <tr data-harga="25.0" data-gpu="RTX 5050" data-cpu="AMD" data-ram="DDR5" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/asus-rog-strix-g16-g614ph-rtx5050">ASUS ROG Strix G16 G614PH Ryzen 9 8940HX RTX 5050</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 9 8940HX</span></td>
+          <td><span class="badge-gpu">RTX 5050 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" QHD 240Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 25 Jt</td>
+        </tr>
+
+        <tr data-harga="23.0" data-gpu="RTX 5060" data-cpu="AMD" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/asus-tuf-a16-fa608um-rtx5060">ASUS TUF A16 FA608UM Ryzen AI 7 260 RTX 5060</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 260</span></td>
+          <td><span class="badge-gpu">RTX 5060 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WUXGA 165Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 23 Jt</td>
+        </tr>
+
+        <tr data-harga="25.5" data-gpu="RTX 5060" data-cpu="Intel" data-ram="DDR5" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-legion-5i-15irx10-i7-14700hx-rtx5060">Lenovo Legion 5i 15IRX10 i7-14700HX RTX 5060</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-14700HX</span></td>
+          <td><span class="badge-gpu">RTX 5060 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>15" WQXGA 165Hz OLED</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 25–26 Jt</td>
+        </tr>
+
+        <tr data-harga="27.5" data-gpu="RTX 5060" data-cpu="Intel" data-ram="DDR5" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-legion-5i-15iax10-rtx5060">Lenovo Legion 5i 15IAX10 Ultra 7 255HX RTX 5060</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 255HX</span></td>
+          <td><span class="badge-gpu">RTX 5060 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>15" WQXGA 165Hz OLED</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 27–28 Jt</td>
+        </tr>
+
+        <tr data-harga="22.5" data-gpu="RTX 5060" data-cpu="AMD" data-ram="DDR5" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/msi-crosshair-a16-hx-7945hx-rtx5060">MSI Crosshair A16 HX Ryzen 9 7945HX RTX 5060</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 9 7945HX</span></td>
+          <td><span class="badge-gpu">RTX 5060 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WQXGA 240Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 22–23 Jt</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5060" data-cpu="AMD" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/hp-omen-8940hx-rtx5060">HP Omen Ryzen 9 8940HX RTX 5060</a></td>
+          <td class="td-merk">HP</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 9 8940HX</span></td>
+          <td><span class="badge-gpu">RTX 5060 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" 2K 165Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5060" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/acer-predator-helios-neo-16s-255hx-rtx5060">Acer Predator Helios Neo 16S Ultra 7 255HX RTX 5060</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 255HX</span></td>
+          <td><span class="badge-gpu">RTX 5060 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WQXGA 240Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5060" data-cpu="AMD" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-loq-15ahp11-rtx5060">Lenovo LOQ 15AHP11 Ryzen AI 7 250 RTX 5060</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 250</span></td>
+          <td><span class="badge-gpu">RTX 5060 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>15" FHD 165Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5060" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/hp-omen-i7-14650hx-rtx5060">HP Omen i7-14650HX RTX 5060</a></td>
+          <td class="td-merk">HP</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-14650HX</span></td>
+          <td><span class="badge-gpu">RTX 5060 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>WQXGA 180Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5060" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/acer-predator-helios-neo-16s-ultra7-356h-rtx5060">Acer Predator Helios Neo 16S Ultra 7 356H RTX 5060</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 356H</span></td>
+          <td><span class="badge-gpu">RTX 5060 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WQXGA 165Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5070" data-cpu="AMD" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/asus-tuf-a16-fa608up-rtx5070">ASUS TUF A16 FA608UP Ryzen AI 7 260 RTX 5070</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 260</span></td>
+          <td><span class="badge-gpu">RTX 5070 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WUXGA 165Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="21.5" data-gpu="RTX 5070" data-cpu="Intel" data-ram="DDR5" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/axioo-pongo-775-rtx5070">Axioo Pongo 775 i7-13620H RTX 5070</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-13620H</span></td>
+          <td><span class="badge-gpu">RTX 5070 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WQXGA 180Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 21–22 Jt</td>
+        </tr>
+
+        <tr data-harga="24.5" data-gpu="RTX 5070" data-cpu="AMD" data-ram="DDR5" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/msi-crosshair-a16-hx-7945hx-rtx5070">MSI Crosshair A16 HX Ryzen 9 7945HX RTX 5070</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 9 7945HX</span></td>
+          <td><span class="badge-gpu">RTX 5070 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WQXGA 240Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 24–25 Jt</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5070" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/acer-predator-helios-neo-16s-ultra9-386h-rtx5070">Acer Predator Helios Neo 16S Ultra 9 386H RTX 5070</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 9 386H</span></td>
+          <td><span class="badge-gpu">RTX 5070 8GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WQXGA 165Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="31.0" data-gpu="RTX 5070 Ti" data-cpu="Intel" data-ram="DDR5" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/msi-vector-16hx-255hx-rtx5070ti">MSI Vector 16HX Ultra 7 255HX RTX 5070 Ti</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 255HX</span></td>
+          <td><span class="badge-gpu">RTX 5070 Ti 12GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WQXGA 240Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 31 Jt</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5070 Ti" data-cpu="" data-ram="DDR5" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/asus-rog-strix-g16-g614pr-rtx5070ti">ASUS ROG Strix G16 2025 G614PR RTX 5070 Ti</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-cpu">Tidak tercantum</span></td>
+          <td><span class="badge-gpu">RTX 5070 Ti 12GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" FHD+ 165Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5070 Ti" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-legion-pro-5i-16-oled-rtx5070ti">Lenovo Legion Pro 5i 16 OLED Ultra 9 275HX RTX 5070 Ti</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 9 275HX</span></td>
+          <td><span class="badge-gpu">RTX 5070 Ti 12GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WQXGA 240Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5070 Ti" data-cpu="AMD" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/hp-omen-max-16-rtx5070ti">HP Omen Max 16 Ryzen AI 7 350 RTX 5070 Ti</a></td>
+          <td class="td-merk">HP</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 350</span></td>
+          <td><span class="badge-gpu">RTX 5070 Ti 12GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WQXGA 240Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5080" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/msi-vector-16hx-275hx-rtx5080">MSI Vector 16HX Ultra 9 275HX RTX 5080</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 9 275HX</span></td>
+          <td><span class="badge-gpu">RTX 5080 16GB</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>16" WQXGA 240Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
       </tbody>
     </table>
   </div>
