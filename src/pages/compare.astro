@@ -108,6 +108,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .badge-cpu { font-size: 0.8rem; white-space: nowrap; }
     .badge-amd { background: rgba(239,68,68,0.15); color: #f87171; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
     .badge-intel { background: rgba(96,165,250,0.12); color: #60a5fa; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .badge-apple { background: rgba(148,163,184,0.15); color: #cbd5e1; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
     .badge-ram { background: rgba(255,255,255,0.08); color: #94a3b8; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
 
     .check { color: #34d399; font-size: 1rem; }
@@ -171,6 +172,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <option value="">Intel & AMD</option>
         <option value="Intel">Intel</option>
         <option value="AMD">AMD</option>
+        <option value="Apple">Apple</option>
       </select>
     </div>
 
@@ -198,6 +200,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <option value="">Semua</option>
         <option value="gaming">Gaming</option>
         <option value="high-gaming">High Gaming</option>
+        <option value="ultrabook">Ultrabook</option>
         <option value="produktivitas">Produktivitas / Office</option>
         <option value="budget">Budget</option>
       </select>
@@ -961,6 +964,187 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-gpu">RTX 5080 16GB</span></td>
           <td><span class="badge-ram">DDR5</span></td>
           <td>16" WQXGA 240Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+
+        <tr data-harga="10.5" data-gpu="Integrated" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/acer-swift-go-14-sfg14-ultra5-125h">Acer Swift Go 14 SFG14 Ultra 5 125H</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 5 125H</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">LPDDR5</span></td>
+          <td>14" 2.8K</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 10–11 Jt</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="Integrated" data-cpu="" data-ram="DDR5" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/acer-swift-go-14-sfg14-73p9">Acer Swift Go 14 AI SFG14-73-73P9</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-cpu">Tidak tercantum</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">LPDDR5X</span></td>
+          <td>14" 2.8K OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="10.5" data-gpu="Integrated" data-cpu="AMD" data-ram="DDR5" data-srgb="tidak" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/advan-workplus-ai-ryzen7-255">ADVAN Workplus AI Ryzen 7 255</a></td>
+          <td class="td-merk">Advan</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 255</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>14" FHD+</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 10–11 Jt</td>
+        </tr>
+
+        <tr data-harga="12.5" data-gpu="Integrated" data-cpu="Apple" data-ram="" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/apple-macbook-air-m2-13">Apple MacBook Air M2 13"</a></td>
+          <td class="td-merk">Apple</td>
+          <td><span class="badge-apple">Apple</span> <span class="badge-cpu">Apple M2</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">—</span></td>
+          <td>13" 2.5K</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 12–13 Jt</td>
+        </tr>
+
+        <tr data-harga="12.5" data-gpu="Integrated" data-cpu="AMD" data-ram="DDR5" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/lenovo-ideapad-slim5-14-oled-ryzen7-8845hs">Lenovo IdeaPad Slim 5 14 OLED Ryzen 7 8845HS</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 8845HS</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>14" WUXGA OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 12–13 Jt</td>
+        </tr>
+
+        <tr data-harga="13.5" data-gpu="Integrated" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/lenovo-ideapad-slim5-14iah10-ultra5-225h">Lenovo IdeaPad Slim 5 14IAH10 Ultra 5 225H</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 5 225H</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>14" WUXGA OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 13–14 Jt</td>
+        </tr>
+
+        <tr data-harga="15.5" data-gpu="Integrated" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/lenovo-ideapad-slim5i-ultra7-255h">Lenovo IdeaPad Slim 5i Ultra 7 255H</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 255H</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">DDR5</span></td>
+          <td>14" WUXGA OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 15–16 Jt</td>
+        </tr>
+
+        <tr data-harga="19.0" data-gpu="Integrated" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/lenovo-yoga-slim7i-aura-ultra5-226v">Lenovo Yoga Slim 7i Aura Edition Ultra 5 226V</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 5 226V</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">LPDDR5</span></td>
+          <td>14" 2.8K OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 19 Jt</td>
+        </tr>
+
+        <tr data-harga="21.0" data-gpu="Integrated" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/msi-prestige-14-ai-ultra7-355">MSI Prestige 14 AI+ Ultra 7 355</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 355</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">LPDDR5X</span></td>
+          <td>14" FHD+ OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 21 Jt</td>
+        </tr>
+
+        <tr data-harga="24.0" data-gpu="Integrated" data-cpu="Apple" data-ram="" data-srgb="tidak" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/apple-macbook-air-m4">Apple MacBook Air M4</a></td>
+          <td class="td-merk">Apple</td>
+          <td><span class="badge-apple">Apple</span> <span class="badge-cpu">Apple M4</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">—</span></td>
+          <td>—</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 24 Jt</td>
+        </tr>
+
+        <tr data-harga="26.0" data-gpu="Integrated" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/msi-prestige-14-flip-ultra9-386h">MSI Prestige 14 Flip AI+ Ultra 9 386H</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 9 386H</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">LPDDR5X</span></td>
+          <td>14" FHD+ OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 26 Jt</td>
+        </tr>
+
+        <tr data-harga="27.0" data-gpu="Integrated" data-cpu="Apple" data-ram="" data-srgb="tidak" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/apple-macbook-pro-14-m5">Apple MacBook Pro 14 M5</a></td>
+          <td class="td-merk">Apple</td>
+          <td><span class="badge-apple">Apple</span> <span class="badge-cpu">Apple M5</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">—</span></td>
+          <td>—</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 27 Jt</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="Integrated" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/asus-expertbook-ultra-p5405csa-ultra7-258v">ASUS ExpertBook Ultra P5405CSA Ultra 7 258V</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 258V</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">LPDDR5X</span></td>
+          <td>14" 2.5K OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="Integrated" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/acer-swift-go-14-sfg14-171-ultra7-358h">Acer Swift Go 14 AI SFG14-171 Ultra 7 358H</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 358H</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">LPDDR5</span></td>
+          <td>14" WUXGA 60Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="Integrated" data-cpu="Intel" data-ram="DDR5" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/asus-expertbook-b9400cba-ultra7-358h">ASUS ExpertBook B9400CBA Ultra 7 358H</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 358H</span></td>
+          <td><span class="badge-gpu">Integrated</span></td>
+          <td><span class="badge-ram">LPDDR5X</span></td>
+          <td>14" 2.8K 120Hz OLED</td>
           <td class="check">✅</td>
           <td class="score-cell"><span class="score-badge">—</span></td>
           <td class="harga-cell">—</td>
