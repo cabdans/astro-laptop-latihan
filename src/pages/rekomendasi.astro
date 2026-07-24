@@ -86,7 +86,7 @@ const laptops = [
 ];
 ---
 
-<BaseLayout title="Temukan Laptop — AstroLaptop" description="Filter wizard 5 langkah untuk menemukan laptop paling sesuai budget dan kebutuhanmu">
+<BaseLayout title="Temukan Laptop" description="Filter wizard 5 langkah untuk menemukan laptop paling sesuai budget dan kebutuhanmu">
 <style>
   .rekomen-hero {
     text-align: center;
@@ -280,7 +280,7 @@ const laptops = [
 
 <div class="rekomen-hero reveal">
   <h1>🎯 Temukan Laptop yang Pas</h1>
-  <p>Jawab 5 pertanyaan singkat — kami carikan laptop terbaik dari 61 pilihan</p>
+  <p>Jawab 5 pertanyaan singkat — kami carikan laptop terbaik dari 76 pilihan</p>
 </div>
 
 <div class="filter-wizard">
@@ -374,7 +374,9 @@ const laptops = [
   // Filter logic
   function budgetPass(l, val) {
     if (!val) return true;
-    if (l.hMin === 0) return true;
+    // Laptop tanpa data harga (hMin=0) tidak boleh lolos filter budget spesifik —
+    // sebelumnya "return true" membuat laptop mahal (mis. RTX 5080) muncul di semua rentang budget.
+    if (l.hMin === 0) return false;
     if (val === 'under5')  return l.hMax <= 5;
     if (val === '5to10')   return l.hMin >= 5  && l.hMax <= 10;
     if (val === '10to15')  return l.hMin >= 10 && l.hMax <= 15;
