@@ -58,6 +58,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .cs-option:last-child { border-bottom: none; }
     .cs-option:hover { background: rgba(96,165,250,0.1); color: #60a5fa; }
     .cs-option.selected { background: rgba(96,165,250,0.12); color: #60a5fa; font-weight: 600; }
+    /* LIGHT MODE: dropdown & input agar terbaca (sebelumnya panel gelap di background terang) */
+    :global(html[data-theme="light"]) .cs-dropdown { background: #ffffff; border-color: rgba(37,99,235,0.25); box-shadow: 0 8px 32px rgba(15,23,42,0.15); }
+    :global(html[data-theme="light"]) .cs-option { color: #1e293b; border-bottom-color: rgba(15,23,42,0.08); }
+    :global(html[data-theme="light"]) .cs-input { color: #0f172a; background: #f1f5f9; border-color: rgba(15,23,42,0.15); }
+    :global(html[data-theme="light"]) .cs-input::placeholder { color: #94a3b8; }
     .vs-badge {
       text-align: center; font-size: 1.3rem; font-weight: 900; color: #60a5fa;
       background: rgba(96,165,250,0.12); border-radius: 50%;
@@ -586,8 +591,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         tbody.innerHTML += '<tr><td>' + label + '</td><td class="' + clsA + '">' + vA + iconA + '</td><td class="' + clsB + '">' + vB + iconB + '</td></tr>';
       });
 
-      document.getElementById('wins-a').textContent = '&#x1F3C6; ' + winsA + ' unggul';
-      document.getElementById('wins-b').textContent = '&#x1F3C6; ' + winsB + ' unggul';
+      document.getElementById('wins-a').textContent = '🏆 ' + winsA + ' unggul';
+      document.getElementById('wins-b').textContent = '🏆 ' + winsB + ' unggul';
 
       document.getElementById('verdict-name-a').textContent = a.nama;
       document.getElementById('verdict-name-b').textContent = b.nama;
@@ -597,13 +602,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       ulB.innerHTML = prosB.length ? prosB.map(p => '<li>' + p + '</li>').join('') : '<li style="color:#475569;font-style:italic">Tidak unggul di kategori ini</li>';
 
       const banner = document.getElementById('winner-banner');
-      if (winsA > winsB) banner.textContent = '&#x1F3C6; ' + a.nama + ' unggul di lebih banyak kategori (' + winsA + ' vs ' + winsB + ')';
-      else if (winsB > winsA) banner.textContent = '&#x1F3C6; ' + b.nama + ' unggul di lebih banyak kategori (' + winsB + ' vs ' + winsA + ')';
-      else banner.textContent = '&#x1F91D; Kedua laptop seimbang (' + winsA + ' vs ' + winsB + ')';
+      if (winsA > winsB) banner.textContent = '🏆 ' + a.nama + ' unggul di lebih banyak kategori (' + winsA + ' vs ' + winsB + ')';
+      else if (winsB > winsA) banner.textContent = '🏆 ' + b.nama + ' unggul di lebih banyak kategori (' + winsB + ' vs ' + winsA + ')';
+      else banner.textContent = '🤝 Kedua laptop seimbang (' + winsA + ' vs ' + winsB + ')';
     }
 
-    document.getElementById('sel-a').addEventListener('change', render);
-    document.getElementById('sel-b').addEventListener('change', render);
+    // Elemen #sel-a / #sel-b sudah tidak ada (diganti custom dropdown). render() dipicu lewat onSelect
+    // pada buildDropdown, jadi baris addEventListener lama dihapus agar tak melempar TypeError null.
     render();
   </script>
 </BaseLayout>
