@@ -898,6 +898,10 @@ const kategoriBadgeText: Record<string, string> = {
       .stats-bar { gap: 8px; }
       .stat-angka { font-size: 1.5rem; }
     }
+
+    /* ── LIGHT MODE: perbaiki keterbacaan judul kartu review (sebelumnya near-white di background terang) ── */
+    :global(html[data-theme="light"]) .card-title { color: #0f172a; }
+    :global(html[data-theme="light"]) .card-desc { color: #475569; }
   </style>
 
   <!-- HERO -->
@@ -1020,7 +1024,7 @@ const kategoriBadgeText: Record<string, string> = {
       <a href="/compare" class="cta-card reveal">
         <div class="cta-icon">📊</div>
         <div class="cta-title">Tabel Perbandingan</div>
-        <div class="cta-desc">Bandingkan semua 61 laptop side-by-side. Sortir dan filter per kolom.</div>
+        <div class="cta-desc">Bandingkan semua 76 laptop side-by-side. Sortir dan filter per kolom.</div>
       </a>
       <a href="/h2h" class="cta-card reveal">
         <div class="cta-icon">⚔️</div>
