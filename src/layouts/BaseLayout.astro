@@ -534,6 +534,8 @@ const { title, description = "Review laptop jujur untuk semua kebutuhan dan budg
         links.classList.remove("open");
         document.body.style.overflow = "";
       }
+      // Expose ke global scope agar inline onclick="closeNav()" pada link nav bisa mengaksesnya
+      window.closeNav = closeNav;
       // Close on outside tap
       document.addEventListener("click", (e) => {
         if (!toggle.contains(e.target) && !links.contains(e.target)) closeNav();
