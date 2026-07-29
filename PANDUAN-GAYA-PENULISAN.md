@@ -151,5 +151,7 @@ Profesi: pekerja IT · konten kreator astronomi (livestream)
 | Budget | 7 | ✅ selesai 27 Juli 2026 |
 | Produktivitas | 12 | ✅ selesai 27 Juli 2026 |
 | Gaming | 20 file di folder gaming/ | ✅ selesai 27 Juli 2026 |
-| High Gaming | 24 | belum |
-| Ultrabook | 15 | belum |
+| High Gaming | 24 (22 di `high-gaming/` + 2 di `gaming/`) | ✅ selesai 27 Juli 2026 |
+| Ultrabook | 15 | ✅ selesai 27 Juli 2026 |
+
+**Seluruh 90 halaman review sudah memakai gaya 2026.**
