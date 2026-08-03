@@ -154,4 +154,4 @@ Profesi: pekerja IT · konten kreator astronomi (livestream)
 | High Gaming | 24 (22 di `high-gaming/` + 2 di `gaming/`) | ✅ selesai 27 Juli 2026 |
 | Ultrabook | 15 | ✅ selesai 27 Juli 2026 |
 
-**Seluruh 90 halaman review sudah memakai gaya 2026.**
+**Seluruh 76 halaman review sudah memakai gaya 2026.**
