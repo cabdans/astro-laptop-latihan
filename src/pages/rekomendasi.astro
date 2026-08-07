@@ -307,9 +307,8 @@ const laptops = [
       🔧 Perlu RAM upgradeable?
     </div>
     <div class="filter-chips" data-group="ram">
-      <button class="chip" data-val="any">Tidak perlu</button>
-      <button class="chip" data-val="want">Pengen upgradeable</button>
-      <button class="chip" data-val="must">Harus upgradeable</button>
+      <button class="chip" data-val="ya">Ya</button>
+      <button class="chip" data-val="tidak">Tidak</button>
     </div>
   </div>
 
@@ -322,7 +321,7 @@ const laptops = [
     <div class="filter-chips" data-group="editing">
       <button class="chip" data-val="none">Tidak ada</button>
       <button class="chip" data-val="light">Editing ringan (foto/Canva)</button>
-      <button class="chip" data-val="heavy">Editing berat (video/3D)</button>
+      <button class="chip" data-val="heavy">Editing berat (video/3D) — GPU + 100% sRGB</button>
     </div>
   </div>
 
@@ -334,9 +333,8 @@ const laptops = [
     </div>
     <div class="filter-chips" data-group="performa">
       <button class="chip" data-val="ringan">🪶 Ringan & Awet Baterai</button>
-      <button class="chip" data-val="cpu">🖥️ CPU</button>
-      <button class="chip" data-val="berat">🔥 Berat</button>
-      <button class="chip" data-val="gpu">🎮 GPU</button>
+      <button class="chip" data-val="produktivitas">🖥️ Produktivitas</button>
+      <button class="chip" data-val="gaming">🎮 Gaming</button>
     </div>
   </div>
 
@@ -387,13 +385,15 @@ const laptops = [
 
   function passesAllFilters(l) {
     if (!budgetPass(l, state.budget)) return false;
-    if ((state.ram === 'want' || state.ram === 'must') && !l.ramUp) return false;
+    // Bar 2: RAM upgradeable — "ya" wajib upgradeable, "tidak" tidak membatasi
+    if (state.ram === 'ya' && !l.ramUp) return false;
+    // Bar 3: Editing — ringan butuh 100% sRGB, berat butuh sRGB + GPU dedicated
     if (state.editing === 'light' && !l.srgb) return false;
     if (state.editing === 'heavy' && (!l.srgb || !l.gpuDed)) return false;
     // Bar 4: Prioritas performa
     if (state.performa === 'ringan' && l.gpuDed) return false;
-    if (state.performa === 'gpu'    && !l.gpuDed) return false;
-    // 'cpu' dan 'berat': tidak ada hard filter tambahan
+    if (state.performa === 'gaming' && !l.gpuDed) return false;
+    // 'produktivitas': tidak ada hard filter, hanya memengaruhi urutan (pmMulti tertinggi)
     if (state.brand === 'lokal' && !l.lokal) return false;
     if (state.brand === 'luar' && l.lokal) return false;
     return true;
@@ -402,14 +402,14 @@ const laptops = [
   function scoreClosest(l) {
     let s = 0;
     if (budgetPass(l, state.budget)) s += 2;
-    if (!state.ram || state.ram === 'any' || l.ramUp) s++;
+    if (!state.ram || state.ram === 'tidak' || l.ramUp) s++;
     if (!state.editing || state.editing === 'none') s++;
     else if (state.editing === 'light' && l.srgb) s++;
     else if (state.editing === 'heavy' && l.srgb && l.gpuDed) s++;
-    if (!state.performa || state.performa === 'cpu') s++;
+    // 'produktivitas' tidak punya hard filter, jadi selalu terpenuhi
+    if (!state.performa || state.performa === 'produktivitas') s++;
     else if (state.performa === 'ringan' && !l.gpuDed) s++;
-    else if (state.performa === 'gpu' && l.gpuDed) s++;
-    else if (state.performa === 'berat' && l.pmMulti >= 18000) s++;
+    else if (state.performa === 'gaming' && l.gpuDed) s++;
     if (!state.brand || state.brand === 'all') s++;
     else if (state.brand === 'lokal' && l.lokal) s++;
     else if (state.brand === 'luar' && !l.lokal) s++;
@@ -435,21 +435,15 @@ const laptops = [
 
   function sortByPerforma(list) {
     const p = state.performa;
-    if (p === 'gpu') {
-      // GPU mode: TGP tertinggi → VRAM terbesar
+    if (p === 'gaming') {
+      // Gaming mode: TGP GPU tertinggi → VRAM terbesar
       return [...list].sort((a, b) =>
         b.gpuTgp !== a.gpuTgp ? b.gpuTgp - a.gpuTgp : b.gpuVram - a.gpuVram
       );
     }
-    if (p === 'cpu') {
-      // CPU mode: Passmark Multi-Thread tertinggi
+    if (p === 'produktivitas') {
+      // Produktivitas mode: Passmark Multi-Thread tertinggi
       return [...list].sort((a, b) => b.pmMulti - a.pmMulti);
-    }
-    if (p === 'berat') {
-      // Berat mode: gabungan CPU + GPU — cocok untuk beban berat (render, gaming+stream)
-      return [...list].sort((a, b) =>
-        (b.pmMulti + b.gpuTgp * 100) - (a.pmMulti + a.gpuTgp * 100)
-      );
     }
     if (p === 'ringan') {
       // Ringan mode: efficiency score tertinggi (no-dGPU bonus, TGP penalty, bobot, pmMulti)
@@ -524,9 +518,8 @@ const laptops = [
             <div style="font-size:0.76rem;color:${specColor};">🖥️ ${l.cpu}</div>
             <div style="font-size:0.76rem;color:${specColor};">🎮 ${l.gpu}</div>
             <div style="font-size:0.76rem;color:${specColor};">💾 ${l.ram}</div>
-            ${state.performa === 'gpu' && l.gpuTgp ? `<div style="font-size:0.76rem;color:${light ? '#ea580c' : '#f97316'};">⚡ TGP: ${l.gpuTgp}W · VRAM: ${l.gpuVram}GB</div>` : ''}
-            ${state.performa === 'cpu' && l.pmMulti ? `<div style="font-size:0.76rem;color:${light ? '#2563eb' : '#60a5fa'};">🖥️ Passmark Multi: ${l.pmMulti.toLocaleString('id-ID')}</div>` : ''}
-            ${state.performa === 'berat' && l.pmMulti ? `<div style="font-size:0.76rem;color:${light ? '#7c3aed' : '#a78bfa'};">📊 CPU+GPU Score: ${(l.pmMulti + l.gpuTgp * 100).toLocaleString('id-ID')}</div>` : ''}
+            ${state.performa === 'gaming' && l.gpuTgp ? `<div style="font-size:0.76rem;color:${light ? '#ea580c' : '#f97316'};">⚡ TGP: ${l.gpuTgp}W · VRAM: ${l.gpuVram}GB</div>` : ''}
+            ${state.performa === 'produktivitas' && l.pmMulti ? `<div style="font-size:0.76rem;color:${light ? '#2563eb' : '#60a5fa'};">🖥️ Passmark Multi: ${l.pmMulti.toLocaleString('id-ID')}</div>` : ''}
             ${state.performa === 'ringan' ? `<div style="font-size:0.76rem;color:${light ? '#059669' : '#34d399'};">${!l.gpuDed ? '🔋 Tanpa dGPU' : ''}${l.bobot ? (l.gpuDed ? '' : ' · ') + '⚖️ ' + l.bobot + ' kg' : ''}${l.pmMulti ? ' · eff: ' + Math.round(efficiencyScore(l)) : ''}</div>` : ''}
           </div>
 
