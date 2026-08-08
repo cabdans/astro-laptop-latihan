@@ -61,13 +61,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       overflow-x: auto; border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.09);
     }
-    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    table {
+      width: 100%; min-width: 1060px;
+      border-collapse: collapse; font-size: 0.875rem;
+    }
     thead tr {
       background: rgba(255,255,255,0.06);
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     th {
-      padding: 12px 16px; text-align: left;
+      padding: 12px 12px; text-align: left;
       font-size: 0.78rem; font-weight: 700; color: #64748b;
       text-transform: uppercase; letter-spacing: 0.04em;
       white-space: nowrap; cursor: pointer; user-select: none;
@@ -81,7 +84,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     tbody tr:hover { background: rgba(96,165,250,0.05); }
     tbody tr.hidden { display: none; }
 
-    td { padding: 14px 16px; color: #cbd5e1; vertical-align: middle; }
+    td { padding: 14px 12px; color: #cbd5e1; vertical-align: middle; }
     .td-nama { font-weight: 600; color: #e2e8f0; min-width: 200px; }
     .td-nama a { color: #60a5fa; text-decoration: none; }
     .td-nama a:hover { text-decoration: underline; }
@@ -113,7 +116,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     .check { color: #34d399; font-size: 1rem; }
     .cross { color: #334155; font-size: 1rem; }
-    .harga-cell { font-weight: 700; color: #34d399; white-space: nowrap; }
+    .harga-cell {
+      font-weight: 700; color: #34d399; white-space: nowrap;
+      min-width: 108px; text-align: right; padding-right: 18px;
+    }
+    th[data-col="harga"] { text-align: right; padding-right: 18px; }
 
     .no-result { text-align: center; padding: 48px; color: #475569; display: none; }
     .no-result.show { display: table-row; }
@@ -713,7 +720,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>15.6" WUXGA 165 Hz</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">57</span></td>
           <td class="harga-cell">Rp 22–23 Jt</td>
         </tr>
 
@@ -749,7 +756,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>16" QHD 240 Hz</td>
           <td class="cross">—</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">70</span></td>
           <td class="harga-cell">Rp 25 Jt</td>
         </tr>
 
@@ -773,7 +780,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>15" WQXGA 165 Hz OLED</td>
           <td class="cross">—</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">64</span></td>
           <td class="harga-cell">Rp 25–26 Jt</td>
         </tr>
 
@@ -785,7 +792,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>15" WQXGA 165 Hz OLED</td>
           <td class="cross">—</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">75</span></td>
           <td class="harga-cell">Rp 27–28 Jt</td>
         </tr>
 
@@ -797,7 +804,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>16" WQXGA 240 Hz</td>
           <td class="cross">—</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">74</span></td>
           <td class="harga-cell">Rp 22–23 Jt</td>
         </tr>
 
@@ -809,7 +816,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>16" 2K 165 Hz</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">70</span></td>
           <td class="harga-cell">—</td>
         </tr>
 
@@ -821,7 +828,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>16" WQXGA 240 Hz OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">75</span></td>
           <td class="harga-cell">—</td>
         </tr>
 
@@ -845,7 +852,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>WQXGA 180 Hz</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
           <td class="harga-cell">—</td>
         </tr>
 
@@ -893,7 +900,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>16" WQXGA 240 Hz</td>
           <td class="cross">—</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">74</span></td>
           <td class="harga-cell">Rp 24–25 Jt</td>
         </tr>
 
@@ -905,7 +912,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>16" WQXGA 165 Hz OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">69</span></td>
           <td class="harga-cell">—</td>
         </tr>
 
@@ -917,7 +924,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>16" WQXGA 240 Hz</td>
           <td class="cross">—</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">75</span></td>
           <td class="harga-cell">Rp 31 Jt</td>
         </tr>
 
@@ -941,7 +948,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>16" WQXGA 240 Hz OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">78</span></td>
           <td class="harga-cell">—</td>
         </tr>
 
@@ -953,7 +960,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>16" WQXGA 240 Hz</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">63</span></td>
           <td class="harga-cell">—</td>
         </tr>
 
@@ -965,7 +972,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>16" WQXGA 240 Hz</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">78</span></td>
           <td class="harga-cell">—</td>
         </tr>
 
@@ -1002,7 +1009,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>14" FHD+</td>
           <td class="cross">—</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">62</span></td>
           <td class="harga-cell">Rp 10–11 Jt</td>
         </tr>
 
@@ -1014,7 +1021,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">—</span></td>
           <td>13" 2.5K</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">57</span></td>
           <td class="harga-cell">Rp 12–13 Jt</td>
         </tr>
 
@@ -1026,7 +1033,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>14" WUXGA OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
           <td class="harga-cell">Rp 12–13 Jt</td>
         </tr>
 
@@ -1038,7 +1045,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>14" WUXGA OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">64</span></td>
           <td class="harga-cell">Rp 13–14 Jt</td>
         </tr>
 
@@ -1050,7 +1057,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">DDR5</span></td>
           <td>14" WUXGA OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">68</span></td>
           <td class="harga-cell">Rp 15–16 Jt</td>
         </tr>
 
@@ -1062,7 +1069,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">LPDDR5</span></td>
           <td>14" 2.8K OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">55</span></td>
           <td class="harga-cell">Rp 19 Jt</td>
         </tr>
 
@@ -1074,7 +1081,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">LPDDR5X</span></td>
           <td>14" FHD+ OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">60</span></td>
           <td class="harga-cell">Rp 21 Jt</td>
         </tr>
 
@@ -1086,7 +1093,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">—</span></td>
           <td>—</td>
           <td class="cross">—</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">76</span></td>
           <td class="harga-cell">Rp 24 Jt</td>
         </tr>
 
@@ -1098,7 +1105,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">LPDDR5X</span></td>
           <td>14" FHD+ OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">69</span></td>
           <td class="harga-cell">Rp 26 Jt</td>
         </tr>
 
@@ -1110,7 +1117,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">—</span></td>
           <td>—</td>
           <td class="cross">—</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">81</span></td>
           <td class="harga-cell">Rp 27 Jt</td>
         </tr>
 
@@ -1122,7 +1129,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">LPDDR5X</span></td>
           <td>14" 2.5K OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">59</span></td>
           <td class="harga-cell">—</td>
         </tr>
 
@@ -1134,7 +1141,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">LPDDR5</span></td>
           <td>14" WUXGA 60 Hz OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">71</span></td>
           <td class="harga-cell">—</td>
         </tr>
 
@@ -1146,7 +1153,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <td><span class="badge-ram">LPDDR5X</span></td>
           <td>14" 2.8K 120 Hz OLED</td>
           <td class="check">✅</td>
-          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="score-cell"><span class="score-badge">71</span></td>
           <td class="harga-cell">—</td>
         </tr>
 
