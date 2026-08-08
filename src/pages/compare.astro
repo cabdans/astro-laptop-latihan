@@ -1201,6 +1201,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         let show = true;
 
+        // Laptop tanpa data harga (data-harga="0") tidak boleh lolos filter rentang
+        // harga apa pun — harganya belum diketahui, bukan berarti murah.
+        // Pola ini konsisten dengan budgetPass() di rekomendasi.astro dan
+        // matchesFilters() di h2h.astro.
+        if (harga && rHarga === 0) show = false;
+
         if (harga === 'bawah10')   { if (rHarga >= 10) show = false; }
         else if (harga === '10-13') { if (rHarga < 10 || rHarga > 13) show = false; }
         else if (harga === '13-17') { if (rHarga < 13 || rHarga > 17) show = false; }
@@ -1255,12 +1261,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         rowsArr.sort((a, b) => {
           if (col === 'harga') {
-            return (parseFloat(a.dataset.harga) - parseFloat(b.dataset.harga)) * sortDir;
+            // Laptop tanpa data harga (0) selalu di bawah, tidak ikut tersortir
+            // seolah-olah termurah.
+            const hA = parseFloat(a.dataset.harga) || 0;
+            const hB = parseFloat(b.dataset.harga) || 0;
+            if (hA === 0 && hB === 0) return 0;
+            if (hA === 0) return 1;
+            if (hB === 0) return -1;
+            return (hA - hB) * sortDir;
           }
           if (col === 'score') {
+            // Badge selalu ada; yang bertanda "—" berarti belum ada benchmark.
+            // parseInt("—") menghasilkan NaN, jadi harus dinormalkan ke null
+            // supaya guard No Data di bawah benar-benar bekerja.
             const getScore = row => {
               const badge = row.querySelector('.score-badge');
-              return badge ? parseInt(badge.textContent.trim()) : null;
+              if (!badge) return null;
+              const n = parseInt(badge.textContent.trim(), 10);
+              return Number.isNaN(n) ? null : n;
             };
             const sA = getScore(a), sB = getScore(b);
             // No Data always goes to bottom
