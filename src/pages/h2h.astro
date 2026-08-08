@@ -399,6 +399,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     function matchesFilters(laptop) {
       if (!laptop) return true;
+      // Bucket "Semua" = min 0, max 999. Hanya di bucket itu laptop tanpa data
+      // harga (hargaNum:0) boleh muncul; di bucket spesifik mana pun ia harus
+      // dikecualikan karena harganya belum diketahui, bukan berarti murah.
+      // Pola ini konsisten dengan budgetPass() di rekomendasi.astro dan
+      // applyFilters() di compare.astro.
+      const semuaHarga = budgetMin === 0 && budgetMax === 999;
+      if (laptop.hargaNum === 0 && !semuaHarga) return false;
       const inBudget = laptop.hargaNum >= budgetMin && laptop.hargaNum <= budgetMax;
       let inGpu = gpuFilter === 'all' ? true
         : gpuFilter === 'integrated' ? laptop.gpu === 'Integrated'
