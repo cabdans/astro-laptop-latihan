@@ -292,11 +292,11 @@ const laptops = [
       💰 Berapa budget kamu?
     </div>
     <div class="filter-chips" data-group="budget">
-      <button class="chip" data-val="under5">Di bawah Rp 5 juta</button>
-      <button class="chip" data-val="5to10">Rp 5–10 juta</button>
+      <button class="chip" data-val="under10">Di bawah Rp 10 juta</button>
       <button class="chip" data-val="10to15">Rp 10–15 juta</button>
       <button class="chip" data-val="15to20">Rp 15–20 juta</button>
-      <button class="chip" data-val="over20">Di atas Rp 20 juta</button>
+      <button class="chip" data-val="20to25">Rp 20–25 juta</button>
+      <button class="chip" data-val="over25">Di atas Rp 25 juta</button>
     </div>
   </div>
 
@@ -370,17 +370,31 @@ const laptops = [
   const state = { budget: null, ram: null, editing: null, performa: null, brand: null };
 
   // Filter logic
+  /* Rentang bucket harga, dalam juta rupiah. Batas bawah inklusif, batas atas
+     eksklusif — [lo, hi) — supaya laptop berharga tunggal (mis. tepat Rp 20 juta)
+     jatuh di tepat satu bucket, bukan dua atau nol. */
+  const BUDGET_BUCKETS = {
+    under10: [0,  10],
+    '10to15': [10, 15],
+    '15to20': [15, 20],
+    '20to25': [20, 25],
+    over25:  [25, Infinity],
+  };
+
   function budgetPass(l, val) {
     if (!val) return true;
     // Laptop tanpa data harga (hMin=0) tidak boleh lolos filter budget spesifik —
     // sebelumnya "return true" membuat laptop mahal (mis. RTX 5080) muncul di semua rentang budget.
     if (l.hMin === 0) return false;
-    if (val === 'under5')  return l.hMax <= 5;
-    if (val === '5to10')   return l.hMin >= 5  && l.hMax <= 10;
-    if (val === '10to15')  return l.hMin >= 10 && l.hMax <= 15;
-    if (val === '15to20')  return l.hMin >= 15 && l.hMax <= 20;
-    if (val === 'over20')  return l.hMin >= 20;
-    return true;
+    const bucket = BUDGET_BUCKETS[val];
+    if (!bucket) return true;
+    const [lo, hi] = bucket;
+    /* Cocokkan berdasarkan IRISAN rentang, bukan "harus muat seluruhnya".
+       Versi lama memakai `hMin >= lo && hMax <= hi`, sehingga laptop yang
+       harganya menyeberang batas bucket (mis. Rp 9–11 juta) tidak masuk bucket
+       mana pun dan hilang total dari hasil. Dengan irisan, laptop seperti itu
+       muncul di kedua bucket yang disentuhnya — yang memang benar. */
+    return l.hMin < hi && l.hMax >= lo;
   }
 
   function passesAllFilters(l) {
@@ -555,9 +569,11 @@ const laptops = [
       header.innerHTML = `<strong>${matched.length} laptop</strong> cocok dengan pilihanmu`;
       grid.innerHTML = sortByPerforma(matched).map(l => buildCard(l)).join('');
     } else {
-      // Fallback: tampilkan 3 laptop dengan skor tertinggi
-      const scored = laptops
-        .map(l => ({ ...l, _score: scoreClosest(l) }))
+      // Fallback: tampilkan 3 laptop dengan skor tertinggi.
+      // sortByPerforma() dijalankan lebih dulu supaya jadi tiebreak — Array.sort
+      // bersifat stabil, jadi laptop berskor sama tetap urut sesuai prioritas
+      // performa yang dipilih user, bukan urutan acak dari array sumber.
+      const scored = sortByPerforma(laptops.map(l => ({ ...l, _score: scoreClosest(l) })))
         .sort((a, b) => b._score - a._score)
         .slice(0, 3);
 
