@@ -715,11 +715,24 @@ const kategoriBadgeText: Record<string, string> = {
     }
     .hero-btn-outline:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.5); }
     .hero-disclaimer {
-      font-size: 0.78rem; margin-top: 20px; line-height: 1.55; max-width: 420px;
+      font-size: 0.78rem; margin-top: 20px; line-height: 1.55; max-width: 440px;
       background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.28);
-      border-radius: 8px; padding: 9px 13px; color: #fde68a;
+      border-radius: 8px; padding: 11px 14px; color: #fde68a;
+      display: flex; flex-direction: column; gap: 7px;
     }
+    .hero-disclaimer p { margin: 0; }
     .hero-disclaimer a { color: #fbbf24; font-weight: 600; text-decoration: underline; }
+    .hero-disclaimer a:hover { color: #fef3c7; }
+    .hd-status { font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .hd-badge {
+      background: rgba(251,191,36,0.9); color: #431407;
+      font-size: 0.64rem; font-weight: 800; letter-spacing: 0.08em;
+      padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+    }
+    .hd-afiliasi {
+      font-size: 0.72rem; color: rgba(253,230,138,0.72); line-height: 1.5;
+      border-top: 1px solid rgba(251,191,36,0.22); padding-top: 7px;
+    }
     .hero-img {
       width: 340px; flex-shrink: 0; position: relative; overflow: hidden;
       background: linear-gradient(135deg,#050518,#0c1444);
@@ -915,7 +928,13 @@ const kategoriBadgeText: Record<string, string> = {
           <a href="/review" class="hero-btn">Lihat Semua Review →</a>
           <a href="/compare" class="hero-btn-outline">Bandingkan Laptop</a>
         </div>
-        <p class="hero-disclaimer">⚠️ Data ~90% akurat. Ada mismatch? Mohon maaf & lapor ke <a href="https://www.tiktok.com/@astrolaptop" target="_blank" rel="noopener">TikTok/AstroLaptop</a></p>
+        <div class="hero-disclaimer">
+          <p class="hd-status"><span class="hd-badge">PROTOTYPE</span> Website ini masih berstatus prototype.</p>
+          <p>⚠️ Data ~90% akurat. Menemukan bug atau data yang tidak cocok? Mohon maaf, dan tolong laporkan ke
+            <a href="mailto:cahyaabdan633@gmail.com">cahyaabdan633@gmail.com</a>
+            atau chat lewat <a href="https://www.tiktok.com/@astrolaptop" target="_blank" rel="noopener">TikTok/AstroLaptop</a>.</p>
+          <p class="hd-afiliasi">Sebagian tautan pembelian di situs ini adalah tautan afiliasi. AstroLaptop berkemungkinan memperoleh komisi dari pembelian melalui tautan tersebut, tanpa menambah harga yang Anda bayar.</p>
+        </div>
       </div>
       <div class="hero-img">
         <img src="/astrolaptop-mascot.png" alt="AstroLaptop Mascot" loading="eager" />
