@@ -1,0 +1,91 @@
+========================================================================
+DAFTAR PROSESOR TANPA DATA BENCHMARK
+Project AstroLaptop  -  8 Agustus 2026
+========================================================================
+
+RINGKASAN
+  Prosesor berbeda tanpa benchmark : 6
+  Laptop tanpa nama prosesor       : 3
+  Total halaman review terdampak   : 11 dari 76
+  Halaman review sudah ada data    : 65 dari 76
+
+Diperiksa di 3 tempat sekaligus: halaman review, kolom Score CPU di
+halaman Perbandingan, dan field pmMulti di halaman Temukan Laptop.
+
+
+========================================================================
+A. PROSESOR YANG BENAR-BENAR BELUM PUNYA DATA  (6 prosesor, 7 laptop)
+========================================================================
+
+1. AMD Ryzen AI 7 260                                   [3 laptop]
+   - high-gaming/asus-tuf-a14-fa401uh-rtx5050
+   - high-gaming/asus-tuf-a16-fa608um-rtx5060
+   - high-gaming/asus-tuf-a16-fa608up-rtx5070
+
+2. AMD Ryzen AI 7 250                                   [1 laptop]
+   - high-gaming/lenovo-loq-15ahp11-rtx5060
+
+3. Intel Core Ultra 5 125H                              [1 laptop]
+   - ultrabook/acer-swift-go-14-sfg14-ultra5-125h
+
+4. Intel Core Ultra 7 356H                              [1 laptop]
+   - high-gaming/acer-predator-helios-neo-16s-ultra7-356h-rtx5060
+
+5. Intel Core i7-13620H                                 [1 laptop]
+   - high-gaming/axioo-pongo-775-rtx5070
+   CATATAN: sengaja dikosongkan atas keputusan Anda sebelumnya
+            (nama di Cpu.xlsx berbeda, tidak diasumsikan sama)
+
+Ketiga sumber konsisten untuk kelima prosesor di atas:
+halaman review kosong, Score CPU di Perbandingan bertanda "—",
+dan pmMulti bernilai 0.
+
+
+========================================================================
+B. LAPTOP YANG NAMA PROSESORNYA BELUM TERCANTUM  (3 laptop)
+========================================================================
+
+Bukan soal benchmark hilang, tapi CPU-nya sendiri belum diketahui.
+Sumber data menuliskannya "Tidak tercantum di sumber data".
+Nama prosesor harus dipastikan lebih dulu sebelum benchmark bisa diisi.
+
+   - high-gaming/asus-rog-strix-g16-g614pr-rtx5070ti
+   - high-gaming/lenovo-legion-5i-15irx10-oled-rtx5050
+   - ultrabook/acer-swift-go-14-sfg14-73p9
+
+
+========================================================================
+C. TEMUAN: 1 HALAMAN KOSONG PADAHAL DATANYA SUDAH ADA
+========================================================================
+
+   Intel Core Ultra 5 115U
+   - budget/advan-workmate-ultra-core-ultra5-115u
+
+   Halaman review-nya TIDAK punya bagian Benchmark CPU, padahal data
+   prosesor ini sudah tersimpan di tempat lain dalam project:
+
+       Halaman Perbandingan  -> Score CPU  : 40
+       Halaman Temukan Laptop-> pmMulti    : 12.771
+       Halaman H2H (cpuBench)-> nano 40, efficiency 65,
+                                Passmark Single 2.950, Multi 10.800
+
+   Jadi ini bukan data yang hilang, melainkan halaman review yang
+   belum disinkronkan. Bisa langsung diisi tanpa perlu sumber baru
+   -- bilang saja kalau mau saya kerjakan.
+
+   (Angka pmMulti 12.771 di Temukan Laptop berbeda dengan 10.800 di
+   H2H. Perlu dicek mana yang benar sebelum diisikan.)
+
+
+========================================================================
+RINGKASAN PER KATEGORI
+========================================================================
+
+   High Gaming ......... 7 laptop
+   Ultrabook ........... 2 laptop
+   Budget .............. 1 laptop   (kasus C, data sebenarnya ada)
+   Gaming .............. 0 laptop
+   Produktivitas ....... 0 laptop
+
+Yang perlu dicarikan data dari sumber luar hanya 5 prosesor di
+bagian A (di luar i7-13620H yang memang sengaja dikosongkan).

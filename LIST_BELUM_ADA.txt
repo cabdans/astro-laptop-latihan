@@ -1,0 +1,115 @@
+LAPTOP YANG BELUM ADA DI PROJECT ASTROLAPTOP
+Sumber: AstroLaptop Recomendation August Part 1.xlsx
+11 dari 22 laptop
+============================================================
+
+
+1. SPC Style 55
+   Harga     : Rp 5,7 juta
+   Kategori  : Budget / Office
+   Prosesor  : Ryzen 5 3500U
+   GPU       : iGPU Vega
+   RAM       : 8 GB DDR4-2400
+   Storage   : SSD 256 GB
+   Layar     : IPS
+   Garansi   : 1 tahun
+
+
+2. SPC Life 5
+   Harga     : Rp 6,8 juta
+   Kategori  : Budget / Office
+   Prosesor  : Core i5-12450H (seri H)
+   GPU       : iGPU Intel UHD
+   RAM       : 8 GB, upgradable s/d 64 GB
+   Storage   : SSD 512 GB
+   Layar     : Full HD IPS
+   Garansi   : 1 tahun
+
+
+3. Zyrex D-TECHt Pro V2 (8 GB)
+   Harga     : Rp 7 juta
+   Kategori  : Budget / Entry
+   Prosesor  : Ryzen 5 6600H
+   GPU       : Radeon 660M
+   RAM       : 8 GB
+   Storage   : SSD 512 GB
+   Layar     : Full HD IPS
+   Garansi   : 1 tahun
+
+
+4. Zyrex D-TECHt Pro V2 (16 GB)
+   Harga     : Rp 8,1 juta
+   Kategori  : Budget / Entry Gaming
+   Prosesor  : Ryzen 5 6600H
+   GPU       : Radeon 660M
+   RAM       : 16 GB dual channel (2x8)
+   Storage   : SSD 512 GB
+   Layar     : Full HD IPS
+   Garansi   : 1 tahun
+
+
+5. Asus ExpertBook P1
+   Harga     : Rp 8,9 juta
+   Kategori  : Allrounder / Durable
+   Prosesor  : Core i3-1315U
+   GPU       : iGPU Intel UHD
+   Garansi   : 3 tahun + 1 tahun ADP
+
+
+6. Axioo Hype 7 X8
+   Harga     : Rp 10,48 juta
+   Kategori  : Entry Gaming / Performa
+   Prosesor  : Ryzen 7 6800H
+   GPU       : Radeon 680M (iGPU)
+
+
+7. HP 14 Intel Ultra 5
+   Harga     : Rp 11,8 juta
+   Kategori  : Non-Gaming / Multitasking
+   Prosesor  : Core Ultra 5 125H
+   GPU       : Intel Arc (iGPU)
+
+
+8. Acer Nitro V15 (RTX 3050)
+   Harga     : Rp 13,99 juta
+   Kategori  : Gaming / All-in
+   Prosesor  : Core 5 210H
+   GPU       : RTX 3050 6 GB
+
+
+9. Acer Nitro Lite (RTX 4050)
+   Harga     : Rp 16,4 juta
+   Kategori  : Gaming + Mobilitas
+   Prosesor  : Core i5-13420H
+   GPU       : RTX 4050 6 GB
+
+
+10. Acer Swift 14 AI OLED
+    Harga    : Rp 16,7 juta
+    Kategori : Ultrabook
+    Prosesor : Core Ultra 5 226V (Lunar Lake)
+    GPU      : Intel Arc 130V (iGPU)
+
+
+11. Asus Vivobook S14 OLED
+    Harga    : Rp 17,3 juta
+    Kategori : Ultrabook
+    Prosesor : Ryzen 7 260 (setara 8845HS)
+    GPU      : Radeon 780M (iGPU)
+
+
+============================================================
+SUDAH ADA DI PROJECT - tidak perlu ditambah (11 laptop)
+============================================================
+
+   Acer Aspire Go (i3-1315U)
+   Acer Aspire Go Ultra 5
+   Acer Aspire 7 Pro
+   Acer Nitro Lite 16
+   Lenovo LOQ ARP10
+   Colorful Evol (RTX 4050)
+   Colorful Evol (RTX 5050)
+   Acer Nitro V15 (RTX 5050)
+   Acer Swift Go 14 AI
+   Axioo Pongo 755 AMD
+   Lenovo LOQ IRX10

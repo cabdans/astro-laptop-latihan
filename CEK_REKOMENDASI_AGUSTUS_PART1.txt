@@ -1,0 +1,137 @@
+========================================================================
+CEK: MANA YANG BELUM ADA DI PROJECT ASTROLAPTOP
+Sumber : AstroLaptop Recomendation August Part 1.xlsx
+         sheet "Rekomendasi Laptop" - 22 laptop
+Project: 76 halaman review
+Tanggal: 10 Agustus 2026
+========================================================================
+
+HASIL
+  Belum ada di project ....... 11 laptop
+  Sudah ada .................. 11 laptop
+
+Pencocokan berdasarkan nama + prosesor + GPU. Yang beda GPU atau beda
+prosesor dihitung BELUM ADA, karena di project itu memang SKU berbeda.
+
+
+========================================================================
+BELUM ADA DI PROJECT  (11 laptop)
+========================================================================
+
+--- Brand yang sama sekali belum ada di project (5) -------------------
+
+ 1. SPC Style 55                              Rp 5,7 jt
+    Ryzen 5 3500U | iGPU Vega | 8 GB DDR4 | SSD 256 GB | IPS | 1 th
+    -> Brand SPC belum ada sama sekali di project
+
+ 2. SPC Life 5                                Rp 6,8 jt
+    Core i5-12450H | iGPU Intel UHD | 8 GB (upgradable 64 GB) |
+    SSD 512 GB | Full HD IPS | 1 th
+    -> Brand SPC belum ada sama sekali di project
+
+ 3. Zyrex D-TECHt Pro V2 (8 GB)               Rp 7 jt
+    Ryzen 5 6600H | Radeon 660M | 8 GB | SSD 512 GB | Full HD IPS | 1 th
+    -> Brand Zyrex belum ada sama sekali di project
+
+ 4. Zyrex D-TECHt Pro V2 (16 GB)              Rp 8,1 jt
+    Ryzen 5 6600H | Radeon 660M | 16 GB dual channel (2x8) |
+    SSD 512 GB | Full HD IPS | 1 th
+    -> Brand Zyrex belum ada sama sekali di project
+
+ 5. Axioo Hype 7 X8                           Rp 10,48 jt
+    Ryzen 7 6800H | Radeon 680M (iGPU)
+    -> Axioo di project hanya lini Pongo, lini Hype belum ada
+
+
+--- Brand sudah ada, tapi model/SKU ini belum (6) ---------------------
+
+ 6. Asus ExpertBook P1                        Rp 8,9 jt
+    Core i3-1315U | iGPU Intel UHD | garansi 3 th + 1 th ADP
+    -> ExpertBook di project: PM1403CDA (R5 150U), B9400CBA (Ultra 7
+       358H), Ultra P5405CSA (Ultra 7 258V). Seri P1 belum ada.
+
+ 7. HP 14 Intel Ultra 5                       Rp 11,8 jt
+    Core Ultra 5 125H | Intel Arc (iGPU)
+    -> HP di project cuma Victus 15 dan lini Omen. HP 14 belum ada.
+
+ 8. Acer Nitro V15 (RTX 3050)                 Rp 13,99 jt
+    Core 5 210H | RTX 3050 6 GB
+    -> Nitro V15 di project: RTX 5050 (i5-13420H) dan ANV15-42
+       (R7 7445HS / RTX 4050). Varian RTX 3050 + Core 5 210H belum ada.
+
+ 9. Acer Nitro Lite (RTX 4050)                Rp 16,4 jt
+    Core i5-13420H | RTX 4050 6 GB
+    -> Nitro Lite di project cuma NL16 dengan RTX 3050 55 W.
+       Varian RTX 4050 belum ada.
+
+10. Acer Swift 14 AI OLED                     Rp 16,7 jt
+    Core Ultra 5 226V (Lunar Lake) | Intel Arc 130V (iGPU)
+    -> Lini "Swift 14" belum ada. Yang ada cuma "Swift Go 14".
+       CPU Ultra 5 226V sendiri sudah ada di project, tapi di laptop
+       lain (Lenovo Yoga Slim 7i Aura).
+
+11. Asus Vivobook S14 OLED                    Rp 17,3 jt
+    Ryzen 7 260 (setara 8845HS) | Radeon 780M (iGPU)
+    -> VivoBook di project cuma VivoBook 15 (R5 7520U). Seri S14 OLED
+       belum ada.
+
+
+========================================================================
+SUDAH ADA DI PROJECT  (11 laptop)
+========================================================================
+
+  Excel                          ->  Halaman review di project
+  ---------------------------------------------------------------------
+  Acer Aspire Go (i3-1315U)      ->  Acer Aspire GO 14 i3-1315U
+  Acer Aspire Go Ultra 5         ->  Acer Aspire Go 14 Ai Ultra 5 125H
+  Acer Aspire 7 Pro              ->  Acer Aspire 7 Pro A715
+  Acer Nitro Lite 16             ->  Acer Nitro Lite NL16
+  Lenovo LOQ ARP10               ->  Lenovo LOQ Essential 15ARP10E
+                                     R7 7735HS
+  Colorful Evol (RTX 4050)       ->  Colorful Evol P15 HE55D i5-12450H
+  Colorful Evol (RTX 5050)       ->  Colorful Evol P15 RTX 5050
+  Acer Nitro V15 (RTX 5050)      ->  Acer Nitro V15 RTX 5050 i5-13420H
+  Acer Swift Go 14 AI            ->  Acer Swift Go 14 AI SFG14-73-73P9
+  Axioo Pongo 755 AMD            ->  Axioo Pongo 755 R7 255 RTX 5050
+  Lenovo LOQ IRX10               ->  Lenovo LOQ 15IRX10 i5-13450HX
+
+
+========================================================================
+CATATAN - 4 hal yang perlu Anda cek sendiri
+========================================================================
+
+1. Lenovo LOQ ARP10
+   Excel   : Ryzen 7 7735HS + RTX 3050 6 GB, Rp 13,5 jt
+   Project : LOQ Essential 15ARP10E, R7 7735HS + RTX 4050, Rp 16-17 jt
+   CPU cocok, tapi GPU dan harga beda jauh. Kemungkinan ini varian
+   RTX 3050 yang berbeda - kalau iya, berarti BELUM ADA.
+
+2. Acer Swift Go 14 AI
+   Excel   : Core Ultra 7 258V (Lunar Lake), harga kosong di Excel
+   Project : SFG14-73-73P9, prosesor "Tidak tercantum di sumber data"
+   Nama dan seri cocok. Kalau memang CPU-nya Ultra 7 258V, Excel ini
+   bisa jadi sumber untuk mengisi field prosesor yang masih kosong itu.
+
+3. Acer Nitro Lite 16 vs Nitro Lite NL16
+   Excel   : Core 5 210H + RTX 3050 6 GB, Rp 13,2 jt
+   Project : NL16, RTX 3050 TGP 55 W, Rp 14-15 jt
+   Kemungkinan besar laptop yang sama, cuma beda penulisan harga.
+
+4. Baris nomor 21 tidak ada di Excel
+   Penomoran lompat dari 20 langsung ke 22. Total baris terisi 22,
+   tapi nomor terakhir 23. Mungkin ada baris yang terhapus.
+
+
+========================================================================
+RINGKASAN PER HARGA - yang belum ada
+========================================================================
+
+   Di bawah Rp 10 jt ....... 5 laptop  (SPC x2, Zyrex x2, ExpertBook P1)
+   Rp 10-15 jt ............. 3 laptop  (Axioo Hype 7 X8, HP 14,
+                                        Nitro V15 RTX 3050)
+   Rp 15-20 jt ............. 3 laptop  (Nitro Lite RTX 4050,
+                                        Swift 14 AI OLED,
+                                        Vivobook S14 OLED)
+
+Paling banyak kekosongan ada di segmen bawah Rp 10 juta, terutama
+brand lokal SPC dan Zyrex yang sama sekali belum masuk project.
