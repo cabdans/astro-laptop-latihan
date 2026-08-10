@@ -6,9 +6,21 @@ export interface Props {
   kategori: string;
   tanggal: string;
   ringkasan: string;
+  /* Link afiliasi. Opsional — kalau tidak diisi, tombol tetap tampil
+     dengan href="#" seperti sebelumnya, jadi 65 halaman review lain
+     tidak terpengaruh sama sekali. */
+  linkTokopedia?: string;
+  linkShopee?: string;
 }
 
-const { title, harga, rating, kategori, tanggal, ringkasan } = Astro.props;
+const { title, harga, rating, kategori, tanggal, ringkasan, linkTokopedia, linkShopee } = Astro.props;
+
+/* Kalau ada link afiliasi, buka di tab baru dengan rel yang aman.
+   Kalau kosong, perilaku lama dipertahankan (href="#", tanpa target). */
+const tokoHref = linkTokopedia || '#';
+const shopHref = linkShopee || '#';
+const tokoExt = Boolean(linkTokopedia);
+const shopExt = Boolean(linkShopee);
 
 const bintang = Math.round(rating);
 
@@ -437,6 +449,7 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
         <div style="display:flex;align-items:center;gap:18px;">
           <ul class="nav-links">
             <li><a href="/">Home</a></li>
+            <li><a href="/hotdeals">🔥 Hot Deals</a></li>
             <li><a href="/review">Review</a></li>
             <li><a href="/compare">Perbandingan</a></li>
             <li><a href="/h2h">H2H</a></li>
@@ -487,8 +500,12 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
         <div class="sidebar-card">
           <h3>💰 Harga</h3>
           <div class="harga-display">{harga}</div>
-          <a href="#" class="btn-beli">🛒 Beli di Tokopedia</a>
-          <a href="#" class="btn-beli-secondary">🛍️ Beli di Shopee</a>
+          <a href={tokoHref} class="btn-beli"
+             target={tokoExt ? '_blank' : undefined}
+             rel={tokoExt ? 'nofollow sponsored noopener' : undefined}>🛒 Beli di Tokopedia</a>
+          <a href={shopHref} class="btn-beli-secondary"
+             target={shopExt ? '_blank' : undefined}
+             rel={shopExt ? 'nofollow sponsored noopener' : undefined}>🛍️ Beli di Shopee</a>
           <p class="disclaimer">*Link afiliasi — harga dapat berubah</p>
         </div>
 
