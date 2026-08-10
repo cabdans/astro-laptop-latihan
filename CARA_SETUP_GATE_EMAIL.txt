@@ -1,0 +1,149 @@
+========================================================================
+CARA MENGAKTIFKAN PEREKAMAN DATA PENGGUNA
+Halaman: Temukan Laptop (/rekomendasi)
+========================================================================
+
+Gate nama + email SUDAH JALAN sekarang. Yang belum: datanya belum
+terkirim ke mana pun. Ikuti 3 langkah di bawah untuk menyalakannya.
+
+Selama belum disetel, situs tetap normal - pengguna bisa mengisi nama
+dan email lalu masuk seperti biasa, datanya saja yang tidak tersimpan.
+
+
+========================================================================
+LANGKAH 1 - BUAT GOOGLE FORM
+========================================================================
+
+Buka https://forms.google.com lalu buat form baru berisi TIGA
+pertanyaan, semuanya tipe "Jawaban singkat":
+
+   1. Nama
+   2. Email
+   3. Pilihan Filter
+
+Urutan tidak masalah. Nama pertanyaannya juga bebas - yang penting
+ada tiga kotak isian.
+
+Jangan aktifkan "Wajib diisi" pada pertanyaan mana pun. Kalau
+diaktifkan, pengiriman otomatis dari website bisa ditolak.
+
+
+========================================================================
+LANGKAH 2 - AMBIL ID FORM
+========================================================================
+
+Klik tombol "Send" (Kirim) di kanan atas, pilih tab link (ikon rantai).
+Anda akan dapat alamat seperti ini:
+
+   https://docs.google.com/forms/d/e/1FAIpQLSdAbCdEf123456/viewform
+                                     ^^^^^^^^^^^^^^^^^^^^^^
+                                     ini yang dipakai
+
+Salin bagian tengah itu. Itulah FORM_ID.
+
+
+========================================================================
+LANGKAH 3 - AMBIL ID TIAP KOTAK ISIAN
+========================================================================
+
+Buka form versi isian (alamat yang berakhiran /viewform) di Chrome.
+
+Untuk tiap kotak isian:
+   1. Klik kanan tepat di kotak isian "Nama"
+   2. Pilih "Inspect" / "Periksa"
+   3. Di panel yang terbuka, cari teks berbentuk: entry.1234567890
+   4. Salin angkanya
+
+Ulangi untuk kotak "Email" dan "Pilihan Filter".
+
+Kalau kesulitan menemukannya: tekan Ctrl+F di panel Inspect, lalu
+ketik "entry." - semua kemunculannya akan tersorot.
+
+
+========================================================================
+LANGKAH 4 - MASUKKAN KE FILE
+========================================================================
+
+Buka file:
+
+   src/pages/rekomendasi.astro
+
+Cari baris yang bertuliskan "KONFIGURASI PENGUMPULAN DATA" (sekitar
+baris 460). Di bawahnya ada 4 baris kosong. Isi seperti contoh:
+
+   const FORM_ID     = '1FAIpQLSdAbCdEf123456';
+   const ENTRY_NAMA  = 'entry.1234567890';
+   const ENTRY_EMAIL = 'entry.9876543210';
+   const ENTRY_FILTER= 'entry.1122334455';
+
+Simpan, lalu jalankan push.bat seperti biasa.
+
+
+========================================================================
+YANG AKAN MASUK KE SPREADSHEET
+========================================================================
+
+Tiap pengguna menghasilkan maksimal 2 baris:
+
+  Baris 1 - saat mereka mengisi gate
+     Nama           : Budi
+     Email          : budi@email.com
+     Pilihan Filter : (baru mendaftar)
+
+  Baris 2 - saat mereka selesai memilih kriteria
+     Nama           : Budi
+     Email          : budi@email.com
+     Pilihan Filter : budget=10to15, ram=ya, performa=gaming | hasil: 6 laptop
+
+Baris kedua dikirim 5 detik setelah pengguna berhenti mengubah
+pilihan, dan hanya sekali per kunjungan. Ini disengaja supaya satu
+orang tidak menghasilkan puluhan baris hanya karena mengklik-klik
+filter bolak-balik.
+
+Kolom "Timestamp" ditambahkan otomatis oleh Google, jadi Anda tidak
+perlu membuatnya sendiri.
+
+
+========================================================================
+CARA KERJA GATE
+========================================================================
+
+- Pengunjung baru melihat form nama + email. Filter dan hasil
+  tersembunyi.
+- Setelah mengisi, filter terbuka dan muncul sapaan "Halo, [nama]".
+- Data tersimpan di browser mereka, jadi kunjungan berikutnya
+  langsung terbuka tanpa isi ulang.
+- Ada tombol "Ganti data" kalau mereka ingin mengisi ulang.
+
+Validasi yang berlaku:
+- Nama minimal 2 huruf
+- Email harus berformat benar (ada @ dan domain)
+
+
+========================================================================
+CATATAN PENTING
+========================================================================
+
+1. DATA TIDAK 100% TERKUMPUL
+   Pengiriman ke Google Form memakai mode "no-cors", artinya browser
+   tidak memberi tahu kita berhasil atau gagal. Ini keterbatasan
+   Google Form, bukan bug. Kalau ada pengguna yang memakai pemblokir
+   iklan agresif, datanya bisa tidak terkirim tanpa jejak.
+   Untuk analisis awal ini biasanya tidak masalah, tapi jangan
+   dianggap angka yang presisi.
+
+2. LOCALSTORAGE BUKAN DATABASE
+   Data yang tersimpan di browser pengunjung hanya berguna untuk
+   mengingat mereka. Anda tidak bisa melihatnya. Yang bisa Anda
+   analisis hanya yang masuk ke Google Sheets.
+
+3. GATE MENURUNKAN JUMLAH PEMAKAI
+   Sebagian pengunjung akan pergi daripada mengisi email. Ini wajar
+   dan terjadi di semua situs. Kalau ternyata penurunannya terlalu
+   besar, gate bisa dilonggarkan - beri tahu saya.
+
+4. PRIVASI
+   Di bawah form sudah ada keterangan bahwa data dipakai hanya untuk
+   statistik dan tidak dibagikan. Kalau nanti situs ini serius
+   dipakai publik, sebaiknya dibuat halaman kebijakan privasi
+   tersendiri.
