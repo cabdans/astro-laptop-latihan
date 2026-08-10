@@ -912,9 +912,53 @@ const kategoriBadgeText: Record<string, string> = {
       .stat-angka { font-size: 1.5rem; }
     }
 
+    /* ── PANDUAN PAKAI ── */
+    .panduan-hint { font-size: 0.82rem; color: #64748b; }
+    .panduan-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .panduan-card {
+      display: flex; align-items: flex-start; gap: 13px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px; padding: 15px 16px;
+      text-decoration: none; color: inherit;
+      transition: border-color 0.22s, background 0.22s, transform 0.22s;
+    }
+    .panduan-card:hover {
+      border-color: rgba(96,165,250,0.45);
+      background: rgba(96,165,250,0.07);
+      transform: translateY(-2px);
+    }
+    .panduan-icon { font-size: 1.4rem; line-height: 1.2; flex-shrink: 0; }
+    .panduan-text { flex: 1; min-width: 0; }
+    .panduan-nama {
+      font-size: 0.95rem; font-weight: 700; color: #e2e8f0; margin-bottom: 3px;
+    }
+    .panduan-text p {
+      font-size: 0.82rem; color: #94a3b8; line-height: 1.5; margin: 0;
+    }
+    .panduan-arrow {
+      color: #475569; font-size: 1rem; flex-shrink: 0; align-self: center;
+      transition: color 0.22s, transform 0.22s;
+    }
+    .panduan-card:hover .panduan-arrow { color: #60a5fa; transform: translateX(3px); }
+
     /* ── LIGHT MODE: perbaiki keterbacaan judul kartu review (sebelumnya near-white di background terang) ── */
     :global(html[data-theme="light"]) .card-title { color: #0f172a; }
     :global(html[data-theme="light"]) .card-desc { color: #475569; }
+    :global(html[data-theme="light"]) .panduan-card {
+      background: rgba(255,255,255,0.85);
+      border-color: rgba(0,0,0,0.1);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    }
+    :global(html[data-theme="light"]) .panduan-card:hover {
+      background: rgba(96,165,250,0.08);
+      border-color: rgba(37,99,235,0.45);
+    }
+    :global(html[data-theme="light"]) .panduan-nama { color: #0f172a; }
+    :global(html[data-theme="light"]) .panduan-text p { color: #475569; }
   </style>
 
   <!-- HERO -->
@@ -951,6 +995,56 @@ const kategoriBadgeText: Record<string, string> = {
       </div>
     ))}
   </div>
+
+  <!-- PANDUAN PAKAI -->
+  <section>
+    <div class="section-header">
+      <h2 class="section-title">Panduan Pakai</h2>
+      <span class="panduan-hint">Bingung mulai dari mana? Ini isi tiap menu.</span>
+    </div>
+    <div class="panduan-grid">
+      <a href="/hotdeals" class="panduan-card reveal">
+        <span class="panduan-icon">🔥</span>
+        <div class="panduan-text">
+          <div class="panduan-nama">Hot Deals</div>
+          <p>Rekomendasi laptop pilihan bulan ini, langsung ke halaman pembelian.</p>
+        </div>
+        <span class="panduan-arrow">→</span>
+      </a>
+      <a href="/review" class="panduan-card reveal">
+        <span class="panduan-icon">📋</span>
+        <div class="panduan-text">
+          <div class="panduan-nama">Review</div>
+          <p>Lihat spesifikasi lengkap tiap laptop beserta skor benchmark CPU-nya.</p>
+        </div>
+        <span class="panduan-arrow">→</span>
+      </a>
+      <a href="/rekomendasi" class="panduan-card reveal">
+        <span class="panduan-icon">🧭</span>
+        <div class="panduan-text">
+          <div class="panduan-nama">Temukan Laptop</div>
+          <p>Untuk pemula yang belum tahu harus cari apa. Jawab 5 pertanyaan, dapat rekomendasinya.</p>
+        </div>
+        <span class="panduan-arrow">→</span>
+      </a>
+      <a href="/compare" class="panduan-card reveal">
+        <span class="panduan-icon">🔍</span>
+        <div class="panduan-text">
+          <div class="panduan-nama">Perbandingan</div>
+          <p>Seluruh database laptop dalam satu tabel. Bisa difilter dan diurutkan sesuka Anda.</p>
+        </div>
+        <span class="panduan-arrow">→</span>
+      </a>
+      <a href="/h2h" class="panduan-card reveal">
+        <span class="panduan-icon">⚔️</span>
+        <div class="panduan-text">
+          <div class="panduan-nama">H2H</div>
+          <p>Adu dua laptop berhadapan langsung, spek per spek, untuk memutuskan mana yang menang.</p>
+        </div>
+        <span class="panduan-arrow">→</span>
+      </a>
+    </div>
+  </section>
 
   <!-- KATEGORI -->
   <section>
