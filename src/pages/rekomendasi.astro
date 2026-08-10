@@ -262,6 +262,20 @@ const laptops = [
   .gate-err { font-size: 0.76rem; color: #f87171; min-height: 0; }
   .gate-err:empty { display: none; }
 
+  .gate-pilihan { display: flex; flex-wrap: wrap; gap: 8px; }
+  .gate-chip {
+    padding: 9px 14px; font-size: 0.84rem; font-weight: 600;
+    background: rgba(255,255,255,0.05); color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 20px;
+    cursor: pointer; transition: all 0.18s; white-space: nowrap;
+  }
+  .gate-chip:hover { border-color: rgba(96,165,250,0.45); color: #cbd5e1; }
+  .gate-chip.aktif {
+    background: rgba(59,130,246,0.9); color: white;
+    border-color: rgba(59,130,246,0.9);
+  }
+  .gate-pilihan.salah .gate-chip { border-color: rgba(248,113,113,0.5); }
+
   .gate-btn {
     margin-top: 4px; padding: 12px 20px;
     background: linear-gradient(135deg, #2563eb, #3b82f6); color: white;
@@ -300,6 +314,13 @@ const laptops = [
     background: rgba(0,0,0,0.03); color: #0f172a; border-color: rgba(0,0,0,0.14);
   }
   :global(html[data-theme="light"]) .gate-field input::placeholder { color: #94a3b8; }
+  :global(html[data-theme="light"]) .gate-chip {
+    background: rgba(0,0,0,0.03); color: #475569; border-color: rgba(0,0,0,0.14);
+  }
+  :global(html[data-theme="light"]) .gate-chip:hover { color: #1e293b; border-color: rgba(37,99,235,0.45); }
+  :global(html[data-theme="light"]) .gate-chip.aktif {
+    background: #2563eb; color: white; border-color: #2563eb;
+  }
   :global(html[data-theme="light"]) .gate-halo { color: #475569; }
   :global(html[data-theme="light"]) .gate-halo strong { color: #059669; }
 
@@ -437,6 +458,27 @@ const laptops = [
       <input type="email" id="gEmail" name="email" placeholder="nama@email.com" autocomplete="email" required />
       <span class="gate-err" id="errEmail"></span>
     </div>
+
+    <div class="gate-field">
+      <label>Kamu saat ini</label>
+      <div class="gate-pilihan" data-grup="okupansi">
+        <button type="button" class="gate-chip" data-val="Pelajar/Mahasiswa">🎓 Pelajar/Mahasiswa</button>
+        <button type="button" class="gate-chip" data-val="Pekerja">💼 Pekerja</button>
+        <button type="button" class="gate-chip" data-val="Pengguna Casual">🏠 Pengguna Casual</button>
+      </div>
+      <span class="gate-err" id="errOkupansi"></span>
+    </div>
+
+    <div class="gate-field">
+      <label>Laptopnya buat apa</label>
+      <div class="gate-pilihan" data-grup="kebutuhan">
+        <button type="button" class="gate-chip" data-val="Pekerjaan / Kuliah">📄 Pekerjaan / Kuliah</button>
+        <button type="button" class="gate-chip" data-val="Gaming">🎮 Gaming</button>
+        <button type="button" class="gate-chip" data-val="Livestream">🎥 Livestream</button>
+      </div>
+      <span class="gate-err" id="errKebutuhan"></span>
+    </div>
+
     <button type="submit" class="gate-btn" id="gateBtn">Buka Pencarian →</button>
   </form>
 
@@ -447,7 +489,7 @@ const laptops = [
 
 <!-- Sapaan setelah gate terbuka -->
 <div class="gate-halo" id="gateHalo" hidden>
-  <span>👋 Halo, <strong id="haloNama"></strong> — silakan pilih kriteriamu.</span>
+  <span>👋 Halo, <strong id="haloNama"></strong> — <em id="haloProfil"></em>. Silakan pilih kriteriamu di bawah.</span>
   <button type="button" id="gateReset" class="gate-ganti">Ganti data</button>
 </div>
 
@@ -859,6 +901,26 @@ const laptops = [
   const gateBtn    = document.getElementById('gateBtn');
 
   let pengguna = null;
+  const pilihanGate = { okupansi: null, kebutuhan: null };
+
+  /* Chip okupansi & kebutuhan — satu pilihan per grup, bisa dibatalkan
+     dengan mengklik ulang chip yang sudah aktif. */
+  document.querySelectorAll('.gate-pilihan').forEach(grup => {
+    const nama = grup.dataset.grup;
+    grup.querySelectorAll('.gate-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const sudahAktif = chip.classList.contains('aktif');
+        grup.querySelectorAll('.gate-chip').forEach(c => c.classList.remove('aktif'));
+        if (sudahAktif) {
+          pilihanGate[nama] = null;
+        } else {
+          chip.classList.add('aktif');
+          pilihanGate[nama] = chip.dataset.val;
+        }
+        grup.classList.remove('salah');
+      });
+    });
+  });
 
   function bacaSimpanan() {
     try {
@@ -869,14 +931,24 @@ const laptops = [
     } catch (e) { return null; }
   }
 
+  /* Catatan: okupansi & kebutuhan SENGAJA tidak memengaruhi filter apa pun.
+     Keduanya murni data untuk analisis. Filter 5 pertanyaan tetap berdiri
+     sendiri dan selalu dimulai dari kondisi kosong. */
+
+  function ringkasProfil(u) {
+    return `okupansi=${u.okupansi || '-'} | kebutuhan=${u.kebutuhan || '-'}`;
+  }
+
   function bukaKunci(u, baruDaftar) {
     pengguna = u;
     gateBox.hidden = true;
     wizard.hidden = false;
     document.querySelector('.results-section').hidden = false;
     document.getElementById('haloNama').textContent = u.nama;
+    document.getElementById('haloProfil').textContent =
+      [u.okupansi, u.kebutuhan].filter(Boolean).join(' · ');
     gateHalo.hidden = false;
-    if (baruDaftar) kirimKeForm(u.nama, u.email, '(baru mendaftar)');
+    if (baruDaftar) kirimKeForm(u.nama, u.email, `(baru mendaftar) ${ringkasProfil(u)}`);
   }
 
   /* Validasi email: cukup longgar supaya tidak menolak alamat yang sah,
@@ -891,6 +963,9 @@ const laptops = [
 
     errNama.textContent = ''; inpNama.classList.remove('salah');
     errEmail.textContent = ''; inpEmail.classList.remove('salah');
+    document.getElementById('errOkupansi').textContent = '';
+    document.getElementById('errKebutuhan').textContent = '';
+    document.querySelectorAll('.gate-pilihan').forEach(g => g.classList.remove('salah'));
 
     if (nama.length < 2) {
       errNama.textContent = 'Nama minimal 2 huruf.';
@@ -900,12 +975,25 @@ const laptops = [
       errEmail.textContent = 'Format email belum benar. Contoh: nama@email.com';
       inpEmail.classList.add('salah'); ok = false;
     }
+    if (!pilihanGate.okupansi) {
+      document.getElementById('errOkupansi').textContent = 'Pilih salah satu.';
+      document.querySelector('.gate-pilihan[data-grup="okupansi"]').classList.add('salah'); ok = false;
+    }
+    if (!pilihanGate.kebutuhan) {
+      document.getElementById('errKebutuhan').textContent = 'Pilih salah satu.';
+      document.querySelector('.gate-pilihan[data-grup="kebutuhan"]').classList.add('salah'); ok = false;
+    }
     if (!ok) return;
 
     gateBtn.disabled = true;
     gateBtn.textContent = 'Membuka…';
 
-    const u = { nama, email, waktu: new Date().toISOString() };
+    const u = {
+      nama, email,
+      okupansi: pilihanGate.okupansi,
+      kebutuhan: pilihanGate.kebutuhan,
+      waktu: new Date().toISOString(),
+    };
     try { localStorage.setItem(KUNCI_SIMPAN, JSON.stringify(u)); } catch (err) {}
     bukaKunci(u, true);
   });
@@ -920,6 +1008,8 @@ const laptops = [
     gateBtn.disabled = false;
     gateBtn.textContent = 'Buka Pencarian →';
     inpNama.value = ''; inpEmail.value = '';
+    pilihanGate.okupansi = null; pilihanGate.kebutuhan = null;
+    document.querySelectorAll('.gate-chip').forEach(c => c.classList.remove('aktif'));
     gateBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
 
@@ -935,7 +1025,8 @@ const laptops = [
       if (isi.length === 0) return;
       const ringkasan = isi.map(([k, v]) => `${k}=${v}`).join(', ');
       const jml = laptops.filter(passesAllFilters).length;
-      kirimKeForm(pengguna.nama, pengguna.email, `${ringkasan} | hasil: ${jml} laptop`);
+      kirimKeForm(pengguna.nama, pengguna.email,
+        `${ringkasProfil(pengguna)} | ${ringkasan} | hasil: ${jml} laptop`);
       sudahKirimFilter = true;
     }, 5000);
   }
