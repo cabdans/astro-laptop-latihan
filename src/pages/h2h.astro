@@ -112,40 +112,54 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       text-transform: uppercase; letter-spacing: 0.03em;
       background: rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.07);
     }
-    /* Section header rows — dibuat menonjol supaya batas antar bagian jelas
-       saat tabel di-scroll panjang. Garis aksen di kiri jadi penanda visual
-       utama, bukan sekadar beda warna latar yang tipis. */
+    /* Section header rows — sengaja dibuat kontras kuat terhadap baris data.
+       Label baris biasa berukuran 0.8rem dan nilainya 0.9rem, jadi header ini
+       dinaikkan ke 1rem supaya hierarkinya terbaca sekali lihat, bukan sekadar
+       beda warna tipis yang mudah terlewat saat tabel di-scroll panjang. */
     .spec-table tr.section-row td {
-      background: linear-gradient(90deg, rgba(96,165,250,0.16), rgba(96,165,250,0.05) 55%, transparent);
-      color: #dbeafe;
-      font-size: 0.82rem; font-weight: 800; letter-spacing: 0.1em;
-      text-transform: uppercase; padding: 13px 16px 12px;
-      border-top: 2px solid rgba(96,165,250,0.45);
-      border-bottom: 1px solid rgba(96,165,250,0.18);
+      background: linear-gradient(90deg, rgba(96,165,250,0.28) 0%, rgba(96,165,250,0.14) 45%, rgba(96,165,250,0.06) 100%);
+      color: #eff6ff;
+      font-size: 1rem; font-weight: 800; letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 18px 16px 16px 22px;
+      border-top: 3px solid #60a5fa;
+      border-bottom: 1px solid rgba(96,165,250,0.3);
       border-right: none;
       position: relative;
-      text-shadow: 0 0 18px rgba(96,165,250,0.35);
+      text-shadow: 0 0 22px rgba(96,165,250,0.55);
     }
     .spec-table tr.section-row td::before {
       content: ""; position: absolute; left: 0; top: 0; bottom: 0;
-      width: 4px; background: #60a5fa;
-      box-shadow: 0 0 12px rgba(96,165,250,0.7);
+      width: 6px; background: #60a5fa;
+      box-shadow: 0 0 16px rgba(96,165,250,0.9);
     }
+    /* Baris pertama tabel tidak perlu garis atas ganda */
+    .spec-table tr.section-row:first-child td { border-top-width: 0; }
     .spec-table tr.section-row td:first-child {
-      color: #dbeafe; border-right: none;
+      color: #eff6ff; border-right: none;
+      width: auto; font-size: 1rem;
     }
+    /* Latar zebra jangan menimpa header bagian */
+    .spec-table tr.section-row:nth-child(even) { background: transparent; }
     /* Beri jarak dari baris terakhir bagian sebelumnya */
-    .spec-table tr.section-row + tr td { padding-top: 13px; }
+    .spec-table tr.section-row + tr td { padding-top: 15px; }
 
     :global(html[data-theme="light"]) .spec-table tr.section-row td {
-      background: linear-gradient(90deg, rgba(37,99,235,0.13), rgba(37,99,235,0.04) 55%, transparent);
+      background: linear-gradient(90deg, rgba(37,99,235,0.2) 0%, rgba(37,99,235,0.1) 45%, rgba(37,99,235,0.04) 100%);
       color: #1e3a8a; text-shadow: none;
-      border-top-color: rgba(37,99,235,0.4);
-      border-bottom-color: rgba(37,99,235,0.15);
+      border-top-color: #2563eb;
+      border-bottom-color: rgba(37,99,235,0.25);
     }
     :global(html[data-theme="light"]) .spec-table tr.section-row td:first-child { color: #1e3a8a; }
     :global(html[data-theme="light"]) .spec-table tr.section-row td::before {
       background: #2563eb; box-shadow: none;
+    }
+
+    @media (max-width: 640px) {
+      .spec-table tr.section-row td {
+        font-size: 0.9rem; letter-spacing: 0.1em; padding: 15px 12px 13px 18px;
+      }
+      .spec-table tr.section-row td:first-child { font-size: 0.9rem; }
     }
 
     /* Draw */
