@@ -112,14 +112,41 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       text-transform: uppercase; letter-spacing: 0.03em;
       background: rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.07);
     }
-    /* Section header rows */
+    /* Section header rows — dibuat menonjol supaya batas antar bagian jelas
+       saat tabel di-scroll panjang. Garis aksen di kiri jadi penanda visual
+       utama, bukan sekadar beda warna latar yang tipis. */
     .spec-table tr.section-row td {
-      background: rgba(255,255,255,0.04); color: #94a3b8;
-      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em;
-      text-transform: uppercase; padding: 8px 16px;
-      border-top: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(90deg, rgba(96,165,250,0.16), rgba(96,165,250,0.05) 55%, transparent);
+      color: #dbeafe;
+      font-size: 0.82rem; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 13px 16px 12px;
+      border-top: 2px solid rgba(96,165,250,0.45);
+      border-bottom: 1px solid rgba(96,165,250,0.18);
+      border-right: none;
+      position: relative;
+      text-shadow: 0 0 18px rgba(96,165,250,0.35);
     }
-    .spec-table tr.section-row td:first-child { color: #94a3b8; background: rgba(255,255,255,0.04); border-right: none; }
+    .spec-table tr.section-row td::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 4px; background: #60a5fa;
+      box-shadow: 0 0 12px rgba(96,165,250,0.7);
+    }
+    .spec-table tr.section-row td:first-child {
+      color: #dbeafe; border-right: none;
+    }
+    /* Beri jarak dari baris terakhir bagian sebelumnya */
+    .spec-table tr.section-row + tr td { padding-top: 13px; }
+
+    :global(html[data-theme="light"]) .spec-table tr.section-row td {
+      background: linear-gradient(90deg, rgba(37,99,235,0.13), rgba(37,99,235,0.04) 55%, transparent);
+      color: #1e3a8a; text-shadow: none;
+      border-top-color: rgba(37,99,235,0.4);
+      border-bottom-color: rgba(37,99,235,0.15);
+    }
+    :global(html[data-theme="light"]) .spec-table tr.section-row td:first-child { color: #1e3a8a; }
+    :global(html[data-theme="light"]) .spec-table tr.section-row td::before {
+      background: #2563eb; box-shadow: none;
+    }
 
     /* Draw */
     .spec-table td.draw { color: #94a3b8; }
@@ -549,29 +576,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       const bA = getBench(a.cpu), bB = getBench(b.cpu);
 
       const rows = [
-        ['section', 'Identitas', '', '', null, null],
+        ['section', '📋 Identitas', '', '', null, null],
         ['row-equal', 'Kategori', a.kategori, b.kategori, null, null],
         ['row-equal', 'Merk', a.merk, b.merk, null, null],
         ['row-lower', 'Harga', a.harga, b.harga, a.hargaNum, b.hargaNum],
-        ['section', 'Layar & Baterai', '', '', null, null],
+        ['section', '🖥️ Layar & Baterai', '', '', null, null],
         ['row-equal', 'Layar', a.layar, b.layar, null, null],
         ['row-higher', 'Refresh Rate', a.layarHz + ' Hz', b.layarHz + ' Hz', a.layarHz, b.layarHz],
         ['row-higher', '100% sRGB', srgbBadge(a.srgb), srgbBadge(b.srgb), a.srgb?1:0, b.srgb?1:0],
         ['row-equal', 'Baterai / Charger', batteryChargerBadge(a), batteryChargerBadge(b), null, null],
-        ['section', 'Hardware', '', '', null, null],
+        ['section', '⚙️ Hardware', '', '', null, null],
         ['row-equal', 'CPU', cpuBadge(a.cpu, a.cpuMerk), cpuBadge(b.cpu, b.cpuMerk), null, null],
         ['row-higher', 'GPU', gpuBadge(a.gpu), gpuBadge(b.gpu), a.gpuNum, b.gpuNum],
         ['row-higher', 'Tipe RAM', a.ram, b.ram, ramRank(a.ram), ramRank(b.ram)],
         ['row-higher', 'Kapasitas RAM', a.ramSize + ' GB', b.ramSize + ' GB', a.ramSize, b.ramSize],
         ['row-higher', 'Upgrade', upgradeBadge(a.upgrade||'Tidak'), upgradeBadge(b.upgrade||'Tidak'), a.upgradeNum||0, b.upgradeNum||0],
         ['row-equal', 'Cooling', a.cooling||'No Data', b.cooling||'No Data', null, null],
-        ['section', 'Fisik & Garansi', '', '', null, null],
+        ['section', '📦 Fisik & Garansi', '', '', null, null],
         ['row-lower', 'Bobot', a.berat, b.berat, parseKg(a.berat), parseKg(b.berat)],
         ['row-equal', 'Garansi', a.garansi, b.garansi, null, null],
         ['row-equal', 'OS', a.os, b.os, null, null],
         ['row-equal', 'TDP (CPU)', a.tdp||'&mdash;', b.tdp||'&mdash;', null, null],
         ['row-higher', 'TGP (GPU)', a.tgp||'&mdash;', b.tgp||'&mdash;', parseTgp(a.tgp||'0'), parseTgp(b.tgp||'0')],
-        ['section', 'Benchmark CPU', '', '', null, null],
+        ['section', '📊 Benchmark CPU', '', '', null, null],
         ['row-higher', 'NanoReview Score', benchCell(bA,'nano').html, benchCell(bB,'nano').html, benchCell(bA,'nano').num, benchCell(bB,'nano').num],
         ['row-higher', 'Power Efficiency', benchCell(bA,'eff').html, benchCell(bB,'eff').html, benchCell(bA,'eff').num, benchCell(bB,'eff').num],
         ['row-higher', 'Performa Single-Core', benchCell(bA,'pmS').html, benchCell(bB,'pmS').html, benchCell(bA,'pmS').num, benchCell(bB,'pmS').num],
