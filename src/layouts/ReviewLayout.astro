@@ -11,9 +11,12 @@ export interface Props {
      tidak terpengaruh sama sekali. */
   linkTokopedia?: string;
   linkShopee?: string;
+  /* Penanda kapan data terakhir diperiksa ulang. Opsional — badge hanya
+     muncul di halaman yang mengisinya. */
+  update?: string;
 }
 
-const { title, harga, rating, kategori, tanggal, ringkasan, linkTokopedia, linkShopee } = Astro.props;
+const { title, harga, rating, kategori, tanggal, ringkasan, linkTokopedia, linkShopee, update } = Astro.props;
 
 /* Kalau ada link afiliasi, buka di tab baru dengan rel yang aman.
    Kalau kosong, perilaku lama dipertahankan (href="#", tanpa target). */
@@ -150,6 +153,22 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
         letter-spacing: 0.05em;
         text-transform: uppercase;
         color: white;
+      }
+      /* Penanda kapan data terakhir diperiksa ulang */
+      .badge-update {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 13px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+        margin-left: 8px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #34d399;
+        background: rgba(52,211,153,0.14);
+        border: 1px solid rgba(52,211,153,0.45);
+        backdrop-filter: blur(4px);
       }
       .review-hero-content h1 {
         font-size: 1.9rem;
@@ -469,6 +488,7 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
       <div class="review-hero-overlay"></div>
       <div class="review-hero-content">
         <span class="badge" style={`background:${bColor};`}>{kategori}</span>
+        {update && <span class="badge-update">Update: {update}</span>}
         <h1>Review {title}</h1>
         <div class="meta">Diterbitkan: {tanggal}</div>
       </div>
