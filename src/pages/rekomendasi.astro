@@ -233,6 +233,48 @@ const laptops = [
   .gate-box[hidden],
   .results-section[hidden] { display: none !important; }
 
+  /* ── Diagnosa saat hasil kosong ── */
+  .diagnosa {
+    margin: 14px 0 20px; padding: 16px 18px;
+    background: rgba(251,191,36,0.05);
+    border: 1px solid rgba(251,191,36,0.22);
+    border-left: 3px solid rgba(251,191,36,0.7);
+    border-radius: 10px;
+  }
+  .diagnosa :global(.diag-utama) {
+    margin: 0 0 10px; font-size: 0.9rem; color: #e2e8f0; line-height: 1.6;
+  }
+  .diagnosa :global(.diag-utama strong) { color: #fbbf24; }
+  .diagnosa :global(.diag-sub) {
+    margin: 0 0 8px; font-size: 0.85rem; color: #94a3b8; line-height: 1.6;
+  }
+  .diagnosa :global(.diag-sub strong) { color: #cbd5e1; }
+  .diagnosa :global(.diag-list) {
+    margin: 0 0 10px; padding-left: 20px;
+    font-size: 0.85rem; color: #94a3b8; line-height: 1.75;
+  }
+  .diagnosa :global(.diag-list strong) { color: #cbd5e1; }
+  .diagnosa :global(.diag-detail) {
+    margin-top: 4px; font-size: 0.82rem; color: #64748b;
+    border-top: 1px solid rgba(251,191,36,0.15); padding-top: 10px;
+  }
+  .diagnosa :global(.diag-detail summary) {
+    cursor: pointer; color: #94a3b8; user-select: none;
+  }
+  .diagnosa :global(.diag-detail summary:hover) { color: #fbbf24; }
+  .diagnosa :global(.diag-detail ul) { margin-top: 8px; }
+
+  :global(html[data-theme="light"]) .diagnosa {
+    background: rgba(251,191,36,0.08); border-color: rgba(180,83,9,0.28);
+    border-left-color: rgba(180,83,9,0.6);
+  }
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-utama) { color: #1e293b; }
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-utama strong) { color: #b45309; }
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-sub),
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-list) { color: #475569; }
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-sub strong),
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-list strong) { color: #1e293b; }
+
   /* ── Gate nama + email ── */
   .gate-box {
     max-width: 620px; margin: 0 auto 28px; padding: 26px 28px;
@@ -672,19 +714,22 @@ const laptops = [
     return l.hMin < hi && l.hMax >= lo;
   }
 
-  function passesAllFilters(l) {
-    if (!budgetPass(l, state.budget)) return false;
+  /* Parameter s dibuat opsional supaya fungsi ini bisa dipakai ulang untuk
+     menguji state hipotetis — dipakai oleh diagnosaKosong() saat mencari
+     filter mana yang membuat hasilnya nol. */
+  function passesAllFilters(l, s = state) {
+    if (!budgetPass(l, s.budget)) return false;
     // Bar 2: RAM upgradeable — "ya" wajib upgradeable, "tidak" tidak membatasi
-    if (state.ram === 'ya' && !l.ramUp) return false;
+    if (s.ram === 'ya' && !l.ramUp) return false;
     // Bar 3: Editing — ringan butuh 100% sRGB, berat butuh sRGB + GPU dedicated
-    if (state.editing === 'light' && !l.srgb) return false;
-    if (state.editing === 'heavy' && (!l.srgb || !l.gpuDed)) return false;
+    if (s.editing === 'light' && !l.srgb) return false;
+    if (s.editing === 'heavy' && (!l.srgb || !l.gpuDed)) return false;
     // Bar 4: Prioritas performa
-    if (state.performa === 'ringan' && l.gpuDed) return false;
-    if (state.performa === 'gaming' && !l.gpuDed) return false;
+    if (s.performa === 'ringan' && l.gpuDed) return false;
+    if (s.performa === 'gaming' && !l.gpuDed) return false;
     // 'produktivitas': tidak ada hard filter, hanya memengaruhi urutan (pmMulti tertinggi)
-    if (state.brand === 'lokal' && !l.lokal) return false;
-    if (state.brand === 'luar' && l.lokal) return false;
+    if (s.brand === 'lokal' && !l.lokal) return false;
+    if (s.brand === 'luar' && l.lokal) return false;
     return true;
   }
 
@@ -743,6 +788,114 @@ const laptops = [
 
   function hasAnyFilter() {
     return state.budget || state.ram || state.editing || state.performa || state.brand;
+  }
+
+  /* ═══════════ DIAGNOSA SAAT HASIL KOSONG ═══════════
+     Menjelaskan filter mana yang membuat hasilnya nol, bukan sekadar
+     memberi tahu bahwa hasilnya kosong. Caranya: lepas satu filter,
+     hitung ulang; kalau hasilnya jadi ada, filter itulah penyebabnya. */
+
+  const NAMA_BAR = { budget:'Budget', ram:'RAM upgradeable', editing:'Kebutuhan editing',
+                     performa:'Prioritas performa', brand:'Preferensi brand' };
+
+  /* Label diambil langsung dari teks chip di halaman, jadi kalau suatu saat
+     teksnya diubah, penjelasan ini ikut berubah tanpa perlu disunting lagi. */
+  function labelChip(grup, val) {
+    const el = document.querySelector(`.filter-chips[data-group="${grup}"] .chip[data-val="${val}"]`);
+    return el ? el.textContent.trim() : val;
+  }
+
+  /* Alasan semantik untuk kombinasi yang memang mustahil secara logika.
+     Ditulis manual karena penjelasannya butuh konteks yang tidak bisa
+     disimpulkan otomatis dari data. */
+  function alasanKombinasi(a, b) {
+    const pasangan = [a, b].sort().join('|');
+    const peta = {
+      'editing:heavy|performa:ringan':
+        'Editing berat mensyaratkan GPU dedicated, sementara Ringan &amp; Awet Baterai justru hanya menampilkan laptop tanpa GPU dedicated. Dua kriteria ini saling meniadakan.',
+      'editing:light|performa:ringan':
+        'Editing ringan mensyaratkan panel 100% sRGB, dan di antara laptop tanpa GPU dedicated jumlahnya terbatas.',
+      'editing:heavy|performa:gaming':
+        'Keduanya mensyaratkan GPU dedicated, jadi yang menyempitkan hasil kemungkinan besar syarat panel 100% sRGB dari editing berat.',
+    };
+    return peta[pasangan] || null;
+  }
+
+  function diagnosaKosong() {
+    // Hanya hitung filter yang benar-benar membatasi. Nilai seperti
+    // "Tidak", "Tidak ada", dan "Semua brand" tidak menyaring apa pun.
+    const aktif = Object.entries(state)
+      .filter(([, v]) => v && !['none', 'all', 'tidak'].includes(v));
+    if (aktif.length === 0) return '';
+
+    const jml = (s) => laptops.filter(l => passesAllFilters(l, s)).length;
+
+    // Tahap 1: cari filter tunggal yang kalau dilepas langsung membuka hasil
+    const tunggal = [];
+    for (const [k, v] of aktif) {
+      const n = jml({ ...state, [k]: null });
+      if (n > 0) tunggal.push({ k, v, n });
+    }
+
+    const bagian = [];
+
+    /* Kontradiksi yang sudah dikenali diperiksa lebih dulu. Kalau dua kriteria
+       memang saling meniadakan, menjelaskan sebabnya lebih berguna daripada
+       menyalahkan salah satunya secara sepihak. */
+    let kontradiksi = null;
+    for (let i = 0; i < aktif.length && !kontradiksi; i++) {
+      for (let j = i + 1; j < aktif.length && !kontradiksi; j++) {
+        const [k1, v1] = aktif[i], [k2, v2] = aktif[j];
+        const alasan = alasanKombinasi(`${k1}:${v1}`, `${k2}:${v2}`);
+        if (alasan) kontradiksi = { k1, v1, k2, v2, alasan };
+      }
+    }
+
+    if (kontradiksi) {
+      const { k1, v1, k2, v2, alasan } = kontradiksi;
+      bagian.push(`<p class="diag-utama"><strong>${NAMA_BAR[k1]}</strong> (&ldquo;${labelChip(k1, v1)}&rdquo;) dan <strong>${NAMA_BAR[k2]}</strong> (&ldquo;${labelChip(k2, v2)}&rdquo;) saling bertentangan.</p>`);
+      bagian.push(`<p class="diag-sub">${alasan}</p>`);
+      const opsi = tunggal.map(x =>
+        `<li>Lepas <strong>${NAMA_BAR[x.k]}</strong> (&ldquo;${labelChip(x.k, x.v)}&rdquo;) &rarr; <strong>${x.n} laptop</strong> cocok</li>`
+      ).join('');
+      if (opsi) bagian.push(`<p class="diag-sub">Yang bisa dicoba:</p><ul class="diag-list">${opsi}</ul>`);
+    } else if (tunggal.length > 0) {
+      tunggal.sort((a, b) => b.n - a.n);
+      const t = tunggal[0];
+      bagian.push(`<p class="diag-utama">Penyebabnya ada di <strong>${NAMA_BAR[t.k]}</strong>, yaitu pilihan &ldquo;${labelChip(t.k, t.v)}&rdquo;. Tidak ada laptop yang memenuhi kriteria itu sekaligus kriteria lain yang kamu pilih.</p>`);
+      const opsi = tunggal.map(x =>
+        `<li>Lepas <strong>${NAMA_BAR[x.k]}</strong> (&ldquo;${labelChip(x.k, x.v)}&rdquo;) &rarr; <strong>${x.n} laptop</strong> cocok</li>`
+      ).join('');
+      bagian.push(`<p class="diag-sub">Yang bisa dicoba:</p><ul class="diag-list">${opsi}</ul>`);
+    } else {
+      // Tahap 2: tidak ada satu pun filter yang cukup dilepas sendirian,
+      // berarti ada dua kriteria yang saling bertentangan.
+      let ketemu = null;
+      for (let i = 0; i < aktif.length && !ketemu; i++) {
+        for (let j = i + 1; j < aktif.length && !ketemu; j++) {
+          const [k1, v1] = aktif[i], [k2, v2] = aktif[j];
+          if (jml({ ...state, [k1]: null, [k2]: null }) > 0) ketemu = [[k1, v1], [k2, v2]];
+        }
+      }
+      if (ketemu) {
+        const [[k1, v1], [k2, v2]] = ketemu;
+        const alasan = alasanKombinasi(`${k1}:${v1}`, `${k2}:${v2}`);
+        bagian.push(`<p class="diag-utama">Kombinasi <strong>${NAMA_BAR[k1]}</strong> (&ldquo;${labelChip(k1, v1)}&rdquo;) dan <strong>${NAMA_BAR[k2]}</strong> (&ldquo;${labelChip(k2, v2)}&rdquo;) tidak bisa dipenuhi bersamaan.</p>`);
+        if (alasan) bagian.push(`<p class="diag-sub">${alasan}</p>`);
+        bagian.push(`<p class="diag-sub">Lepas salah satu dari keduanya untuk melihat hasil.</p>`);
+      } else {
+        bagian.push(`<p class="diag-utama">Kriteria yang kamu pilih terlalu ketat untuk 81 laptop yang ada. Coba lepas satu atau dua pilihan.</p>`);
+      }
+    }
+
+    // Info tambahan: berapa laptop yang lolos tiap filter kalau berdiri sendiri
+    const sendiri = aktif.map(([k, v]) => {
+      const s = { budget:null, ram:null, editing:null, performa:null, brand:null, [k]: v };
+      return `<li>${NAMA_BAR[k]} &ldquo;${labelChip(k, v)}&rdquo; saja &rarr; ${jml(s)} laptop</li>`;
+    }).join('');
+    bagian.push(`<details class="diag-detail"><summary>Rincian tiap kriteria</summary><ul class="diag-list">${sendiri}</ul></details>`);
+
+    return `<div class="diagnosa">${bagian.join('')}</div>`;
   }
 
   // Warna aksen per kategori
@@ -837,10 +990,11 @@ const laptops = [
       return;
     }
 
-    const matched = laptops.filter(passesAllFilters);
+    const matched = laptops.filter(l => passesAllFilters(l));
 
     if (matched.length > 0) {
       fallbackNote.style.display = 'none';
+      fallbackNote.innerHTML = '';   // bersihkan diagnosa lama supaya tidak tertinggal
       header.innerHTML = `<strong>${matched.length} laptop</strong> cocok dengan pilihanmu`;
       grid.innerHTML = sortByPerforma(matched).map(l => buildCard(l)).join('');
     } else {
@@ -853,6 +1007,9 @@ const laptops = [
         .slice(0, 3);
 
       fallbackNote.style.display = 'block';
+      fallbackNote.innerHTML =
+        `<span class="fallback-note">⚠️ Tidak ada laptop yang 100% cocok. Ini yang paling mendekati kebutuhanmu:</span>`
+        + diagnosaKosong();
       header.innerHTML = `Tidak ada laptop yang cocok 100% — menampilkan <strong>${scored.length} yang paling mendekati</strong>`;
       grid.innerHTML = scored.map(l => buildCard(l)).join('');
     }
@@ -1029,7 +1186,7 @@ const laptops = [
       const isi = Object.entries(state).filter(([, v]) => v);
       if (isi.length === 0) return;
       const ringkasan = isi.map(([k, v]) => `${k}=${v}`).join(', ');
-      const jml = laptops.filter(passesAllFilters).length;
+      const jml = laptops.filter(l => passesAllFilters(l)).length;
       kirimKeForm(pengguna.nama, pengguna.email,
         `${ringkasProfil(pengguna)} | ${ringkasan} | hasil: ${jml} laptop`);
       sudahKirimFilter = true;
