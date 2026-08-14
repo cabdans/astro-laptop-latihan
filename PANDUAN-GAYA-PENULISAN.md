@@ -148,10 +148,14 @@ Profesi: pekerja IT · konten kreator astronomi (livestream)
 
 | Kategori | Jumlah file | Status gaya 2026 |
 |---|---|---|
-| Budget | 7 | ✅ selesai 27 Juli 2026 |
-| Produktivitas | 12 | ✅ selesai 27 Juli 2026 |
-| Gaming | 20 file di folder gaming/ | ✅ selesai 27 Juli 2026 |
-| High Gaming | 24 (22 di `high-gaming/` + 2 di `gaming/`) | ✅ selesai 27 Juli 2026 |
-| Ultrabook | 15 | ✅ selesai 27 Juli 2026 |
+| Budget | 8 | ✅ selesai · terakhir ditambah 13 Agustus 2026 |
+| Produktivitas | 13 | ✅ selesai · terakhir ditambah 13 Agustus 2026 |
+| Gaming | 24 | ✅ selesai · terakhir ditambah 13 Agustus 2026 |
+| High Gaming | 24 | ✅ selesai 27 Juli 2026 |
+| Ultrabook | 19 | ✅ selesai · terakhir ditambah 13 Agustus 2026 |
 
-**Seluruh 76 halaman review sudah memakai gaya 2026.**
+**Seluruh 88 halaman review sudah memakai gaya 2026.**
+
+> Sejak 3 Agustus 2026 prefix slug selalu sama dengan field `kategori`, jadi
+> `high-gaming/` berisi tepat 24 file dan tidak ada lagi laptop High Gaming
+> yang slug-nya menumpang di folder `gaming/`.
