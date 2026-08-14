@@ -15,9 +15,47 @@ export interface Props {
      muncul di halaman yang mengisinya. */
   update?: string;
   hargaUpdate?: string;
+  /* Override "Ringkasan Cepat" untuk kasus khusus. Kalau tidak diisi,
+     isinya diturunkan otomatis dari kategori laptop. */
+  cocokUntuk?: string[];
+  kurangUntuk?: string[];
 }
 
-const { title, harga, rating, kategori, tanggal, ringkasan, linkTokopedia, linkShopee, update, hargaUpdate } = Astro.props;
+const { title, harga, rating, kategori, tanggal, ringkasan, linkTokopedia, linkShopee, update, hargaUpdate, cocokUntuk, kurangUntuk } = Astro.props;
+
+/* ── RINGKASAN CEPAT ──
+   Sebelumnya dua kalimat ini hardcoded sama untuk semua 89 halaman, jadi
+   laptop gaming pun tertulis "tidak ideal untuk gaming berat". Sekarang
+   diturunkan dari kategori — data yang sudah ada, jadi tidak ada angka
+   atau spesifikasi apa pun yang diubah. Halaman tertentu bisa menimpanya
+   lewat prop cocokUntuk / kurangUntuk. */
+const RINGKAS_KATEGORI: Record<string, { cocok: string[]; kurang: string[] }> = {
+  'Budget': {
+    cocok:  ['Tugas kuliah, Office, dan browsing harian', 'Pemakaian pertama dengan dana terbatas'],
+    kurang: ['Gaming AAA dan rendering berat', 'Multitasking aplikasi berat sekaligus'],
+  },
+  'Produktivitas': {
+    cocok:  ['Multitasking kerja dan kuliah seharian', 'Office, data, dan editing ringan'],
+    kurang: ['Gaming AAA di setelan tinggi', 'Rendering 3D yang butuh GPU dedicated'],
+  },
+  'Gaming': {
+    cocok:  ['Gaming 1080p di setelan medium ke tinggi', 'Editing video dan streaming'],
+    kurang: ['Dipakai jauh dari colokan', 'Dibawa bepergian tiap hari karena bobotnya'],
+  },
+  'High Gaming': {
+    cocok:  ['Gaming AAA 1440p dan e-sport high refresh', 'Rendering, 3D, dan beban kerja berat'],
+    kurang: ['Mobilitas tinggi karena bobot dan charger besar', 'Pemakaian baterai tanpa adaptor'],
+  },
+  'Ultrabook': {
+    cocok:  ['Dibawa bepergian, tipis dan ringan', 'Kerja mobile dengan baterai panjang'],
+    kurang: ['Gaming berat dan rendering lama', 'Upgrade komponen di kemudian hari'],
+  },
+};
+const dasar = RINGKAS_KATEGORI[kategori] ?? RINGKAS_KATEGORI['Produktivitas'];
+const ringkas = {
+  cocok:  cocokUntuk  ?? dasar.cocok,
+  kurang: kurangUntuk ?? dasar.kurang,
+};
 
 /* Kalau ada link afiliasi, buka di tab baru dengan rel yang aman.
    Kalau kosong, perilaku lama dipertahankan (href="#", tanpa target). */
@@ -396,6 +434,24 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
       .disclaimer { font-size: 0.72rem; color: #475569; margin-top: 8px; text-align: center; }
 
       .sidebar-card p { font-size: 0.875rem; color: #94a3b8; line-height: 1.6; }
+      /* Baris Ringkasan Cepat: ikon sejajar, teks tidak menabrak ikon */
+      .rc-ya, .rc-tidak {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        font-size: 0.85rem;
+        line-height: 1.55;
+        padding: 7px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+      .sidebar-card .rc-ya:last-child,
+      .sidebar-card .rc-tidak:last-child { border-bottom: none; padding-bottom: 0; }
+      .rc-ya    { color: #a7f3d0; }
+      .rc-tidak { color: #fcd9a4; }
+      html[data-theme="light"] .rc-ya    { color: #047857; }
+      html[data-theme="light"] .rc-tidak { color: #b45309; }
+      html[data-theme="light"] .rc-ya,
+      html[data-theme="light"] .rc-tidak { border-bottom-color: rgba(0,0,0,0.06); }
 
       /* ── FOOTER ── */
       footer {
@@ -562,8 +618,8 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
 
         <div class="sidebar-card">
           <h3>⚡ Ringkasan Cepat</h3>
-          <p>✅ Cocok untuk pelajar & mahasiswa</p>
-          <p style="margin-top: 8px;">⚠️ Tidak ideal untuk gaming berat</p>
+          {ringkas.cocok.map((t) => <p class="rc-ya">✅ {t}</p>)}
+          {ringkas.kurang.map((t) => <p class="rc-tidak">⚠️ {t}</p>)}
         </div>
       </aside>
     </div>
