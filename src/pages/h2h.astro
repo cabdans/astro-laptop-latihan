@@ -116,9 +116,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);
       font-size: 0.9rem; vertical-align: middle; color: #cbd5e1;
     }
+    /* Kolom label memakai jenis huruf berbeda (monospace) dari kolom nilai,
+       supaya sekali lihat terbaca mana pertanyaan dan mana jawaban. */
     .spec-table td:first-child {
-      width: 200px; font-weight: 600; color: #64748b; font-size: 0.8rem;
-      text-transform: uppercase; letter-spacing: 0.03em;
+      width: 200px; font-weight: 700; color: #7d8ba1; font-size: 0.78rem;
+      font-family: ui-monospace, 'Cascadia Mono', Consolas, 'SF Mono', Menlo, monospace;
+      text-transform: uppercase; letter-spacing: 0.02em;
       background: rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.07);
     }
     /* Section header rows — sengaja dibuat kontras kuat terhadap baris data.
@@ -128,9 +131,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .spec-table tr.section-row td {
       background: linear-gradient(90deg, rgba(96,165,250,0.28) 0%, rgba(96,165,250,0.14) 45%, rgba(96,165,250,0.06) 100%);
       color: #eff6ff;
-      font-size: 1rem; font-weight: 800; letter-spacing: 0.14em;
+      font-size: 1.32rem; font-weight: 800; letter-spacing: 0.14em;
+      font-family: 'Segoe UI', system-ui, sans-serif;
       text-transform: uppercase;
-      padding: 18px 16px 16px 22px;
+      /* Padding atas besar = efek "enter", memberi jeda napas sebelum
+         bagian baru dimulai, bukan sekadar beda warna. */
+      padding: 34px 16px 20px 26px;
       border-top: 3px solid #60a5fa;
       border-bottom: 1px solid rgba(96,165,250,0.3);
       border-right: none;
@@ -142,11 +148,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       width: 6px; background: #60a5fa;
       box-shadow: 0 0 16px rgba(96,165,250,0.9);
     }
-    /* Baris pertama tabel tidak perlu garis atas ganda */
-    .spec-table tr.section-row:first-child td { border-top-width: 0; }
+    /* Baris pertama tabel tidak perlu garis atas ganda maupun jeda besar */
+    .spec-table tr.section-row:first-child td { border-top-width: 0; padding-top: 20px; }
     .spec-table tr.section-row td:first-child {
-      color: #eff6ff; border-right: none;
-      width: auto; font-size: 1rem;
+      color: #eff6ff; border-right: none; background: none;
+      width: auto; font-size: 1.32rem; letter-spacing: 0.14em;
+      font-family: 'Segoe UI', system-ui, sans-serif;
     }
     /* Latar zebra jangan menimpa header bagian */
     .spec-table tr.section-row:nth-child(even) { background: transparent; }
@@ -166,9 +173,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     @media (max-width: 640px) {
       .spec-table tr.section-row td {
-        font-size: 0.9rem; letter-spacing: 0.1em; padding: 15px 12px 13px 18px;
+        font-size: 1.08rem; letter-spacing: 0.1em; padding: 26px 12px 15px 20px;
       }
-      .spec-table tr.section-row td:first-child { font-size: 0.9rem; }
+      .spec-table tr.section-row:first-child td { padding-top: 16px; }
+      .spec-table tr.section-row td:first-child { font-size: 1.08rem; }
     }
 
     /* Draw */
@@ -195,7 +203,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .win-chip {
       display: inline-block; min-width: 54px;
       padding: 4px 10px; border-radius: 6px;
-      font-size: 0.76rem; font-weight: 800; letter-spacing: 0.08em;
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em;
+      font-family: ui-monospace, 'Cascadia Mono', Consolas, 'SF Mono', Menlo, monospace;
       text-transform: uppercase;
     }
     .win-chip.a    { background: rgba(96,165,250,0.18); color: #93c5fd; border: 1px solid rgba(96,165,250,0.5); }
