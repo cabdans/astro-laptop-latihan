@@ -79,7 +79,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .compare-wrap.show { display: block; }
 
     /* HEADER CARDS with win counter */
-    .laptop-headers { display: grid; grid-template-columns: 200px 1fr 1fr; gap: 0; margin-bottom: 0; }
+    .laptop-headers { display: grid; grid-template-columns: 200px 1fr 1fr 110px; gap: 0; margin-bottom: 0; }
+    /* Kepala kolom WIN — menyamakan tata letak header dengan tabel di bawahnya */
+    .header-win {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #fbbf24;
+      background: rgba(251,191,36,0.08);
+      border: 1px solid rgba(251,191,36,0.3);
+      border-left: none;
+    }
     .header-empty { background: transparent; }
     .laptop-card {
       border: 2px solid rgba(255,255,255,0.1); border-radius: 12px 12px 0 0;
@@ -174,6 +183,37 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
     .win-icon { display: none; }
 
+    /* ── KOLOM WIN ──
+       Kolom keempat yang menyatakan pemenang tiap baris, meniru tata letak
+       tabel perbandingan cetak: A / B / SERI. Nilai diambil dari logika
+       menang-kalah yang sudah ada, tidak ada data baru yang dibuat. */
+    .spec-table td.td-win {
+      width: 110px; text-align: center; padding: 10px 8px;
+      border-left: 1px solid rgba(255,255,255,0.09);
+      background: rgba(251,191,36,0.04);
+    }
+    .win-chip {
+      display: inline-block; min-width: 54px;
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 0.76rem; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .win-chip.a    { background: rgba(96,165,250,0.18); color: #93c5fd; border: 1px solid rgba(96,165,250,0.5); }
+    .win-chip.b    { background: rgba(167,139,250,0.18); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.5); }
+    .win-chip.seri { background: rgba(148,163,184,0.12); color: #94a3b8; border: 1px solid rgba(148,163,184,0.35); }
+
+    /* Garis vertikal antar kolom supaya terbaca sebagai grid, bukan teks lepas */
+    .spec-table td:nth-child(2) { border-right: 1px solid rgba(255,255,255,0.07); }
+
+    :global(html[data-theme="light"]) .spec-table td.td-win {
+      border-left-color: rgba(0,0,0,0.09); background: rgba(251,191,36,0.07);
+    }
+    :global(html[data-theme="light"]) .spec-table td:nth-child(2) { border-right-color: rgba(0,0,0,0.07); }
+    :global(html[data-theme="light"]) .win-chip.a    { background: rgba(37,99,235,0.12);  color: #1d4ed8; border-color: rgba(37,99,235,0.4); }
+    :global(html[data-theme="light"]) .win-chip.b    { background: rgba(124,58,237,0.12); color: #6d28d9; border-color: rgba(124,58,237,0.4); }
+    :global(html[data-theme="light"]) .win-chip.seri { background: rgba(100,116,139,0.1); color: #475569; border-color: rgba(100,116,139,0.3); }
+    :global(html[data-theme="light"]) .header-win { color: #b45309; background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.4); }
+
     .badge-gpu { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; background: rgba(251,191,36,0.15); color: #fbbf24; }
     .badge-cpu-intel { background: rgba(96,165,250,0.12); color: #60a5fa; display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; }
     .badge-cpu-amd { background: rgba(239,68,68,0.12); color: #f87171; display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; }
@@ -206,8 +246,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     @media (max-width: 640px) {
       .page-header { padding: 36px 20px; }
       .selector-wrap { grid-template-columns: 1fr; }
-      .laptop-headers { grid-template-columns: 100px 1fr 1fr; }
+      .laptop-headers { grid-template-columns: 100px 1fr 1fr 62px; }
       .spec-table td:first-child { width: 100px; font-size: 0.72rem; }
+      /* Di layar sempit chip diringkas jadi A / B / = supaya kolom tidak memakan ruang */
+      .header-win { font-size: 0.6rem; letter-spacing: 0.06em; }
+      .spec-table td.td-win { width: 62px; padding: 10px 4px; }
+      .win-chip { min-width: 0; padding: 4px 7px; font-size: 0.68rem; letter-spacing: 0.04em; }
+      .win-chip.a::before    { content: "A"; }
+      .win-chip.b::before    { content: "B"; }
+      .win-chip.seri::before { content: "="; }
+      .win-chip { font-size: 0; }
+      .win-chip::before { font-size: 0.72rem; font-weight: 800; }
     }
   </style>
 
@@ -285,6 +334,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div class="card-price" id="price-b">—</div>
         <div class="win-counter" id="wins-b">0 unggul</div>
       </div>
+      <div class="header-win">Win</div>
     </div>
 
     <table class="spec-table">
@@ -641,18 +691,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       rows.forEach(([type, label, vA, vB, numA, numB]) => {
         if (type === 'section') {
-          tbody.innerHTML += '<tr class="section-row"><td colspan="3">' + label + '</td></tr>';
+          tbody.innerHTML += '<tr class="section-row"><td colspan="4">' + label + '</td></tr>';
           return;
         }
         let clsA = 'draw', clsB = 'draw', iconA = '', iconB = '';
+        let win = '<span class="win-chip seri">Seri</span>';
         if (type !== 'row-equal' && numA !== null && numB !== null) {
           if (numA !== numB) {
             const aWins = type === 'row-higher' ? numA > numB : numA < numB;
-            if (aWins) { clsA = 'win-a'; iconA = '<span class="win-icon">&#x1F3C6;</span>'; winsA++; prosA.push(label); }
-            else { clsB = 'win-b'; iconB = '<span class="win-icon">&#x1F3C6;</span>'; winsB++; prosB.push(label); }
+            if (aWins) {
+              clsA = 'win-a'; iconA = '<span class="win-icon">&#x1F3C6;</span>'; winsA++; prosA.push(label);
+              win = '<span class="win-chip a">Laptop A</span>';
+            } else {
+              clsB = 'win-b'; iconB = '<span class="win-icon">&#x1F3C6;</span>'; winsB++; prosB.push(label);
+              win = '<span class="win-chip b">Laptop B</span>';
+            }
           }
         }
-        tbody.innerHTML += '<tr><td>' + label + '</td><td class="' + clsA + '">' + vA + iconA + '</td><td class="' + clsB + '">' + vB + iconB + '</td></tr>';
+        tbody.innerHTML += '<tr><td>' + label + '</td><td class="' + clsA + '">' + vA + iconA + '</td><td class="' + clsB + '">' + vB + iconB + '</td><td class="td-win">' + win + '</td></tr>';
       });
 
       document.getElementById('wins-a').textContent = '🏆 ' + winsA + ' unggul';
