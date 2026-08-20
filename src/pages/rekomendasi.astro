@@ -40,6 +40,7 @@ const laptops = [
   { slug:"ultrabook/hp-omnibook-3-14-core3-100u", nama:"HP OmniBook 3 14 Core 3 100U", harga:"Rp 12.500.000", hMin:12.5, hMax:12.5, kategori:"Ultrabook", cpu:"Intel Core 3 100U", gpu:"Intel Graphics 64 EU", ram:"8 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:1.46, pmMulti:0 },
   { slug:"ultrabook/asus-vivobook-s14-r7-260", nama:"ASUS Vivobook S14 Ryzen 7 260", harga:"—", hMin:0, hMax:0, kategori:"Ultrabook", cpu:"AMD Ryzen 7 260", gpu:"Radeon 780M", ram:"16 GB onboard + 1 slot", srgb:true, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:0 },
   { slug:"gaming/axioo-pongo-535-rtx3050", nama:"Axioo Pongo 535 i5-13420H RTX 3050", harga:"Rp 15,5 Juta", hMin:15.5, hMax:15.5, kategori:"Gaming", cpu:"Intel Core i5-13420H", gpu:"RTX 3050 4 GB", ram:"16 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:true, gpuTgp:75, gpuVram:4, bobot:2.09, pmMulti:16934 },
+  { slug:"gaming/axioo-pongo-735-rtx3050", nama:"Axioo Pongo 735 i7-13620H RTX 3050", harga:"—", hMin:0, hMax:0, kategori:"Gaming", cpu:"Intel Core i7-13620H", gpu:"RTX 3050 6 GB", ram:"16 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:true, gpuTgp:75, gpuVram:6, bobot:1.99, pmMulti:23398 },
   { slug:"gaming/axioo-pongo-750-rtx4050", nama:"Axioo Pongo 750 i7-13620H RTX 4050", harga:"Rp 15 Juta", hMin:15, hMax:15, kategori:"Gaming", cpu:"Intel Core i7-13620H", gpu:"RTX 4050 6 GB", ram:"16 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:true, gpuTgp:100, gpuVram:6, bobot:2.14, pmMulti:23398 },
   { slug:"gaming/lenovo-loq-essential-15arp10e", nama:"Lenovo LOQ Essential 15ARP10E R7", harga:"Rp 16–17 Juta", hMin:16, hMax:17, kategori:"Gaming", cpu:"AMD Ryzen 7 7735HS", gpu:"RTX 4050 6 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:65, gpuVram:6, bobot:1.80, pmMulti:22369 },
   { slug:"gaming/colorful-evol-p15-he55d", nama:"Colorful Evol P15 HE55D i5-12450H", harga:"Rp 15–16 Juta", hMin:15, hMax:16, kategori:"Gaming", cpu:"Intel Core i5-12450H", gpu:"RTX 4050 6 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:6, bobot:0, pmMulti:14600 },
@@ -490,7 +491,7 @@ const laptops = [
 
 <div class="rekomen-hero reveal">
   <h1>🎯 Temukan Laptop yang Pas</h1>
-  <p>Jawab 5 pertanyaan singkat — kami carikan laptop terbaik dari 90 pilihan</p>
+  <p>Jawab 5 pertanyaan singkat — kami carikan laptop terbaik dari 91 pilihan</p>
 </div>
 
 <!-- ══ GATE: nama + email ══ -->
@@ -893,7 +894,7 @@ const laptops = [
         if (alasan) bagian.push(`<p class="diag-sub">${alasan}</p>`);
         bagian.push(`<p class="diag-sub">Lepas salah satu dari keduanya untuk melihat hasil.</p>`);
       } else {
-        bagian.push(`<p class="diag-utama">Kriteria yang kamu pilih terlalu ketat untuk 90 laptop yang ada. Coba lepas satu atau dua pilihan.</p>`);
+        bagian.push(`<p class="diag-utama">Kriteria yang kamu pilih terlalu ketat untuk 91 laptop yang ada. Coba lepas satu atau dua pilihan.</p>`);
       }
     }
 
