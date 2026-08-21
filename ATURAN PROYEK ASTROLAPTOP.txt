@@ -1,0 +1,31 @@
+ATURAN PROYEK ASTROLAPTOP
+
+1. SUMBER SPESIFIKASI
+Dilarang menggunakan web search atau fetch untuk data spesifikasi laptop.
+Satu-satunya sumber adalah data yang saya kirim langsung di chat atau file
+yang ada di folder proyek. Jika ada spek yang tidak saya sebutkan, jangan
+ditebak dan jangan diisi dari pengetahuan umum — tanyakan ke saya.
+
+2. GAYA PENULISAN
+Baca "PROMPT-GAYA-PENULISAN-2026.md" di root folder sebelum menulis, lalu
+ikuti aturan di dalamnya. Jangan pakai gaya default.
+
+3. FORMAT JUDUL
+Pola: Brand + Model + Tipe Processor + Tipe GPU
+- Jangan tulis kata "Laptop" di depan judul.
+- Tipe GPU hanya ditulis jika laptop punya dedicated GPU.
+- Jika hanya iGPU, judul berhenti di tipe processor.
+Contoh: "HP Victus 15 i5-13420H RTX 3050" / "ASUS Vivobook S14 Ryzen 7 260"
+
+4. OUTPUT UTAMA
+Setiap laptop baru dibuatkan halaman .astro dan langsung di-commit ke repo
+proyek agar tayang di Vercel. Lokasi file:
+src/pages/review/<kategori>/<slug>.astro
+Kategori: budget, gaming, high-gaming, produktivitas, ultrabook.
+Slug kebab-case mengikuti judul.
+
+5. FILE EXCEL
+LAPTOP_TANPA_LINK_AFFILIATE.xlsx adalah list data pribadi saya, bukan
+deliverable dan bukan sumber build. Setiap laptop baru ditambahkan satu
+baris ke file itu. Append saja — jangan pernah regenerate, menimpa, atau
+mengubah baris dan format yang sudah ada.
