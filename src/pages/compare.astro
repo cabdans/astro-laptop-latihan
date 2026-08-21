@@ -162,10 +162,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <label>Rentang Harga</label>
       <select id="f-harga">
         <option value="">Semua Harga</option>
-        <option value="bawah10">Di bawah 10 Juta</option>
-        <option value="10-13">10 – 13 Juta</option>
-        <option value="13-17">13 – 17 Juta</option>
-        <option value="atas17">17 Juta ke atas</option>
+        <option value="5-10">5 – 10 Juta</option>
+        <option value="10-15">10 – 15 Juta</option>
+        <option value="15-20">15 – 20 Juta</option>
+        <option value="20-25">20 – 25 Juta</option>
+        <option value="25-30">25 – 30 Juta</option>
+        <option value="atas30">30 Juta ke atas</option>
       </select>
     </div>
 
@@ -1404,10 +1406,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         // matchesFilters() di h2h.astro.
         if (harga && rHarga === 0) show = false;
 
-        if (harga === 'bawah10')   { if (rHarga >= 10) show = false; }
-        else if (harga === '10-13') { if (rHarga < 10 || rHarga > 13) show = false; }
-        else if (harga === '13-17') { if (rHarga < 13 || rHarga > 17) show = false; }
-        else if (harga === 'atas17') { if (rHarga <= 17) show = false; }
+        // Rentang per 5 juta dengan batas atas EKSKLUSIF [lo, hi), supaya laptop
+        // yang harganya tepat di batas tidak muncul di dua bucket sekaligus.
+        if (harga === '5-10')        { if (rHarga < 5  || rHarga >= 10) show = false; }
+        else if (harga === '10-15')  { if (rHarga < 10 || rHarga >= 15) show = false; }
+        else if (harga === '15-20')  { if (rHarga < 15 || rHarga >= 20) show = false; }
+        else if (harga === '20-25')  { if (rHarga < 20 || rHarga >= 25) show = false; }
+        else if (harga === '25-30')  { if (rHarga < 25 || rHarga >= 30) show = false; }
+        else if (harga === 'atas30') { if (rHarga < 30) show = false; }
 
         if (gpu      && rGpu      !== gpu)      show = false;
         if (cpu      && rCpu      !== cpu)      show = false;
