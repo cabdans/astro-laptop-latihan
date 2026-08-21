@@ -103,13 +103,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       font-size: 0.75rem; font-weight: 700; padding: 3px 10px;
       border-radius: 20px; white-space: nowrap;
     }
-    .badge-gpu.rtx5050 { background: rgba(52,211,153,0.12); color: #34d399; }
-    .badge-gpu.rtx4050 { background: rgba(96,165,250,0.12); color: #60a5fa; }
-    .badge-gpu.rtx3050 { background: rgba(251,191,36,0.12); color: #fbbf24; }
-    .badge-gpu.rtx5060 { background: rgba(167,139,250,0.15); color: #a78bfa; }
-    .badge-gpu.rtx5070 { background: rgba(244,114,182,0.13); color: #f472b6; }
-    .badge-gpu.rtx5070ti { background: rgba(251,113,133,0.15); color: #fb7185; }
-    .badge-gpu.rtx5080 { background: rgba(34,211,238,0.13); color: #22d3ee; }
+    /* Warna badge GPU disusun sebagai spektrum bertingkat: makin tinggi
+       kelas GPU, makin hangat warnanya. iGPU netral abu-abu. */
+    .badge-gpu.igpu      { background: rgba(148,163,184,0.14); color: #94a3b8; }
+    .badge-gpu.rtx3050   { background: rgba(52,211,153,0.13);  color: #34d399; }
+    .badge-gpu.rtx4050   { background: rgba(34,211,238,0.13);  color: #22d3ee; }
+    .badge-gpu.rtx5050   { background: rgba(96,165,250,0.13);  color: #60a5fa; }
+    .badge-gpu.rtx5060   { background: rgba(167,139,250,0.15); color: #a78bfa; }
+    .badge-gpu.rtx5070   { background: rgba(244,114,182,0.14); color: #f472b6; }
+    .badge-gpu.rtx5070ti { background: rgba(251,146,60,0.15);  color: #fb923c; }
+    .badge-gpu.rtx5080   { background: rgba(251,191,36,0.15);  color: #fbbf24; }
 
     .badge-cpu { font-size: 0.8rem; white-space: nowrap; }
     .badge-amd { background: rgba(239,68,68,0.15); color: #f87171; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
