@@ -1,0 +1,1504 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Perbandingan Laptop" description="Bandingkan laptop gaming berdasarkan harga, GPU, CPU, RAM, dan layar.">
+  <style>
+    .page-header {
+      margin-bottom: 28px;
+      background:
+        linear-gradient(135deg, rgba(12,9,2,0.92) 0%, rgba(22,16,3,0.82) 40%, rgba(8,7,2,0.90) 100%),
+        url('/planet-saturnus.jpg') center/cover no-repeat;
+      border: 1px solid rgba(251,191,36,0.25);
+      border-radius: 16px; padding: 48px 40px; position: relative; overflow: hidden;
+      box-shadow: 0 0 60px rgba(251,191,36,0.10);
+    }
+    .page-header::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(251,191,36,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 30%, rgba(251,146,60,0.10) 0%, transparent 45%);
+    }
+    .page-header h1 {
+      font-size: 2rem; font-weight: 800; color: #e2e8f0; margin-bottom: 6px;
+      position: relative; z-index: 1;
+      text-shadow: 0 0 32px rgba(251,191,36,0.6);
+    }
+    .page-header p { color: rgba(255,255,255,0.7); position: relative; z-index: 1; }
+
+    .filters {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px; padding: 20px 24px; margin-bottom: 24px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px;
+    }
+    .filter-group label {
+      display: block; font-size: 0.78rem; font-weight: 700; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;
+    }
+    .filter-group select {
+      width: 100%; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; font-size: 0.9rem; color: #e2e8f0;
+      background: rgba(255,255,255,0.06); cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+    }
+    .filter-group select:focus { outline: none; border-color: rgba(96,165,250,0.5); }
+    .filter-group select option { background: #0a0a1e; color: #e2e8f0; }
+
+    .reset-btn {
+      align-self: end; padding: 8px 16px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; font-size: 0.875rem; cursor: pointer;
+      color: #94a3b8; font-weight: 600; transition: all 0.2s;
+    }
+    .reset-btn:hover { background: rgba(255,255,255,0.1); color: #e2e8f0; }
+
+    .result-info { font-size: 0.875rem; color: #64748b; margin-bottom: 12px; }
+    .result-info strong { color: #e2e8f0; }
+
+    .table-wrap {
+      overflow-x: auto; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+    table {
+      width: 100%; min-width: 1060px;
+      border-collapse: collapse; font-size: 0.875rem;
+    }
+    thead tr {
+      background: rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    th {
+      padding: 12px 12px; text-align: left;
+      font-size: 0.78rem; font-weight: 700; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      white-space: nowrap; cursor: pointer; user-select: none;
+    }
+    th:hover { color: #60a5fa; }
+    th.sort-asc::after { content: " ↑"; color: #60a5fa; }
+    th.sort-desc::after { content: " ↓"; color: #60a5fa; }
+
+    tbody tr { border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.15s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(96,165,250,0.05); }
+    tbody tr.hidden { display: none; }
+
+    td { padding: 14px 12px; color: #cbd5e1; vertical-align: middle; }
+    .td-nama { font-weight: 600; color: #e2e8f0; min-width: 200px; }
+    .td-nama a { color: #60a5fa; text-decoration: none; }
+    .td-nama a:hover { text-decoration: underline; }
+    .td-merk { white-space: nowrap; }
+
+    .score-cell { text-align: center; font-weight: 700; font-size: 0.88rem; }
+    .score-badge {
+      display: inline-block; background: rgba(59,130,246,0.25); color: #93c5fd;
+      border: 1px solid rgba(59,130,246,0.3); padding: 2px 10px;
+      border-radius: 12px; font-size: 0.82rem; font-weight: 700;
+    }
+    .score-nodata { color: #475569; font-size: 0.78rem; font-style: italic; }
+
+    .badge-gpu {
+      background: rgba(251,191,36,0.12); color: #fbbf24;
+      font-size: 0.75rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; white-space: nowrap;
+    }
+    /* Warna badge GPU disusun sebagai spektrum bertingkat: makin tinggi
+       kelas GPU, makin hangat warnanya. iGPU netral abu-abu. */
+    .badge-gpu.igpu      { background: rgba(148,163,184,0.14); color: #94a3b8; }
+    .badge-gpu.rtx3050   { background: rgba(52,211,153,0.13);  color: #34d399; }
+    .badge-gpu.rtx4050   { background: rgba(34,211,238,0.13);  color: #22d3ee; }
+    .badge-gpu.rtx5050   { background: rgba(96,165,250,0.13);  color: #60a5fa; }
+    .badge-gpu.rtx5060   { background: rgba(167,139,250,0.15); color: #a78bfa; }
+    .badge-gpu.rtx5070   { background: rgba(244,114,182,0.14); color: #f472b6; }
+    .badge-gpu.rtx5070ti { background: rgba(251,146,60,0.15);  color: #fb923c; }
+    .badge-gpu.rtx5080   { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+
+    .badge-cpu { font-size: 0.8rem; white-space: nowrap; }
+    .badge-amd { background: rgba(239,68,68,0.15); color: #f87171; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .badge-intel { background: rgba(96,165,250,0.12); color: #60a5fa; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .badge-apple { background: rgba(148,163,184,0.15); color: #cbd5e1; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .badge-ramup {
+      padding: 3px 9px; border-radius: 6px;
+      font-size: 0.75rem; font-weight: 600; white-space: nowrap;
+    }
+    .badge-ramup.yes { background: rgba(52,211,153,0.13); color: #34d399; }
+    .badge-ramup.no  { background: rgba(255,255,255,0.06); color: #64748b; }
+
+    .check { color: #34d399; font-size: 1rem; }
+    .cross { color: #334155; font-size: 1rem; }
+    .harga-cell {
+      font-weight: 700; color: #34d399; white-space: nowrap;
+      min-width: 108px; text-align: right; padding-right: 18px;
+    }
+    th[data-col="harga"] { text-align: right; padding-right: 18px; }
+
+    .no-result { text-align: center; padding: 48px; color: #475569; display: none; }
+    .no-result.show { display: table-row; }
+
+    .search-full { grid-column: 1 / -1; }
+    #search-input {
+      width: 100%; padding: 8px 12px; font-size: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+      background: rgba(255,255,255,0.06); color: #e2e8f0;
+      box-sizing: border-box; outline: none;
+    }
+    #search-input:focus { border-color: rgba(96,165,250,0.5); }
+    #search-input::placeholder { color: #475569; }
+  </style>
+
+  <div class="page-header">
+    <h1>🔍 Perbandingan Laptop</h1>
+    <p>Filter dan bandingkan laptop berdasarkan kebutuhan kamu.</p>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filters">
+    <div class="filter-group search-full">
+      <label>Cari Laptop</label>
+      <input type="text" id="search-input" placeholder="Nama, CPU, GPU, Merk..." autocomplete="off" />
+    </div>
+    <div class="filter-group">
+      <label>Rentang Harga</label>
+      <select id="f-harga">
+        <option value="">Semua Harga</option>
+        <option value="5-10">5 – 10 Juta</option>
+        <option value="10-15">10 – 15 Juta</option>
+        <option value="15-20">15 – 20 Juta</option>
+        <option value="20-25">20 – 25 Juta</option>
+        <option value="25-30">25 – 30 Juta</option>
+        <option value="atas30">30 Juta ke atas</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>GPU</label>
+      <select id="f-gpu">
+        <option value="">Semua GPU</option>
+        <option value="RTX 5080">RTX 5080</option>
+        <option value="RTX 5070 Ti">RTX 5070 Ti</option>
+        <option value="RTX 5070">RTX 5070</option>
+        <option value="RTX 5060">RTX 5060</option>
+        <option value="RTX 5050">RTX 5050</option>
+        <option value="RTX 4050">RTX 4050</option>
+        <option value="RTX 3050">RTX 3050</option>
+        <option value="Integrated">Integrated / Tanpa GPU</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Jenis CPU</label>
+      <select id="f-cpu">
+        <option value="">Intel & AMD</option>
+        <option value="Intel">Intel</option>
+        <option value="AMD">AMD</option>
+        <option value="Apple">Apple</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>RAM Upgradeable</label>
+      <select id="f-ram">
+        <option value="">Semua</option>
+        <option value="ya">Ya</option>
+        <option value="tidak">Tidak</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>100% sRGB</label>
+      <select id="f-srgb">
+        <option value="">Semua</option>
+        <option value="ya">Ada 100% sRGB</option>
+        <option value="tidak">Tanpa 100% sRGB</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Kategori</label>
+      <select id="f-kategori">
+        <option value="">Semua</option>
+        <option value="gaming">Gaming</option>
+        <option value="high-gaming">High Gaming</option>
+        <option value="ultrabook">Ultrabook</option>
+        <option value="produktivitas">Produktivitas / Office</option>
+        <option value="budget">Budget</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <button class="reset-btn" id="btn-reset">↺ Reset Filter</button>
+    </div>
+  </div>
+
+  <p class="result-info">Menampilkan <strong id="result-count">93</strong> laptop</p>
+
+  <!-- TABEL -->
+  <div class="table-wrap">
+    <table id="compare-table">
+      <thead>
+        <tr>
+          <th data-col="nama">Laptop</th>
+          <th data-col="merk">Merk</th>
+          <th data-col="cpu">CPU</th>
+          <th data-col="gpu">GPU</th>
+          <th data-col="ram">RAM Upgrade</th>
+          <th data-col="layar">Layar</th>
+          <th data-col="srgb">100% sRGB</th>
+          <th data-col="score">Score CPU</th>
+          <th data-col="harga">Harga</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <!-- data-harga dalam juta (angka), data-gpu, data-cpu, data-ram, data-srgb -->
+
+        <tr data-harga="11.0" data-gpu="Integrated" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/lenovo-ideapad-slim3-14irh10-i5">Lenovo IdeaPad Slim 3 14IRH10 i5</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i5-13420H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">46</span></td>
+          <td class="harga-cell">Rp 10–11 Jt</td>
+        </tr>
+
+        <tr data-harga="11.0" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/lenovo-ideapad-slim3-14arp10-r5">Lenovo IdeaPad Slim 3 14ARP10 R5</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 5 7535HS</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">46</span></td>
+          <td class="harga-cell">Rp 10–11 Jt</td>
+        </tr>
+
+        <tr data-harga="11.8" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="ya" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/polytron-luxia-pro-ultra5-125h">Polytron Luxia Pro Ultra 5 125H</a></td>
+          <td class="td-merk">Polytron</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 5 125H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" IPS</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">53</span></td>
+          <td class="harga-cell">Rp 10–11 Jt</td>
+        </tr>
+
+        <tr data-harga="10.2" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/acer-aspire-lite-15-r5-8640hs">Acer Aspire Lite 15 R5-8640HS</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 5 8640HS</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 60 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">52</span></td>
+          <td class="harga-cell">Rp 9–10 Jt</td>
+        </tr>
+
+        <tr data-harga="9.7" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/acer-aspire-lite-15-r5-7430u">Acer Aspire Lite 15 R5-7430U</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 5 7430U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" 60 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">43</span></td>
+          <td class="harga-cell">Rp 7–8 Jt</td>
+        </tr>
+
+        <tr data-harga="11" data-gpu="Integrated" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/acer-aspire-go-14-ultra5-125h">Acer Aspire Go 14 Ai Ultra 5 125H</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 5 125H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">53</span></td>
+          <td class="harga-cell">Rp 10–12 Jt</td>
+        </tr>
+
+        <tr data-harga="13.4" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/acer-aspire-lite-15-r7-8840hs">Acer Aspire Lite 15 R7 8840HS</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 8840HS</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">58</span></td>
+          <td class="harga-cell">Rp 11–12 Jt</td>
+        </tr>
+
+        <tr data-harga="11.0" data-gpu="Integrated" data-cpu="AMD" data-ram="tidak" data-srgb="tidak" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/advan-pixwar-touch-r7-8745hs">Advan Pixwar Touchscreen R7 8745HS</a></td>
+          <td class="td-merk">Advan</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 8745HS</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>15" FHD Touch</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
+          <td class="harga-cell">Rp 9–10 Jt</td>
+        </tr>
+
+        <tr data-harga="8.5" data-gpu="Integrated" data-cpu="AMD" data-ram="tidak" data-srgb="tidak" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/advan-workplus-r7-7735hs">Advan Workplus Ryzen 7 7735HS</a></td>
+          <td class="td-merk">Advan</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 7735HS</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" WUXGA</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">52</span></td>
+          <td class="harga-cell">Rp 8–9 Jt</td>
+        </tr>
+
+        <tr data-harga="8.6" data-gpu="Integrated" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="budget">
+          <td class="td-nama"><a href="/review/budget/advan-workmate-ultra-core-ultra5-115u">Advan Workmate Ultra Core Ultra 5 115U</a></td>
+          <td class="td-merk">Advan</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 5 115U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">40</span></td>
+          <td class="harga-cell">Rp 7–8 Jt</td>
+        </tr>
+
+        <tr data-harga="7.8" data-gpu="Integrated" data-cpu="AMD" data-ram="tidak" data-srgb="tidak" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/advan-workplus-r5-6600h">Advan Workplus R5 6600H</a></td>
+          <td class="td-merk">Advan</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 5 6600H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" FHD</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">46</span></td>
+          <td class="harga-cell">Rp 7–8 Jt</td>
+        </tr>
+
+        <tr data-harga="9.0" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/advan-workplus-heritage-r5-7535hs">Advan Workplus Heritage R5 7535HS</a></td>
+          <td class="td-merk">Advan</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 5 7535HS</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">46</span></td>
+          <td class="harga-cell">Rp 7–8 Jt</td>
+        </tr>
+
+        <tr data-harga="9.4" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="tidak" data-kategori="budget">
+          <td class="td-nama"><a href="/review/budget/lenovo-ideapad-slim3-14iru8-i3">Lenovo IdeaPad Slim 3 14IRU8 i3</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i3-1315U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" FHD TN</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">41</span></td>
+          <td class="harga-cell">Rp 7–8 Jt</td>
+        </tr>
+
+        <tr data-harga="7.499" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="budget">
+          <td class="td-nama"><a href="/review/budget/asus-vivobook-15">ASUS VivoBook 15</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 5 7520U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 60 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">34</span></td>
+          <td class="harga-cell">Rp 7,5 Jt</td>
+        </tr>
+
+        <tr data-harga="7.5" data-gpu="Integrated" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="budget">
+          <td class="td-nama"><a href="/review/budget/acer-aspire-go-14-i3-1315u">Acer Aspire GO 14 i3-1315U</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i3-1315U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" 60 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">41</span></td>
+          <td class="harga-cell">Rp 7–8 Jt</td>
+        </tr>
+
+        <tr data-harga="8.2" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="budget">
+          <td class="td-nama"><a href="/review/budget/acer-aspire-lite-al14-42p">Acer Aspire Lite AL14-42P</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 3 5300U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" 60 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">34</span></td>
+          <td class="harga-cell">Rp 6–7 Jt</td>
+        </tr>
+
+        <tr data-harga="7.8" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="budget">
+          <td class="td-nama"><a href="/review/budget/polytron-luxia-r5-7430u">Polytron Luxia Ryzen 5 7430U</a></td>
+          <td class="td-merk">Polytron</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 5 7430U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA 60 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">43</span></td>
+          <td class="harga-cell">Rp 7,2 Jt</td>
+        </tr>
+        <tr data-harga="7.0" data-gpu="Integrated" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="budget">
+          <td class="td-nama"><a href="/review/budget/polytron-luxia-i3-1215">Polytron Luxia i3 1215</a></td>
+          <td class="td-merk">Polytron</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i3-1215U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" 60 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">42</span></td>
+          <td class="harga-cell">Rp 6–7 Jt</td>
+        </tr>
+
+        <tr data-harga="10.0" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="ya" data-kategori="budget">
+          <td class="td-nama"><a href="/review/budget/polytron-luxia-pro-i5-1235u">Polytron Luxia Pro i5-1235U</a></td>
+          <td class="td-merk">Polytron</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i5-1235U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" 100% sRGB</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">43</span></td>
+          <td class="harga-cell">Rp 8–9 Jt</td>
+        </tr>
+
+        <tr data-harga="11.3" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/asus-expertbook-pm1403cda-r5-150">ASUS ExpertBook PM1403CDA R5 150</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 5 150U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" FHD</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">48</span></td>
+          <td class="harga-cell">Rp 10–11 Jt</td>
+        </tr>
+
+        <tr data-harga="12.5" data-gpu="RTX 3050" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/acer-aspire-7-pro-a715">Acer Aspire 7 Pro A715</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-13420H</span></td>
+          <td><span class="badge-gpu rtx3050">RTX 3050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 144 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">46</span></td>
+          <td class="harga-cell">Rp 12–13 Jt</td>
+        </tr>
+
+        <tr data-harga="14.5" data-gpu="RTX 3050" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/acer-nitro-lite-nl16">Acer Nitro Lite NL16 Core 5 210H RTX 3050</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core 5 210H</span></td>
+          <td><span class="badge-gpu rtx3050">RTX 3050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WUXGA 180 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">50</span></td>
+          <td class="harga-cell">Rp 14–15 Jt</td>
+        </tr>
+
+        <tr data-harga="19.0" data-gpu="RTX 5050" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/colorful-evol-p15-rtx5050">Colorful Evol P15 RTX 5050</a></td>
+          <td class="td-merk">Colorful</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-13420H</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 144 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">46</span></td>
+          <td class="harga-cell">Rp 19 Jt</td>
+        </tr>
+
+        <tr data-harga="17.9" data-gpu="RTX 3050" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/lenovo-loq-15irx9">Lenovo LOQ 15IRX9 i5-13450HX</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-13450HX</span></td>
+          <td><span class="badge-gpu rtx3050">RTX 3050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 144 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">50</span></td>
+          <td class="harga-cell">Rp 17,9 Jt</td>
+        </tr>
+
+        <tr data-harga="15.5" data-gpu="RTX 4050" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/colorful-evol-p15-he55d">Colorful Evol P15 HE55D</a></td>
+          <td class="td-merk">Colorful</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-12450H</span></td>
+          <td><span class="badge-gpu rtx4050">RTX 4050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 144 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">44</span></td>
+          <td class="harga-cell">Rp 15,5 Jt</td>
+        </tr>
+
+        <tr data-harga="13.4" data-gpu="RTX 3050" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/asus-tuf-a15-fa506ncg">ASUS TUF A15 FA506NCG</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 7445HS</span></td>
+          <td><span class="badge-gpu rtx3050">RTX 3050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15.6" FHD 144 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">52</span></td>
+          <td class="harga-cell">Rp 13,4 Jt</td>
+        </tr>
+        <tr data-harga="12.5" data-gpu="RTX 3050" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/lenovo-loq-15arp10e-rtx3050">Lenovo LOQ 15ARP10E Ryzen 7 170 RTX 3050</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 170</span></td>
+          <td><span class="badge-gpu rtx3050">RTX 3050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15.6" FHD 144 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">53</span></td>
+          <td class="harga-cell">Rp 12–13 Jt</td>
+        </tr>
+        <tr data-harga="17.7" data-gpu="RTX 4050" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/acer-nitro-lite-16-core5-210h-rtx4050">Acer Nitro Lite 16 Core 5 210H RTX 4050</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">5 210H</span></td>
+          <td><span class="badge-gpu rtx4050">RTX 4050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" FHD 180 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">50</span></td>
+          <td class="harga-cell">Rp 17,7 Jt</td>
+        </tr>
+        <tr data-harga="16.6" data-gpu="RTX 4050" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/acer-nitro-lite-16-core7-240h-rtx4050">Acer Nitro Lite 16 Core 7 240H RTX 4050</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">7 240H</span></td>
+          <td><span class="badge-gpu rtx4050">RTX 4050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" FHD 180 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 16,6 Jt</td>
+        </tr>
+        <tr data-harga="9.7" data-gpu="Integrated" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="budget">
+          <td class="td-nama"><a href="/review/budget/asus-expertbook-p1-i3-1315u">ASUS ExpertBook P1 Core i3-1315U</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i3-1315U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" FHD 60 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">41</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+        <tr data-harga="10.5" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="produktivitas">
+          <td class="td-nama"><a href="/review/produktivitas/axioo-hype-7-x8-r7-6800h">Axioo Hype 7 X8 Ryzen 7 6800H</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 6800H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA 60 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+        <tr data-harga="15.7" data-gpu="Integrated" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/acer-swift-14-oled-ultra5-226v">Acer Swift 14 OLED Core Ultra 5 226V</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Ultra 5 226V</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA 90 Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">55</span></td>
+          <td class="harga-cell">Rp 15,7 Jt</td>
+        </tr>
+        <tr data-harga="12.5" data-gpu="Integrated" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/hp-omnibook-3-14-core3-100u">HP OmniBook 3 14</a></td>
+          <td class="td-merk">HP</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core 3 100U</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">&#10003; Ya</span></td>
+          <td>14" WUXGA 60 Hz</td>
+          <td class="check">&mdash;</td>
+          <td class="score-cell"><span class="score-badge">&mdash;</span></td>
+          <td class="harga-cell">Rp 12,5 Jt</td>
+        </tr>
+
+        <tr data-harga="17.3" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/asus-vivobook-s14-r7-260">ASUS Vivobook S14 Ryzen 7 260</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 260</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA 60 Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 17,3 Jt</td>
+        </tr>
+        <tr data-harga="15.5" data-gpu="RTX 3050" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/axioo-pongo-535-rtx3050">Axioo Pongo 535 i5-13420H RTX 3050</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-13420H</span></td>
+          <td><span class="badge-gpu rtx3050">RTX 3050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15.6" FHD 144 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">46</span></td>
+          <td class="harga-cell">Rp 15,5 Jt</td>
+        </tr>
+        <tr data-harga="13.0" data-gpu="RTX 3050" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/axioo-pongo-735-rtx3050">Axioo Pongo 735 RTX 3050</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i7-13620H</span></td>
+          <td><span class="badge-gpu rtx3050">RTX 3050</span></td>
+          <td><span class="badge-ramup yes">&#10003; Ya</span></td>
+          <td>15.6" FHD 144 Hz</td>
+          <td class="check">&mdash;</td>
+          <td class="score-cell"><span class="score-badge">54</span></td>
+          <td class="harga-cell">Rp 13 Jt</td>
+        </tr>
+
+        <tr data-harga="16.3" data-gpu="RTX 4050" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/axioo-pongo-750-rtx4050">Axioo Pongo 750 i7-13620H RTX 4050</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i7-13620H</span></td>
+          <td><span class="badge-gpu rtx4050">RTX 4050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15.6" FHD+ 144 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">54</span></td>
+          <td class="harga-cell">Rp 16,3 Jt</td>
+        </tr>
+        <tr data-harga="16.5" data-gpu="RTX 4050" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/lenovo-loq-essential-15arp10e">Lenovo LOQ Essential 15ARP10E R7</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 7735HS</span></td>
+          <td><span class="badge-gpu rtx4050">RTX 4050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 144 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">52</span></td>
+          <td class="harga-cell">Rp 16–17 Jt</td>
+        </tr>
+
+        <tr data-harga="15.4" data-gpu="RTX 3050" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/hp-victus-15-i5-13420h-rtx3050">HP Victus 15 RTX 3050</a></td>
+          <td class="td-merk">HP</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-13420H</span></td>
+          <td><span class="badge-gpu rtx3050">RTX 3050</span></td>
+          <td><span class="badge-ramup yes">&#10003; Ya</span></td>
+          <td>15.6" FHD 144 Hz</td>
+          <td class="check">&mdash;</td>
+          <td class="score-cell"><span class="score-badge">46</span></td>
+          <td class="harga-cell">Rp 15,4 Jt</td>
+        </tr>
+
+        <tr data-harga="17.2" data-gpu="RTX 4050" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/hp-victus-15-fa2717tx">HP Victus 15 FA2717TX</a></td>
+          <td class="td-merk">HP</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-13420H</span></td>
+          <td><span class="badge-gpu rtx4050">RTX 4050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 144 Hz</td>
+          <td class="check">—</td>
+          <td class="score-cell"><span class="score-badge">46</span></td>
+          <td class="harga-cell">Rp 17,2 Jt</td>
+        </tr>
+
+        <tr data-harga="14.0" data-gpu="RTX 3050" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/acer-nitro-v15-core5-210h-rtx3050">Acer Nitro V15 RTX 3050</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core 5 210H</span></td>
+          <td><span class="badge-gpu rtx3050">RTX 3050</span></td>
+          <td><span class="badge-ramup yes">&#10003; Ya</span></td>
+          <td>15.6" FHD 180 Hz</td>
+          <td class="check">&#10003;</td>
+          <td class="score-cell"><span class="score-badge">50</span></td>
+          <td class="harga-cell">Rp 14 Jt</td>
+        </tr>
+
+        <tr data-harga="17.5" data-gpu="RTX 5050" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/acer-nitro-v15-5050">Acer Nitro V15 RTX 5050 i5</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-13420H</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 180 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">46</span></td>
+          <td class="harga-cell">Rp 17–18 Jt</td>
+        </tr>
+
+        <tr data-harga="16.7" data-gpu="RTX 4050" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/acer-nitro-v15-anv15-42">Acer Nitro V15 ANV15-42 R7</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 7445HS</span></td>
+          <td><span class="badge-gpu rtx4050">RTX 4050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 180 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">52</span></td>
+          <td class="harga-cell">Rp 16,7 Jt</td>
+        </tr>
+
+        <tr data-harga="20.5" data-gpu="RTX 4050" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/asus-tuf-gaming-a16">ASUS TUF Gaming A16 FA607NUG</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 7445HS</span></td>
+          <td><span class="badge-gpu rtx4050">RTX 4050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WUXGA 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">52</span></td>
+          <td class="harga-cell">Rp 20,5 Jt</td>
+        </tr>
+
+
+        <tr data-harga="16.5" data-gpu="RTX 5050" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/asus-gaming-v16-v3607vh">ASUS Gaming V16 V3607VH</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core 5 210H</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WUXGA 144 Hz</td>
+          <td class="check">❌</td>
+          <td class="score-cell"><span class="score-badge">50</span></td>
+          <td class="harga-cell">Rp 16–17 Jt</td>
+        </tr>
+
+        <tr data-harga="20" data-gpu="RTX 5050" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/lenovo-loq-15ahp10">Lenovo LOQ 15AHP10 RTX 5050</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 250</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 144 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
+          <td class="harga-cell">Rp 20 Jt</td>
+        </tr>
+
+        <tr data-harga="24.3" data-gpu="RTX 5050" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/asus-tuf-a16-fa608uh-rtx5050">ASUS TUF A16 FA608UH RTX 5050</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 260</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WUXGA 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
+          <td class="harga-cell">Rp 24,3 Jt</td>
+        </tr>
+
+        <tr data-harga="23.6" data-gpu="RTX 5050" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/lenovo-loq-15ahp11">Lenovo LOQ 15AHP11 R7 250 RTX 5050</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 250</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" WUXGA 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
+          <td class="harga-cell">Rp 23,6 Jt</td>
+        </tr>
+
+        <tr data-harga="19.0" data-gpu="RTX 5050" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/axioo-pongo-755-x72">Axioo Pongo 755-X72 R7 255 RTX 5050</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 255</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" FHD+ 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">58</span></td>
+          <td class="harga-cell">Rp 19 Jt</td>
+        </tr>
+
+        <tr data-harga="21.3" data-gpu="RTX 5060" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/axioo-pongo-765">Axioo Pongo 765 i7-13620H RTX 5060</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-13620H</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WUXGA 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">55</span></td>
+          <td class="harga-cell">Rp 21,3 Jt</td>
+        </tr>
+
+        <tr data-harga="22.6" data-gpu="RTX 5060" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/axioo-pongo-765-v2">Axioo Pongo 765 V2 i7-13700H RTX 5060</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-13700H</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WUXGA 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">60</span></td>
+          <td class="harga-cell">Rp 22,6 Jt</td>
+        </tr>
+
+        <tr data-harga="22.5" data-gpu="RTX 5050" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/lenovo-loq-15irx10">Lenovo LOQ 15IRX10 i5-13450HX</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i5-13450HX</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 144 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">50</span></td>
+          <td class="harga-cell">Rp 22–23 Jt</td>
+        </tr>
+
+        <tr data-harga="24.5" data-gpu="RTX 5050" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="gaming">
+          <td class="td-nama"><a href="/review/gaming/lenovo-loq-15irx10-i7">Lenovo LOQ 15IRX10 i7-13700HX</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">i7-13700HX</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 144 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">63</span></td>
+          <td class="harga-cell">Rp 24,5 Jt</td>
+        </tr>
+
+        <tr id="no-result" class="no-result">
+          <td colspan="9">😕 Tidak ada laptop yang cocok dengan filter ini.</td>
+        </tr>
+
+        <tr data-harga="25.8" data-gpu="RTX 5050" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-legion-5i-15irx10-i7-13650hx">Lenovo Legion 5i 15IRX10 i7-13650HX RTX 5050</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-13650HX</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15.6" WUXGA 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">57</span></td>
+          <td class="harga-cell">Rp 25,8 Jt</td>
+        </tr>
+
+        <tr data-harga="26.8" data-gpu="RTX 5050" data-cpu="AMD" data-ram="tidak" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/asus-tuf-a14-fa401uh-rtx5050">ASUS TUF A14 FA401UH Ryzen AI 7 260 RTX 5050</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 260</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" WQXGA 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
+          <td class="harga-cell">Rp 26,8 Jt</td>
+        </tr>
+
+        <tr data-harga="25.0" data-gpu="RTX 5050" data-cpu="" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-legion-5i-15irx10-oled-rtx5050">Lenovo Legion 5i 15IRX10 OLED RTX 5050</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-cpu">Tidak tercantum</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" WQXGA 165 Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 25 Jt</td>
+        </tr>
+
+        <tr data-harga="30.8" data-gpu="RTX 5050" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/asus-rog-strix-g16-g614ph-rtx5050">ASUS ROG Strix G16 G614PH Ryzen 9 8940HX RTX 5050</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 9 8940HX</span></td>
+          <td><span class="badge-gpu rtx5050">RTX 5050</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" QHD 240 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">70</span></td>
+          <td class="harga-cell">Rp 30,8 Jt</td>
+        </tr>
+
+        <tr data-harga="28.0" data-gpu="RTX 5060" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/asus-tuf-a16-fa608um-rtx5060">ASUS TUF A16 FA608UM Ryzen AI 7 260 RTX 5060</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 260</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WUXGA 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
+          <td class="harga-cell">Rp 28 Jt</td>
+        </tr>
+
+        <tr data-harga="28.3" data-gpu="RTX 5060" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-legion-5i-15irx10-i7-14700hx-rtx5060">Lenovo Legion 5i 15IRX10 i7-14700HX RTX 5060</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-14700HX</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" WQXGA 165 Hz OLED</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">64</span></td>
+          <td class="harga-cell">Rp 28,3 Jt</td>
+        </tr>
+
+        <tr data-harga="35.3" data-gpu="RTX 5060" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-legion-5i-15iax10-rtx5060">Lenovo Legion 5i 15IAX10 Ultra 7 255HX RTX 5060</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 255HX</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" WQXGA 165 Hz OLED</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">75</span></td>
+          <td class="harga-cell">Rp 35,3 Jt</td>
+        </tr>
+
+        <tr data-harga="24.0" data-gpu="RTX 5060" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/msi-crosshair-a16-hx-7945hx-rtx5060">MSI Crosshair A16 HX Ryzen 9 7945HX RTX 5060</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 9 7945HX</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WQXGA 240 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">74</span></td>
+          <td class="harga-cell">Rp 24 Jt</td>
+        </tr>
+
+        <tr data-harga="25.2" data-gpu="RTX 5060" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/hp-omen-8940hx-rtx5060">HP Omen Ryzen 9 8940HX RTX 5060</a></td>
+          <td class="td-merk">HP</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 9 8940HX</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" 2K 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">70</span></td>
+          <td class="harga-cell">Rp 25,2 Jt</td>
+        </tr>
+
+        <tr data-harga="26.5" data-gpu="RTX 5060" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/acer-predator-helios-neo-16s-255hx-rtx5060">Acer Predator Helios Neo 16S Ultra 7 255HX RTX 5060</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 255HX</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WQXGA 240 Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">75</span></td>
+          <td class="harga-cell">Rp 26,5 Jt</td>
+        </tr>
+
+        <tr data-harga="26.8" data-gpu="RTX 5060" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-loq-15ahp11-rtx5060">Lenovo LOQ 15AHP11 Ryzen AI 7 250 RTX 5060</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 250</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>15" FHD 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
+          <td class="harga-cell">Rp 26,8 Jt</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5060" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/hp-omen-i7-14650hx-rtx5060">HP Omen i7-14650HX RTX 5060</a></td>
+          <td class="td-merk">HP</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-14650HX</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>WQXGA 180 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="35.5" data-gpu="RTX 5060" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/acer-predator-helios-neo-16s-ultra7-356h-rtx5060">Acer Predator Helios Neo 16S Ultra 7 356H RTX 5060</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 356H</span></td>
+          <td><span class="badge-gpu rtx5060">RTX 5060</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WQXGA 165 Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">67</span></td>
+          <td class="harga-cell">Rp 35,5 Jt</td>
+        </tr>
+
+        <tr data-harga="29.5" data-gpu="RTX 5070" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/asus-tuf-a16-fa608up-rtx5070">ASUS TUF A16 FA608UP Ryzen AI 7 260 RTX 5070</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 260</span></td>
+          <td><span class="badge-gpu rtx5070">RTX 5070</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WUXGA 165 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
+          <td class="harga-cell">Rp 29,5 Jt</td>
+        </tr>
+
+        <tr data-harga="24.8" data-gpu="RTX 5070" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/axioo-pongo-775-rtx5070">Axioo Pongo 775 i7-13620H RTX 5070</a></td>
+          <td class="td-merk">Axioo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core i7-13620H</span></td>
+          <td><span class="badge-gpu rtx5070">RTX 5070</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WQXGA 180 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 24,8 Jt</td>
+        </tr>
+
+        <tr data-harga="24.5" data-gpu="RTX 5070" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/msi-crosshair-a16-hx-7945hx-rtx5070">MSI Crosshair A16 HX Ryzen 9 7945HX RTX 5070</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 9 7945HX</span></td>
+          <td><span class="badge-gpu rtx5070">RTX 5070</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WQXGA 240 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">74</span></td>
+          <td class="harga-cell">Rp 24–25 Jt</td>
+        </tr>
+
+        <tr data-harga="35.0" data-gpu="RTX 5070" data-cpu="Intel" data-ram="tidak" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/acer-predator-helios-neo-16s-ultra9-275hx-rtx5070">Acer Predator Helios Neo 16S 275HX</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Ultra 9 275HX</span></td>
+          <td><span class="badge-gpu rtx5070">RTX 5070</span></td>
+          <td><span class="badge-ramup no">&#10007; Tidak</span></td>
+          <td>16" WQXGA 240 Hz</td>
+          <td class="check">&mdash;</td>
+          <td class="score-cell"><span class="score-badge">78</span></td>
+          <td class="harga-cell">Rp 35 Jt</td>
+        </tr>
+
+        <tr data-harga="0" data-gpu="RTX 5070" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/acer-predator-helios-neo-16s-ultra9-386h-rtx5070">Acer Predator Helios Neo 16S Ultra 9 386H RTX 5070</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 9 386H</span></td>
+          <td><span class="badge-gpu rtx5070">RTX 5070</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WQXGA 165 Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">69</span></td>
+          <td class="harga-cell">—</td>
+        </tr>
+
+        <tr data-harga="35.0" data-gpu="RTX 5070 Ti" data-cpu="Intel" data-ram="ya" data-srgb="tidak" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/msi-vector-16hx-255hx-rtx5070ti">MSI Vector 16HX Ultra 7 255HX RTX 5070 Ti</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 255HX</span></td>
+          <td><span class="badge-gpu rtx5070ti">RTX 5070 Ti</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WQXGA 240 Hz</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">75</span></td>
+          <td class="harga-cell">Rp 35 Jt</td>
+        </tr>
+
+        <tr data-harga="43.0" data-gpu="RTX 5070 Ti" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/asus-rog-strix-g16-g614pr-rtx5070ti">ASUS ROG Strix G16 2025 G614PR RTX 5070 Ti</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 9 8940HX</span></td>
+          <td><span class="badge-gpu rtx5070ti">RTX 5070 Ti</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" FHD+ 165 Hz</td>
+          <td class="check">&#10003;</td>
+          <td class="score-cell"><span class="score-badge">70</span></td>
+          <td class="harga-cell">Rp 43 Jt</td>
+        </tr>
+
+        <tr data-harga="44.0" data-gpu="RTX 5070 Ti" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/lenovo-legion-pro-5i-16-oled-rtx5070ti">Lenovo Legion Pro 5i 16 OLED Ultra 9 275HX RTX 5070 Ti</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 9 275HX</span></td>
+          <td><span class="badge-gpu rtx5070ti">RTX 5070 Ti</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WQXGA 240 Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">78</span></td>
+          <td class="harga-cell">Rp 44 Jt</td>
+        </tr>
+
+        <tr data-harga="38.0" data-gpu="RTX 5070 Ti" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/hp-omen-max-16-rtx5070ti">HP Omen Max 16 Ryzen AI 7 350 RTX 5070 Ti</a></td>
+          <td class="td-merk">HP</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen AI 7 350</span></td>
+          <td><span class="badge-gpu rtx5070ti">RTX 5070 Ti</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WQXGA 240 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">63</span></td>
+          <td class="harga-cell">Rp 38 Jt</td>
+        </tr>
+
+        <tr data-harga="44.2" data-gpu="RTX 5080" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="high-gaming">
+          <td class="td-nama"><a href="/review/high-gaming/msi-vector-16hx-275hx-rtx5080">MSI Vector 16HX Ultra 9 275HX RTX 5080</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 9 275HX</span></td>
+          <td><span class="badge-gpu rtx5080">RTX 5080</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>16" WQXGA 240 Hz</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">78</span></td>
+          <td class="harga-cell">Rp 44,2 Jt</td>
+        </tr>
+
+
+        <tr data-harga="15.4" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/acer-swift-air-14-ultra7-155h">Acer Swift Air 14 Core Ultra 7 155H</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 155H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" WQXGA 60 Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">57</span></td>
+          <td class="harga-cell">Rp 15,4 Jt</td>
+        </tr>
+        <tr data-harga="16.7" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/acer-swift-air-14-ultra5-125h">Acer Swift Air 14 Core Ultra 5 125H</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 5 125H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" WQXGA 60 Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">52</span></td>
+          <td class="harga-cell">Rp 16,7 Jt</td>
+        </tr>
+        <tr data-harga="12.5" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/acer-swift-go-14-sfg14-ultra5-125h">Acer Swift Go 14 SFG14 Ultra 5 125H</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 5 125H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" 2.8K</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">52</span></td>
+          <td class="harga-cell">Rp 12,5 Jt</td>
+        </tr>
+
+        <tr data-harga="18.5" data-gpu="Integrated" data-cpu="" data-ram="tidak" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/acer-swift-go-14-sfg14-73p9">Acer Swift Go 14 AI SFG14-73-73P9</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-cpu">Tidak tercantum</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" 2.8K OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">—</span></td>
+          <td class="harga-cell">Rp 18,5 Jt</td>
+        </tr>
+
+        <tr data-harga="10.2" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="tidak" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/advan-workplus-ai-ryzen7-255">Advan Workplus AI Ryzen 7 255</a></td>
+          <td class="td-merk">Advan</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 255</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" FHD+</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">62</span></td>
+          <td class="harga-cell">Rp 10,2 Jt</td>
+        </tr>
+
+        <tr data-harga="12.5" data-gpu="Integrated" data-cpu="Apple" data-ram="tidak" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/apple-macbook-air-m2-13">Apple MacBook Air M2 13"</a></td>
+          <td class="td-merk">Apple</td>
+          <td><span class="badge-apple">Apple</span> <span class="badge-cpu">Apple M2</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>13" 2.5K</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">57</span></td>
+          <td class="harga-cell">Rp 12–13 Jt</td>
+        </tr>
+
+        <tr data-harga="17.7" data-gpu="Integrated" data-cpu="AMD" data-ram="ya" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/lenovo-ideapad-slim5-14-oled-ryzen7-8845hs">Lenovo IdeaPad Slim 5 14 OLED Ryzen 7 8845HS</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-amd">AMD</span> <span class="badge-cpu">Ryzen 7 8845HS</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">61</span></td>
+          <td class="harga-cell">Rp 17,7 Jt</td>
+        </tr>
+
+        <tr data-harga="18.2" data-gpu="Integrated" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/lenovo-ideapad-slim5-14iah10-ultra5-225h">Lenovo IdeaPad Slim 5 14IAH10 Ultra 5 225H</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 5 225H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">64</span></td>
+          <td class="harga-cell">Rp 18,2 Jt</td>
+        </tr>
+
+        <tr data-harga="20.0" data-gpu="Integrated" data-cpu="Intel" data-ram="ya" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/lenovo-ideapad-slim5i-ultra7-255h">Lenovo IdeaPad Slim 5i Ultra 7 255H</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 255H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup yes">✓ Ya</span></td>
+          <td>14" WUXGA OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">68</span></td>
+          <td class="harga-cell">Rp 20 Jt</td>
+        </tr>
+
+        <tr data-harga="19.0" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/lenovo-yoga-slim7i-aura-ultra5-226v">Lenovo Yoga Slim 7i Aura Edition Ultra 5 226V</a></td>
+          <td class="td-merk">Lenovo</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 5 226V</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" 2.8K OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">55</span></td>
+          <td class="harga-cell">Rp 19 Jt</td>
+        </tr>
+
+        <tr data-harga="34.0" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/msi-prestige-14-ai-ultra7-355">MSI Prestige 14 AI+ Ultra 7 355</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 355</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" FHD+ OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">60</span></td>
+          <td class="harga-cell">Rp 34 Jt</td>
+        </tr>
+
+        <tr data-harga="24.0" data-gpu="Integrated" data-cpu="Apple" data-ram="tidak" data-srgb="tidak" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/apple-macbook-air-m4">Apple MacBook Air M4</a></td>
+          <td class="td-merk">Apple</td>
+          <td><span class="badge-apple">Apple</span> <span class="badge-cpu">Apple M4</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>—</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">76</span></td>
+          <td class="harga-cell">Rp 24 Jt</td>
+        </tr>
+
+        <tr data-harga="31.2" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/msi-prestige-14-flip-ultra9-386h">MSI Prestige 14 Flip AI+ Ultra 9 386H</a></td>
+          <td class="td-merk">MSI</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 9 386H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" FHD+ OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">69</span></td>
+          <td class="harga-cell">Rp 31,2 Jt</td>
+        </tr>
+
+        <tr data-harga="27.0" data-gpu="Integrated" data-cpu="Apple" data-ram="tidak" data-srgb="tidak" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/apple-macbook-pro-14-m5">Apple MacBook Pro 14 M5</a></td>
+          <td class="td-merk">Apple</td>
+          <td><span class="badge-apple">Apple</span> <span class="badge-cpu">Apple M5</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>—</td>
+          <td class="cross">—</td>
+          <td class="score-cell"><span class="score-badge">81</span></td>
+          <td class="harga-cell">Rp 27 Jt</td>
+        </tr>
+
+        <tr data-harga="21.0" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/asus-expertbook-ultra-p5405csa-ultra7-258v">ASUS ExpertBook Ultra P5405CSA Ultra 7 258V</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 258V</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" 2.5K OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">59</span></td>
+          <td class="harga-cell">Rp 21 Jt</td>
+        </tr>
+
+        <tr data-harga="25.0" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/acer-swift-go-14-sfg14-171-ultra7-358h">Acer Swift Go 14 AI SFG14-171 Ultra 7 358H</a></td>
+          <td class="td-merk">Acer</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 358H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" WUXGA 60 Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">71</span></td>
+          <td class="harga-cell">Rp 25 Jt</td>
+        </tr>
+
+        <tr data-harga="48.0" data-gpu="Integrated" data-cpu="Intel" data-ram="tidak" data-srgb="ya" data-kategori="ultrabook">
+          <td class="td-nama"><a href="/review/ultrabook/asus-expertbook-b9400cba-ultra7-358h">ASUS ExpertBook B9400CBA Ultra 7 358H</a></td>
+          <td class="td-merk">ASUS</td>
+          <td><span class="badge-intel">Intel</span> <span class="badge-cpu">Core Ultra 7 358H</span></td>
+          <td><span class="badge-gpu igpu">Integrated</span></td>
+          <td><span class="badge-ramup no">Tidak</span></td>
+          <td>14" 2.8K 120 Hz OLED</td>
+          <td class="check">✅</td>
+          <td class="score-cell"><span class="score-badge">71</span></td>
+          <td class="harga-cell">Rp 48 Jt</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const rows = document.querySelectorAll('#table-body tr:not(#no-result)');
+    const noResult = document.getElementById('no-result');
+    const resultCount = document.getElementById('result-count');
+
+    const fHarga    = document.getElementById('f-harga');
+    const fGpu      = document.getElementById('f-gpu');
+    const fCpu      = document.getElementById('f-cpu');
+    const fRam      = document.getElementById('f-ram');
+    const fSrgb     = document.getElementById('f-srgb');
+    const fKategori = document.getElementById('f-kategori');
+    const fSearch   = document.getElementById('search-input');
+
+    function applyFilters() {
+      const harga    = fHarga.value;
+      const gpu      = fGpu.value;
+      const cpu      = fCpu.value;
+      const ram      = fRam.value;
+      const srgb     = fSrgb.value;
+      const kategori = fKategori.value;
+      const search   = fSearch.value.toLowerCase().trim();
+
+      let visible = 0;
+
+      rows.forEach(row => {
+        const rHarga    = row.dataset.harga ? parseFloat(row.dataset.harga) : 0;
+        const rGpu      = row.dataset.gpu   || '';
+        const rCpu      = row.dataset.cpu   || '';
+        const rRam      = row.dataset.ram   || '';
+        const rSrgb     = row.dataset.srgb  || '';
+        const rKategori = row.dataset.kategori || '';
+        const rText     = row.textContent.toLowerCase();
+
+        let show = true;
+
+        // Laptop tanpa data harga (data-harga="0") tidak boleh lolos filter rentang
+        // harga apa pun — harganya belum diketahui, bukan berarti murah.
+        // Pola ini konsisten dengan budgetPass() di rekomendasi.astro dan
+        // matchesFilters() di h2h.astro.
+        if (harga && rHarga === 0) show = false;
+
+        // Rentang per 5 juta dengan batas atas EKSKLUSIF [lo, hi), supaya laptop
+        // yang harganya tepat di batas tidak muncul di dua bucket sekaligus.
+        if (harga === '5-10')        { if (rHarga < 5  || rHarga >= 10) show = false; }
+        else if (harga === '10-15')  { if (rHarga < 10 || rHarga >= 15) show = false; }
+        else if (harga === '15-20')  { if (rHarga < 15 || rHarga >= 20) show = false; }
+        else if (harga === '20-25')  { if (rHarga < 20 || rHarga >= 25) show = false; }
+        else if (harga === '25-30')  { if (rHarga < 25 || rHarga >= 30) show = false; }
+        else if (harga === 'atas30') { if (rHarga < 30) show = false; }
+
+        if (gpu      && rGpu      !== gpu)      show = false;
+        if (cpu      && rCpu      !== cpu)      show = false;
+        if (ram      && rRam      !== ram)      show = false;
+        if (srgb     && rSrgb     !== srgb)     show = false;
+        if (kategori && rKategori !== kategori) show = false;
+        if (search   && !rText.includes(search)) show = false;
+
+        row.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+
+      resultCount.textContent = visible;
+      noResult.classList.toggle('show', visible === 0);
+    }
+
+    [fHarga, fGpu, fCpu, fRam, fSrgb, fKategori].forEach(f =>
+      f.addEventListener('change', applyFilters)
+    );
+    fSearch.addEventListener('input', applyFilters);
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      [fHarga, fGpu, fCpu, fRam, fSrgb, fKategori].forEach(f => f.value = '');
+      fSearch.value = '';
+      applyFilters();
+    });
+
+    // Sort
+    let sortCol = '', sortDir = 1;
+    document.querySelectorAll('th[data-col]').forEach(th => {
+      th.addEventListener('click', () => {
+        const col = th.dataset.col;
+        if (sortCol === col) {
+          sortDir *= -1;
+        } else {
+          sortCol = col;
+          sortDir = 1;
+        }
+
+        document.querySelectorAll('th').forEach(t => t.classList.remove('sort-asc','sort-desc'));
+        th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+
+        const tbody = document.getElementById('table-body');
+        const rowsArr = Array.from(rows);
+
+        const colMap = { nama: 1, merk: 2, cpu: 3, gpu: 4, ram: 5, layar: 6, srgb: 7, score: 8, harga: 9 };
+        const colIdx = colMap[col] || 1;
+
+        rowsArr.sort((a, b) => {
+          if (col === 'harga') {
+            // Laptop tanpa data harga (0) selalu di bawah, tidak ikut tersortir
+            // seolah-olah termurah.
+            const hA = parseFloat(a.dataset.harga) || 0;
+            const hB = parseFloat(b.dataset.harga) || 0;
+            if (hA === 0 && hB === 0) return 0;
+            if (hA === 0) return 1;
+            if (hB === 0) return -1;
+            return (hA - hB) * sortDir;
+          }
+          if (col === 'score') {
+            // Badge selalu ada; yang bertanda "—" berarti belum ada benchmark.
+            // parseInt("—") menghasilkan NaN, jadi harus dinormalkan ke null
+            // supaya guard No Data di bawah benar-benar bekerja.
+            const getScore = row => {
+              const badge = row.querySelector('.score-badge');
+              if (!badge) return null;
+              const n = parseInt(badge.textContent.trim(), 10);
+              return Number.isNaN(n) ? null : n;
+            };
+            const sA = getScore(a), sB = getScore(b);
+            // No Data always goes to bottom
+            if (sA === null && sB === null) return 0;
+            if (sA === null) return 1;
+            if (sB === null) return -1;
+            return (sA - sB) * sortDir;
+          }
+          const aVal = a.querySelector(`td:nth-child(${colIdx})`)?.textContent?.trim() || '';
+          const bVal = b.querySelector(`td:nth-child(${colIdx})`)?.textContent?.trim() || '';
+          return aVal.localeCompare(bVal) * sortDir;
+        });
+
+        rowsArr.forEach(row => tbody.insertBefore(row, noResult));
+        applyFilters();
+      });
+    });
+  </script>
+
+</BaseLayout>

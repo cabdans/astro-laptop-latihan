@@ -1,0 +1,1259 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Data laptop — bersumber dari project ini saja, tanpa referensi luar
+// gpuTgp: TGP GPU dalam watt (0 = tidak ada GPU dedicated)
+// gpuVram: VRAM dalam GB (0 = tidak ada GPU dedicated)
+// bobot: berat dalam kg (0 = data tidak tersedia)
+// pmMulti: Passmark Multi-Thread score (0 = data tidak tersedia)
+const laptops = [
+  { slug:"produktivitas/lenovo-ideapad-slim3-14irh10-i5", nama:"Lenovo IdeaPad Slim 3 14IRH10 Core i5", harga:"Rp 11.000.000", hMin:11.0, hMax:11.0, kategori:"Produktivitas", cpu:"Intel Core i5-13420H", gpu:"Intel UHD Graphics", ram:"8 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:16934 },
+  { slug:"produktivitas/lenovo-ideapad-slim3-14arp10-r5", nama:"Lenovo IdeaPad Slim 3 14ARP10 Ryzen 5", harga:"Rp 11.000.000", hMin:11.0, hMax:11.0, kategori:"Produktivitas", cpu:"AMD Ryzen 5 7535HS", gpu:"Radeon 660M", ram:"8 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:17651 },
+  { slug:"produktivitas/advan-pixwar-touch-r7-8745hs", nama:"Advan Pixwar Touchscreen Ryzen 7 8745HS", harga:"Rp 11.000.000", hMin:11.0, hMax:11.0, kategori:"Produktivitas", cpu:"AMD Ryzen 7 8745HS", gpu:"Radeon 780M", ram:"16 GB LPDDR5 (soldered)", srgb:false, ramUp:false, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:28675 },
+  { slug:"produktivitas/advan-workplus-r7-7735hs", nama:"Advan Workplus Ryzen 7 7735HS", harga:"Rp 8–9 Juta", hMin:8, hMax:9, kategori:"Produktivitas", cpu:"AMD Ryzen 7 7735HS", gpu:"Radeon 680M", ram:"16 GB LPDDR5 (soldered)", srgb:false, ramUp:false, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:22369 },
+  { slug:"budget/advan-workmate-ultra-core-ultra5-115u", nama:"Advan Workmate Ultra Core Ultra 5 115U", harga:"Rp 8.600.000", hMin:8.6, hMax:8.6, kategori:"Budget", cpu:"Intel Core Ultra 5 115U", gpu:"Intel Arc Graphics", ram:"8 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:12771 },
+  { slug:"produktivitas/advan-workplus-r5-6600h", nama:"Advan Workplus Ryzen 5 6600H", harga:"Rp 7.800.000", hMin:7.8, hMax:7.8, kategori:"Produktivitas", cpu:"AMD Ryzen 5 6600H", gpu:"Radeon 660M", ram:"16 GB LPDDR5 (soldered)", srgb:false, ramUp:false, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:18224 },
+  { slug:"produktivitas/advan-workplus-heritage-r5-7535hs", nama:"Advan Workplus Heritage Ryzen 5 7535HS", harga:"Rp 9.000.000", hMin:9.0, hMax:9.0, kategori:"Produktivitas", cpu:"AMD Ryzen 5 7535HS", gpu:"Radeon 660M", ram:"8/16 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:17651 },
+  { slug:"produktivitas/asus-expertbook-pm1403cda-r5-150", nama:"ASUS ExpertBook PM1403CDA Ryzen 5 150", harga:"Rp 11.300.000", hMin:11.3, hMax:11.3, kategori:"Produktivitas", cpu:"AMD Ryzen 5 150U", gpu:"Radeon 740M", ram:"8/16 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:15376 },
+  { slug:"budget/polytron-luxia-pro-i5-1235u", nama:"Polytron Luxia Pro i5-1235U", harga:"Rp 10.000.000", hMin:10.0, hMax:10.0, kategori:"Budget", cpu:"Intel Core i5-1235U", gpu:"Intel Iris Xe", ram:"16 GB LPDDR5 (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:12574 },
+  { slug:"budget/lenovo-ideapad-slim3-14iru8-i3", nama:"Lenovo IdeaPad Slim 3 14IRU8 Core i3", harga:"Rp 9.400.000", hMin:9.4, hMax:9.4, kategori:"Budget", cpu:"Intel Core i3-1315U", gpu:"Intel UHD Graphics", ram:"8 GB LPDDR5 (soldered)", srgb:false, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:11109 },
+  { slug:"produktivitas/polytron-luxia-pro-ultra5-125h", nama:"Polytron Luxia Pro Ultra 5 125H", harga:"Rp 11.800.000", hMin:11.8, hMax:11.8, kategori:"Produktivitas", cpu:"Intel Core Ultra 5 125H", gpu:"Intel Arc Graphics", ram:"16 GB LPDDR5X (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:20314 },
+  { slug:"produktivitas/acer-aspire-go-14-ultra5-125h", nama:"Acer Aspire Go 14 Ai Ultra 5 125H", harga:"Rp 10–12 Juta", hMin:10, hMax:12, kategori:"Produktivitas", cpu:"Intel Core Ultra 5 125H", gpu:"Intel Arc Graphics", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:20314 },
+  { slug:"produktivitas/acer-aspire-lite-15-r7-8840hs", nama:"Acer Aspire Lite 15 Ryzen 7 8840HS", harga:"Rp 13.400.000", hMin:13.4, hMax:13.4, kategori:"Produktivitas", cpu:"AMD Ryzen 7 8840HS", gpu:"Radeon 780M", ram:"16 GB DDR (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:24807 },
+  { slug:"gaming/asus-tuf-a16-fa608uh-rtx5050", nama:"ASUS TUF A16 FA608UH RTX 5050", harga:"Rp 24.300.000", hMin:24.3, hMax:24.3, kategori:"Gaming", cpu:"AMD Ryzen AI 7 260", gpu:"RTX 5050 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:0, pmMulti:28167 },
+  { slug:"high-gaming/axioo-pongo-765", nama:"Axioo Pongo 765 i7-13620H RTX 5060", harga:"Rp 21.300.000", hMin:21.3, hMax:21.3, kategori:"High Gaming", cpu:"Intel Core i7-13620H", gpu:"RTX 5060 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:true, gpuTgp:115, gpuVram:8, bobot:2.35, pmMulti:23398 },
+  { slug:"high-gaming/axioo-pongo-765-v2", nama:"Axioo Pongo 765 V2 i7-13700H RTX 5060", harga:"Rp 22.600.000", hMin:22.6, hMax:22.6, kategori:"High Gaming", cpu:"Intel Core i7-13700H", gpu:"RTX 5060 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:true, gpuTgp:115, gpuVram:8, bobot:2.35, pmMulti:25960 },
+  { slug:"gaming/lenovo-loq-15ahp11", nama:"Lenovo LOQ 15AHP11 R7 250 RTX 5050", harga:"Rp 23.600.000", hMin:23.6, hMax:23.6, kategori:"Gaming", cpu:"AMD Ryzen AI 7 250", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.1, pmMulti:25331 },
+  { slug:"gaming/axioo-pongo-755-x72", nama:"Axioo Pongo 755-X72 R7 255 RTX 5050", harga:"Rp 19.000.000", hMin:19.0, hMax:19.0, kategori:"Gaming", cpu:"AMD Ryzen AI 7 255", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:true, gpuTgp:135, gpuVram:8, bobot:2.35, pmMulti:28774 },
+  { slug:"gaming/lenovo-loq-15ahp10", nama:"Lenovo LOQ 15AHP10 RTX 5050", harga:"Rp 20 Juta", hMin:20, hMax:20, kategori:"Gaming", cpu:"AMD Ryzen AI 7 250", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:100, gpuVram:8, bobot:2.3, pmMulti:25331 },
+  { slug:"gaming/lenovo-loq-15irx10-i7", nama:"Lenovo LOQ 15IRX10 i7-13700HX RTX 5050", harga:"Rp 24.500.000", hMin:24.5, hMax:24.5, kategori:"Gaming", cpu:"Intel Core i7-13700HX", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:100, gpuVram:8, bobot:2.4, pmMulti:31788 },
+  { slug:"gaming/lenovo-loq-15irx10", nama:"Lenovo LOQ 15IRX10 i5-13450HX RTX 5050", harga:"Rp 22–23 Juta", hMin:22, hMax:23, kategori:"Gaming", cpu:"Intel Core i5-13450HX", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:105, gpuVram:8, bobot:2.4, pmMulti:24682 },
+  { slug:"gaming/asus-gaming-v16-v3607vh", nama:"ASUS Gaming V16 V3607VH Core 5 210H", harga:"Rp 16–17 Juta", hMin:16, hMax:17, kategori:"Gaming", cpu:"Intel Core 5 210H", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:75, gpuVram:8, bobot:1.95, pmMulti:18310 },
+  { slug:"gaming/hp-victus-15-i5-13420h-rtx3050", nama:"HP Victus 15 i5-13420H RTX 3050", harga:"Rp 15.400.000", hMin:15.4, hMax:15.4, kategori:"Gaming", cpu:"Intel Core i5-13420H", gpu:"RTX 3050 6 GB", ram:"16 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:75, gpuVram:6, bobot:2.29, pmMulti:16934 },
+  { slug:"gaming/hp-victus-15-fa2717tx", nama:"HP Victus 15 FA2717TX i5-13420H", harga:"Rp 17.200.000", hMin:17.2, hMax:17.2, kategori:"Gaming", cpu:"Intel Core i5-13420H", gpu:"RTX 4050 6 GB", ram:"16 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:50, gpuVram:6, bobot:2.29, pmMulti:16934 },
+  { slug:"gaming/lenovo-loq-15arp10e-rtx3050", nama:"Lenovo LOQ 15ARP10E Ryzen 7 170 RTX 3050", harga:"Rp 12–13 Juta", hMin:12, hMax:13, kategori:"Gaming", cpu:"AMD Ryzen 7 170", gpu:"RTX 3050 6 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:65, gpuVram:6, bobot:1.8, pmMulti:21690 },
+  { slug:"gaming/acer-nitro-lite-16-core5-210h-rtx4050", nama:"Acer Nitro Lite 16 Core 5 210H RTX 4050", harga:"Rp 17.700.000", hMin:17.7, hMax:17.7, kategori:"Gaming", cpu:"Intel Core 5 210H", gpu:"RTX 4050 6 GB", ram:"16 GB (1 slot)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:45, gpuVram:6, bobot:2.1, pmMulti:18310 },
+  { slug:"gaming/acer-nitro-lite-16-core7-240h-rtx4050", nama:"Acer Nitro Lite 16 Core 7 240H RTX 4050", harga:"Rp 16.600.000", hMin:16.6, hMax:16.6, kategori:"Gaming", cpu:"Intel Core 7 240H", gpu:"RTX 4050 6 GB", ram:"16 GB (1 slot)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:45, gpuVram:6, bobot:2.1, pmMulti:0 },
+  { slug:"budget/asus-expertbook-p1-i3-1315u", nama:"ASUS ExpertBook P1 Core i3-1315U", harga:"Rp 9.700.000", hMin:9.7, hMax:9.7, kategori:"Budget", cpu:"Intel Core i3-1315U", gpu:"Intel UHD Graphics", ram:"8 GB (2 slot)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:11109 },
+  { slug:"produktivitas/axioo-hype-7-x8-r7-6800h", nama:"Axioo Hype 7 X8 Ryzen 7 6800H", harga:"Rp 10.500.000", hMin:10.5, hMax:10.5, kategori:"Produktivitas", cpu:"AMD Ryzen 7 6800H", gpu:"Radeon 680M", ram:"16 GB (2 slot)", srgb:false, ramUp:true, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:0 },
+  { slug:"ultrabook/acer-swift-14-oled-ultra5-226v", nama:"Acer Swift 14 OLED Core Ultra 5 226V", harga:"Rp 15.700.000", hMin:15.7, hMax:15.7, kategori:"Ultrabook", cpu:"Intel Core Ultra 5 226V", gpu:"Intel Arc Graphics", ram:"16 GB LPDDR5X (onboard)", srgb:true, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:18028 },
+  { slug:"ultrabook/hp-omnibook-3-14-core3-100u", nama:"HP OmniBook 3 14 Core 3 100U", harga:"Rp 12.500.000", hMin:12.5, hMax:12.5, kategori:"Ultrabook", cpu:"Intel Core 3 100U", gpu:"Intel Graphics 64 EU", ram:"8 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:1.46, pmMulti:0 },
+  { slug:"ultrabook/asus-vivobook-s14-r7-260", nama:"ASUS Vivobook S14 Ryzen 7 260", harga:"Rp 17.300.000", hMin:17.3, hMax:17.3, kategori:"Ultrabook", cpu:"AMD Ryzen 7 260", gpu:"Radeon 780M", ram:"16 GB onboard + 1 slot", srgb:true, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:0 },
+  { slug:"gaming/axioo-pongo-535-rtx3050", nama:"Axioo Pongo 535 i5-13420H RTX 3050", harga:"Rp 15,5 Juta", hMin:15.5, hMax:15.5, kategori:"Gaming", cpu:"Intel Core i5-13420H", gpu:"RTX 3050 4 GB", ram:"16 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:true, gpuTgp:75, gpuVram:4, bobot:2.09, pmMulti:16934 },
+  { slug:"gaming/axioo-pongo-735-rtx3050", nama:"Axioo Pongo 735 i7-13620H RTX 3050", harga:"Rp 13.000.000", hMin:13.0, hMax:13.0, kategori:"Gaming", cpu:"Intel Core i7-13620H", gpu:"RTX 3050 6 GB", ram:"16 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:true, gpuTgp:75, gpuVram:6, bobot:1.99, pmMulti:23398 },
+  { slug:"gaming/axioo-pongo-750-rtx4050", nama:"Axioo Pongo 750 i7-13620H RTX 4050", harga:"Rp 16.300.000", hMin:16.3, hMax:16.3, kategori:"Gaming", cpu:"Intel Core i7-13620H", gpu:"RTX 4050 6 GB", ram:"16 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:true, gpuTgp:100, gpuVram:6, bobot:2.14, pmMulti:23398 },
+  { slug:"gaming/lenovo-loq-essential-15arp10e", nama:"Lenovo LOQ Essential 15ARP10E R7", harga:"Rp 16–17 Juta", hMin:16, hMax:17, kategori:"Gaming", cpu:"AMD Ryzen 7 7735HS", gpu:"RTX 4050 6 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:65, gpuVram:6, bobot:1.80, pmMulti:22369 },
+  { slug:"gaming/colorful-evol-p15-he55d", nama:"Colorful Evol P15 HE55D i5-12450H", harga:"Rp 15.500.000", hMin:15.5, hMax:15.5, kategori:"Gaming", cpu:"Intel Core i5-12450H", gpu:"RTX 4050 6 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:6, bobot:0, pmMulti:14600 },
+  { slug:"gaming/lenovo-loq-15irx9", nama:"Lenovo LOQ 15IRX9 i5-13450HX", harga:"Rp 17.900.000", hMin:17.9, hMax:17.9, kategori:"Gaming", cpu:"Intel Core i5-13450HX", gpu:"RTX 3050 6 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:95, gpuVram:6, bobot:2.38, pmMulti:24682 },
+  { slug:"gaming/acer-nitro-v15-core5-210h-rtx3050", nama:"Acer Nitro V15 Core 5 210H RTX 3050", harga:"Rp 14.000.000", hMin:14.0, hMax:14.0, kategori:"Gaming", cpu:"Intel Core 5 210H", gpu:"RTX 3050 6 GB", ram:"16 GB (dual slot)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:75, gpuVram:6, bobot:2.1, pmMulti:18310 },
+  { slug:"gaming/acer-nitro-v15-5050", nama:"Acer Nitro V15 RTX 5050 i5", harga:"Rp 17–18 Juta", hMin:17, hMax:18, kategori:"Gaming", cpu:"Intel Core i5-13420H", gpu:"RTX 5050 8 GB", ram:"16 GB DDR4 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:75, gpuVram:8, bobot:2.1, pmMulti:16934 },
+  { slug:"gaming/acer-nitro-v15-anv15-42", nama:"Acer Nitro V15 ANV15-42 R7", harga:"Rp 16.700.000", hMin:16.7, hMax:16.7, kategori:"Gaming", cpu:"AMD Ryzen 7 7445HS", gpu:"RTX 4050 6 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:60, gpuVram:6, bobot:2.1, pmMulti:18718 },
+  { slug:"gaming/colorful-evol-p15-rtx5050", nama:"Colorful Evol P15 RTX 5050", harga:"Rp 19.000.000", hMin:19.0, hMax:19.0, kategori:"Gaming", cpu:"Intel Core i5-13420H", gpu:"RTX 5050 8 GB", ram:"DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.25, pmMulti:16934 },
+  { slug:"gaming/acer-nitro-lite-nl16", nama:"Acer Nitro Lite NL16 Core 5 210H RTX 3050", harga:"Rp 14–15 Juta", hMin:14, hMax:15, kategori:"Gaming", cpu:"Intel Core 5 210H", gpu:"RTX 3050 6 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:55, gpuVram:6, bobot:1.95, pmMulti:18310 },
+  { slug:"gaming/acer-aspire-7-pro-a715", nama:"Acer Aspire 7 Pro A715", harga:"Rp 12–13 Juta", hMin:12, hMax:13, kategori:"Gaming", cpu:"Intel Core i5-13420H", gpu:"RTX 3050 6 GB", ram:"16 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:75, gpuVram:6, bobot:2.1, pmMulti:16934 },
+  { slug:"gaming/asus-tuf-a15-fa506ncg", nama:"ASUS TUF A15 FA506NCG", harga:"Rp 13.400.000", hMin:13.4, hMax:13.4, kategori:"Gaming", cpu:"AMD Ryzen 7 7445HS", gpu:"RTX 3050 4 GB", ram:"8 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:75, gpuVram:4, bobot:2.3, pmMulti:18718 },
+  { slug:"gaming/asus-tuf-gaming-a16", nama:"ASUS TUF Gaming A16", harga:"Rp 20.500.000", hMin:20.5, hMax:20.5, kategori:"Gaming", cpu:"AMD Ryzen 7 7445HS", gpu:"RTX 4050 6 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:6, bobot:2.2, pmMulti:18718 },
+  { slug:"budget/asus-vivobook-15", nama:"ASUS VivoBook 15", harga:"Rp 7.499.000", hMin:7.499, hMax:7.499, kategori:"Budget", cpu:"AMD Ryzen 5 7520U", gpu:"Radeon 610M", ram:"8 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:1.7, pmMulti:8949 },
+  { slug:"produktivitas/acer-aspire-lite-15-r5-8640hs", nama:"Acer Aspire Lite 15 R5-8640HS", harga:"Rp 10.200.000", hMin:10.2, hMax:10.2, kategori:"Produktivitas", cpu:"AMD Ryzen 5 8640HS", gpu:"Radeon 760M", ram:"8 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:19897 },
+  { slug:"produktivitas/acer-aspire-lite-15-r5-7430u", nama:"Acer Aspire Lite 15 R5-7430U", harga:"Rp 9.700.000", hMin:9.7, hMax:9.7, kategori:"Produktivitas", cpu:"AMD Ryzen 5 7430U", gpu:"Radeon 610M", ram:"8 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:15484 },
+  { slug:"budget/acer-aspire-go-14-i3-1315u", nama:"Acer Aspire GO 14 i3-1315U", harga:"Rp 7–8 Juta", hMin:7, hMax:8, kategori:"Budget", cpu:"Intel Core i3-1315U", gpu:"Intel UHD Graphics", ram:"8 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:11109 },
+  { slug:"budget/acer-aspire-lite-al14-42p", nama:"Acer Aspire Lite AL14-42P", harga:"Rp 8.200.000", hMin:8.2, hMax:8.2, kategori:"Budget", cpu:"AMD Ryzen 3 5300U", gpu:"Radeon Graphics", ram:"8 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:9317 },
+  { slug:"budget/polytron-luxia-r5-7430u", nama:"Polytron Luxia Ryzen 5 7430U", harga:"Rp 7.800.000", hMin:7.8, hMax:7.8, kategori:"Budget", cpu:"AMD Ryzen 5 7430U", gpu:"AMD Radeon Graphics", ram:"8 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:1.46, pmMulti:15484 },
+  { slug:"budget/polytron-luxia-i3-1215", nama:"Polytron Laptop Luxia i3 1215", harga:"Rp 7.000.000", hMin:7.0, hMax:7.0, kategori:"Budget", cpu:"Intel Core i3-1215U", gpu:"Intel UHD Graphics", ram:"8 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:10173 },
+  { slug:"high-gaming/lenovo-legion-5i-15irx10-i7-13650hx", nama:"Lenovo Legion 5i 15IRX10 i7-13650HX RTX 5050", harga:"Rp 25.800.000", hMin:25.8, hMax:25.8, kategori:"High Gaming", cpu:"Intel Core i7-13650HX", gpu:"RTX 5050 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.1, pmMulti:30232 },
+  { slug:"high-gaming/asus-tuf-a14-fa401uh-rtx5050", nama:"ASUS TUF A14 FA401UH Ryzen AI 7 260 RTX 5050", harga:"Rp 26.800.000", hMin:26.8, hMax:26.8, kategori:"High Gaming", cpu:"AMD Ryzen AI 7 260", gpu:"RTX 5050 8 GB", ram:"32 GB LPDDR5X (soldered)", srgb:true, ramUp:false, gpuDed:true, lokal:false, gpuTgp:105, gpuVram:8, bobot:1.46, pmMulti:28167 },
+  { slug:"high-gaming/lenovo-legion-5i-15irx10-oled-rtx5050", nama:"Lenovo Legion 5i 15IRX10 OLED RTX 5050", harga:"Rp 25 Juta", hMin:25, hMax:25, kategori:"High Gaming", cpu:"Tidak tercantum", gpu:"RTX 5050 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:1.9, pmMulti:0 },
+  { slug:"high-gaming/asus-rog-strix-g16-g614ph-rtx5050", nama:"ASUS ROG Strix G16 G614PH Ryzen 9 8940HX RTX 5050", harga:"Rp 30.800.000", hMin:30.8, hMax:30.8, kategori:"High Gaming", cpu:"AMD Ryzen 9 8940HX", gpu:"RTX 5050 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:0, pmMulti:50289 },
+  { slug:"high-gaming/asus-tuf-a16-fa608um-rtx5060", nama:"ASUS TUF A16 FA608UM Ryzen AI 7 260 RTX 5060", harga:"Rp 28.000.000", hMin:28.0, hMax:28.0, kategori:"High Gaming", cpu:"AMD Ryzen AI 7 260", gpu:"RTX 5060 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.2, pmMulti:28167 },
+  { slug:"high-gaming/lenovo-legion-5i-15irx10-i7-14700hx-rtx5060", nama:"Lenovo Legion 5i 15IRX10 i7-14700HX RTX 5060", harga:"Rp 28.300.000", hMin:28.3, hMax:28.3, kategori:"High Gaming", cpu:"Intel Core i7-14700HX", gpu:"RTX 5060 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:1.9, pmMulti:36789 },
+  { slug:"high-gaming/lenovo-legion-5i-15iax10-rtx5060", nama:"Lenovo Legion 5i 15IAX10 Ultra 7 255HX RTX 5060", harga:"Rp 35.300.000", hMin:35.3, hMax:35.3, kategori:"High Gaming", cpu:"Intel Core Ultra 7 255HX", gpu:"RTX 5060 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:1.9, pmMulti:48756 },
+  { slug:"high-gaming/msi-crosshair-a16-hx-7945hx-rtx5060", nama:"MSI Crosshair A16 HX Ryzen 9 7945HX RTX 5060", harga:"Rp 24.000.000", hMin:24.0, hMax:24.0, kategori:"High Gaming", cpu:"AMD Ryzen 9 7945HX", gpu:"RTX 5060 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.5, pmMulti:54109 },
+  { slug:"high-gaming/hp-omen-8940hx-rtx5060", nama:"HP Omen Ryzen 9 8940HX RTX 5060", harga:"Rp 25.200.000", hMin:25.2, hMax:25.2, kategori:"High Gaming", cpu:"AMD Ryzen 9 8940HX", gpu:"RTX 5060 8 GB", ram:"24 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.45, pmMulti:50289 },
+  { slug:"high-gaming/acer-predator-helios-neo-16s-255hx-rtx5060", nama:"Acer Predator Helios Neo 16S Ultra 7 255HX RTX 5060", harga:"Rp 26.500.000", hMin:26.5, hMax:26.5, kategori:"High Gaming", cpu:"Intel Core Ultra 7 255HX", gpu:"RTX 5060 8 GB", ram:"16 GB (2x8) DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.3, pmMulti:48756 },
+  { slug:"high-gaming/lenovo-loq-15ahp11-rtx5060", nama:"Lenovo LOQ 15AHP11 Ryzen AI 7 250 RTX 5060", harga:"Rp 26.800.000", hMin:26.8, hMax:26.8, kategori:"High Gaming", cpu:"AMD Ryzen AI 7 250", gpu:"RTX 5060 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.1, pmMulti:25331 },
+  { slug:"high-gaming/hp-omen-i7-14650hx-rtx5060", nama:"HP Omen i7-14650HX RTX 5060", harga:" - ", hMin:0, hMax:0, kategori:"High Gaming", cpu:"Intel Core i7-14650HX", gpu:"RTX 5060 8 GB", ram:"24 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.21, pmMulti:33666 },
+  { slug:"high-gaming/acer-predator-helios-neo-16s-ultra7-356h-rtx5060", nama:"Acer Predator Helios Neo 16S Ultra 7 356H RTX 5060", harga:"Rp 35.500.000", hMin:35.5, hMax:35.5, kategori:"High Gaming", cpu:"Intel Core Ultra 7 356H", gpu:"RTX 5060 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.3, pmMulti:34072 },
+  { slug:"high-gaming/asus-tuf-a16-fa608up-rtx5070", nama:"ASUS TUF A16 FA608UP Ryzen AI 7 260 RTX 5070", harga:"Rp 29.500.000", hMin:29.5, hMax:29.5, kategori:"High Gaming", cpu:"AMD Ryzen AI 7 260", gpu:"RTX 5070 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.2, pmMulti:28167 },
+  { slug:"high-gaming/axioo-pongo-775-rtx5070", nama:"Axioo Pongo 775 i7-13620H RTX 5070", harga:"Rp 24.800.000", hMin:24.8, hMax:24.8, kategori:"High Gaming", cpu:"Intel Core i7-13620H", gpu:"RTX 5070 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:true, gpuTgp:115, gpuVram:8, bobot:2.3, pmMulti:0 },
+  { slug:"high-gaming/msi-crosshair-a16-hx-7945hx-rtx5070", nama:"MSI Crosshair A16 HX Ryzen 9 7945HX RTX 5070", harga:"Rp 24-25 Juta", hMin:24, hMax:25, kategori:"High Gaming", cpu:"AMD Ryzen 9 7945HX", gpu:"RTX 5070 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.5, pmMulti:54109 },
+  { slug:"high-gaming/acer-predator-helios-neo-16s-ultra9-275hx-rtx5070", nama:"Acer Predator Helios Neo 16S Ultra 9 275HX RTX 5070", harga:"Rp 35.000.000", hMin:35.0, hMax:35.0, kategori:"High Gaming", cpu:"Intel Core Ultra 9 275HX", gpu:"RTX 5070 8 GB", ram:"32 GB DDR5 (dual channel)", srgb:false, ramUp:false, gpuDed:true, lokal:false, gpuTgp:0, gpuVram:8, bobot:0, pmMulti:55892 },
+  { slug:"high-gaming/acer-predator-helios-neo-16s-ultra9-386h-rtx5070", nama:"Acer Predator Helios Neo 16S Ultra 9 386H RTX 5070", harga:" - ", hMin:0, hMax:0, kategori:"High Gaming", cpu:"Intel Core Ultra 9 386H", gpu:"RTX 5070 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.3, pmMulti:35236 },
+  { slug:"high-gaming/msi-vector-16hx-255hx-rtx5070ti", nama:"MSI Vector 16HX Ultra 7 255HX RTX 5070 Ti", harga:"Rp 35.000.000", hMin:35.0, hMax:35.0, kategori:"High Gaming", cpu:"Intel Core Ultra 7 255HX", gpu:"RTX 5070 Ti 12 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:140, gpuVram:12, bobot:2.7, pmMulti:48756 },
+  { slug:"high-gaming/asus-rog-strix-g16-g614pr-rtx5070ti", nama:"ASUS ROG Strix G16 2025 G614PR RTX 5070 Ti", harga:"Rp 43.000.000", hMin:43.0, hMax:43.0, kategori:"High Gaming", cpu:"AMD Ryzen 9 8940HX", gpu:"RTX 5070 Ti 12 GB", ram:"16 GB DDR5-5200 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:140, gpuVram:12, bobot:2.5, pmMulti:50289 },
+  { slug:"high-gaming/lenovo-legion-pro-5i-16-oled-rtx5070ti", nama:"Lenovo Legion Pro 5i 16 OLED Ultra 9 275HX RTX 5070 Ti", harga:"Rp 44.000.000", hMin:44.0, hMax:44.0, kategori:"High Gaming", cpu:"Intel Core Ultra 9 275HX", gpu:"RTX 5070 Ti 12 GB", ram:"32 GB DDR5 Dual Channel (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:140, gpuVram:12, bobot:2.4, pmMulti:55892 },
+  { slug:"high-gaming/hp-omen-max-16-rtx5070ti", nama:"HP Omen Max 16 Ryzen AI 7 350 RTX 5070 Ti", harga:"Rp 38.000.000", hMin:38.0, hMax:38.0, kategori:"High Gaming", cpu:"AMD Ryzen AI 7 350", gpu:"RTX 5070 Ti 12 GB", ram:"32 GB DDR5 Dual Channel (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:140, gpuVram:12, bobot:2.71, pmMulti:24937 },
+  { slug:"high-gaming/msi-vector-16hx-275hx-rtx5080", nama:"MSI Vector 16HX Ultra 9 275HX RTX 5080", harga:"Rp 44.200.000", hMin:44.2, hMax:44.2, kategori:"High Gaming", cpu:"Intel Core Ultra 9 275HX", gpu:"RTX 5080 16 GB", ram:"32 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:175, gpuVram:16, bobot:2.7, pmMulti:55892 },
+  { slug:"ultrabook/acer-swift-air-14-ultra7-155h", nama:"Acer Swift Air 14 Core Ultra 7 155H", harga:"Rp 18,5 Juta", hMin:18.5, hMax:18.5, kategori:"Ultrabook", cpu:"Intel Core Ultra 7 155H", gpu:"Intel Arc Graphics", ram:"16 GB LPDDR5 (onboard)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0.97, pmMulti:24591 },
+  { slug:"ultrabook/acer-swift-air-14-ultra5-125h", nama:"Acer Swift Air 14 Core Ultra 5 125H", harga:"Rp 15,5 Juta", hMin:15.5, hMax:15.5, kategori:"Ultrabook", cpu:"Intel Core Ultra 5 125H", gpu:"Intel Arc Graphics", ram:"16 GB LPDDR5 (onboard)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0.97, pmMulti:20314 },
+  { slug:"ultrabook/acer-swift-go-14-sfg14-ultra5-125h", nama:"Acer Swift Go 14 SFG14 Ultra 5 125H", harga:"Rp 12.500.000", hMin:12.5, hMax:12.5, kategori:"Ultrabook", cpu:"Intel Core Ultra 5 125H", gpu:"Integrated", ram:"LPDDR5 (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:20314 },
+  { slug:"ultrabook/acer-swift-go-14-sfg14-73p9", nama:"Acer Swift Go 14 AI SFG14-73-73P9", harga:"Rp 18.500.000", hMin:18.5, hMax:18.5, kategori:"Ultrabook", cpu:"Tidak tercantum", gpu:"Integrated", ram:"16 GB LPDDR5X (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:0 },
+  { slug:"ultrabook/advan-workplus-ai-ryzen7-255", nama:"Advan Workplus AI Ryzen 7 255", harga:"Rp 10.200.000", hMin:10.2, hMax:10.2, kategori:"Ultrabook", cpu:"AMD Ryzen 7 255", gpu:"Integrated", ram:"8 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:1.54, pmMulti:28774 },
+  { slug:"ultrabook/apple-macbook-air-m2-13", nama:"Apple MacBook Air M2 13\"", harga:"Rp 12–13 Juta", hMin:12, hMax:13, kategori:"Ultrabook", cpu:"Apple M2", gpu:"Integrated", ram:"Tidak tercantum", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:15652 },
+  { slug:"ultrabook/lenovo-ideapad-slim5-14-oled-ryzen7-8845hs", nama:"Lenovo IdeaPad Slim 5 14 OLED Ryzen 7 8845HS", harga:"Rp 17.700.000", hMin:17.7, hMax:17.7, kategori:"Ultrabook", cpu:"AMD Ryzen 7 8845HS", gpu:"Integrated", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:1.39, pmMulti:28378 },
+  { slug:"ultrabook/lenovo-ideapad-slim5-14iah10-ultra5-225h", nama:"Lenovo IdeaPad Slim 5 14IAH10 Ultra 5 225H", harga:"Rp 18.200.000", hMin:18.2, hMax:18.2, kategori:"Ultrabook", cpu:"Intel Core Ultra 5 225H", gpu:"Integrated", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:1.39, pmMulti:28339 },
+  { slug:"ultrabook/lenovo-ideapad-slim5i-ultra7-255h", nama:"Lenovo IdeaPad Slim 5i Ultra 7 255H", harga:"Rp 20.000.000", hMin:20.0, hMax:20.0, kategori:"Ultrabook", cpu:"Intel Core Ultra 7 255H", gpu:"Integrated", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:1.39, pmMulti:30718 },
+  { slug:"ultrabook/lenovo-yoga-slim7i-aura-ultra5-226v", nama:"Lenovo Yoga Slim 7i Aura Edition Ultra 5 226V", harga:"Rp 19.000.000", hMin:19.0, hMax:19.0, kategori:"Ultrabook", cpu:"Intel Core Ultra 5 226V", gpu:"Integrated", ram:"LPDDR5 (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:1.28, pmMulti:18028 },
+  { slug:"ultrabook/msi-prestige-14-ai-ultra7-355", nama:"MSI Prestige 14 AI+ Ultra 7 355", harga:"Rp 34.000.000", hMin:34.0, hMax:34.0, kategori:"Ultrabook", cpu:"Intel Core Ultra 7 355", gpu:"Integrated", ram:"32 GB LPDDR5X (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:20547 },
+  { slug:"ultrabook/apple-macbook-air-m4", nama:"Apple MacBook Air M4", harga:"Rp 24 Juta", hMin:24, hMax:24, kategori:"Ultrabook", cpu:"Apple M4", gpu:"Integrated", ram:"Tidak tercantum", srgb:false, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:23655 },
+  { slug:"ultrabook/msi-prestige-14-flip-ultra9-386h", nama:"MSI Prestige 14 Flip AI+ Ultra 9 386H", harga:"Rp 31.200.000", hMin:31.2, hMax:31.2, kategori:"Ultrabook", cpu:"Intel Core Ultra 9 386H", gpu:"Integrated", ram:"32 GB LPDDR5X (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:1.37, pmMulti:35236 },
+  { slug:"ultrabook/apple-macbook-pro-14-m5", nama:"Apple MacBook Pro 14 M5", harga:"Rp 27 Juta", hMin:27, hMax:27, kategori:"Ultrabook", cpu:"Apple M5", gpu:"Integrated", ram:"Tidak tercantum", srgb:false, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:26822 },
+  { slug:"ultrabook/asus-expertbook-ultra-p5405csa-ultra7-258v", nama:"ASUS ExpertBook Ultra P5405CSA Ultra 7 258V", harga:"Rp 21.000.000", hMin:21.0, hMax:21.0, kategori:"Ultrabook", cpu:"Intel Core Ultra 7 258V", gpu:"Integrated", ram:"32 GB LPDDR5X (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:18930 },
+  { slug:"ultrabook/acer-swift-go-14-sfg14-171-ultra7-358h", nama:"Acer Swift Go 14 AI SFG14-171 Ultra 7 358H", harga:"Rp 25.000.000", hMin:25.0, hMax:25.0, kategori:"Ultrabook", cpu:"Intel Core Ultra 7 358H", gpu:"Integrated", ram:"16 GB LPDDR5 (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:33967 },
+  { slug:"ultrabook/asus-expertbook-b9400cba-ultra7-358h", nama:"ASUS ExpertBook B9400CBA Ultra 7 358H", harga:"Rp 48.000.000", hMin:48.0, hMax:48.0, kategori:"Ultrabook", cpu:"Intel Core Ultra 7 358H", gpu:"Integrated", ram:"32 GB LPDDR5X (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:33967 },
+];
+---
+
+<BaseLayout title="Temukan Laptop" description="Filter wizard 5 langkah untuk menemukan laptop paling sesuai budget dan kebutuhanmu">
+<style>
+  .rekomen-hero {
+    text-align: center;
+    padding: 48px 20px 32px;
+  }
+  .rekomen-hero h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #e2e8f0, #93c5fd, #c4b5fd);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 10px;
+  }
+  .rekomen-hero p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  /* Filter wizard */
+  .filter-wizard {
+    max-width: 780px;
+    margin: 0 auto 48px;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .filter-bar {
+    background: rgba(10,10,42,0.85);
+    border: 1px solid rgba(96,165,250,0.15);
+    border-radius: 14px;
+    padding: 20px 22px;
+    transition: border-color 0.3s;
+  }
+  .filter-bar.has-selection {
+    border-color: rgba(96,165,250,0.4);
+  }
+  .filter-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .filter-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(96,165,250,0.15);
+    border: 1px solid rgba(96,165,250,0.3);
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    flex-shrink: 0;
+  }
+  .filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    color: var(--text-muted);
+    font-size: 0.84rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .chip:hover {
+    border-color: rgba(96,165,250,0.4);
+    color: var(--text);
+    background: rgba(96,165,250,0.08);
+  }
+  .chip.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #02020e;
+    font-weight: 700;
+    box-shadow: 0 0 16px rgba(96,165,250,0.4);
+  }
+  .reset-btn {
+    padding: 9px 24px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.84rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover {
+    color: var(--text);
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  /* Results */
+  .results-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 16px 64px;
+  }
+  .results-header {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    padding-left: 4px;
+  }
+  .results-header strong {
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .fallback-note {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: rgba(251,191,36,0.08);
+    border: 1px solid rgba(251,191,36,0.25);
+    border-radius: 8px;
+    color: #fbbf24;
+    font-size: 0.84rem;
+  }
+  /* Atribut hidden menerapkan display:none lewat stylesheet bawaan browser,
+     tapi aturan display:flex di bawah punya prioritas lebih tinggi dan
+     membatalkannya. Selektor [hidden] di bawah mengembalikan perilaku yang
+     benar — tanpa ini, filter tetap terlihat walau gate belum diisi. */
+  .filter-wizard[hidden],
+  .gate-halo[hidden],
+  .gate-box[hidden],
+  .results-section[hidden] { display: none !important; }
+
+  /* ── Diagnosa saat hasil kosong ── */
+  .diagnosa {
+    margin: 14px 0 20px; padding: 16px 18px;
+    background: rgba(251,191,36,0.05);
+    border: 1px solid rgba(251,191,36,0.22);
+    border-left: 3px solid rgba(251,191,36,0.7);
+    border-radius: 10px;
+  }
+  .diagnosa :global(.diag-utama) {
+    margin: 0 0 10px; font-size: 0.9rem; color: #e2e8f0; line-height: 1.6;
+  }
+  .diagnosa :global(.diag-utama strong) { color: #fbbf24; }
+  .diagnosa :global(.diag-sub) {
+    margin: 0 0 8px; font-size: 0.85rem; color: #94a3b8; line-height: 1.6;
+  }
+  .diagnosa :global(.diag-sub strong) { color: #cbd5e1; }
+  .diagnosa :global(.diag-list) {
+    margin: 0 0 10px; padding-left: 20px;
+    font-size: 0.85rem; color: #94a3b8; line-height: 1.75;
+  }
+  .diagnosa :global(.diag-list strong) { color: #cbd5e1; }
+  .diagnosa :global(.diag-detail) {
+    margin-top: 4px; font-size: 0.82rem; color: #64748b;
+    border-top: 1px solid rgba(251,191,36,0.15); padding-top: 10px;
+  }
+  .diagnosa :global(.diag-detail summary) {
+    cursor: pointer; color: #94a3b8; user-select: none;
+  }
+  .diagnosa :global(.diag-detail summary:hover) { color: #fbbf24; }
+  .diagnosa :global(.diag-detail ul) { margin-top: 8px; }
+
+  :global(html[data-theme="light"]) .diagnosa {
+    background: rgba(251,191,36,0.08); border-color: rgba(180,83,9,0.28);
+    border-left-color: rgba(180,83,9,0.6);
+  }
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-utama) { color: #1e293b; }
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-utama strong) { color: #b45309; }
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-sub),
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-list) { color: #475569; }
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-sub strong),
+  :global(html[data-theme="light"]) .diagnosa :global(.diag-list strong) { color: #1e293b; }
+
+  /* ── Gate nama + email ── */
+  .gate-box {
+    max-width: 620px; margin: 0 auto 28px; padding: 26px 28px;
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(96,165,250,0.28);
+    border-radius: 16px;
+  }
+  .gate-head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 20px; }
+  .gate-ikon { font-size: 1.5rem; line-height: 1.2; flex-shrink: 0; }
+  .gate-head h2 {
+    font-size: 1.1rem; font-weight: 700; color: #e2e8f0;
+    margin: 0 0 5px; border: none; padding: 0;
+  }
+  .gate-head p { font-size: 0.85rem; color: #94a3b8; line-height: 1.55; margin: 0; }
+
+  .gate-form { display: flex; flex-direction: column; gap: 14px; }
+  .gate-field { display: flex; flex-direction: column; gap: 6px; }
+  .gate-field label {
+    font-size: 0.78rem; font-weight: 700; color: #64748b;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .gate-field input {
+    width: 100%; box-sizing: border-box;
+    padding: 11px 14px; font-size: 0.92rem;
+    background: rgba(255,255,255,0.06); color: #e2e8f0;
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 9px;
+    outline: none; transition: border-color 0.2s, background 0.2s;
+  }
+  .gate-field input::placeholder { color: #475569; }
+  .gate-field input:focus { border-color: rgba(96,165,250,0.6); background: rgba(255,255,255,0.09); }
+  .gate-field input.salah { border-color: rgba(248,113,113,0.7); }
+  .gate-err { font-size: 0.76rem; color: #f87171; min-height: 0; }
+  .gate-err:empty { display: none; }
+
+  .gate-pilihan { display: flex; flex-wrap: wrap; gap: 8px; }
+  .gate-chip {
+    padding: 9px 14px; font-size: 0.84rem; font-weight: 600;
+    background: rgba(255,255,255,0.05); color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 20px;
+    cursor: pointer; transition: all 0.18s; white-space: nowrap;
+  }
+  .gate-chip:hover { border-color: rgba(96,165,250,0.45); color: #cbd5e1; }
+  .gate-chip.aktif {
+    background: rgba(59,130,246,0.9); color: white;
+    border-color: rgba(59,130,246,0.9);
+  }
+  .gate-pilihan.salah .gate-chip { border-color: rgba(248,113,113,0.5); }
+
+  .gate-btn {
+    margin-top: 4px; padding: 12px 20px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6); color: white;
+    border: none; border-radius: 9px; cursor: pointer;
+    font-size: 0.92rem; font-weight: 700;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .gate-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+  .gate-btn:disabled { opacity: 0.55; cursor: default; transform: none; }
+
+  .gate-privasi {
+    margin: 16px 0 0; font-size: 0.75rem; color: #64748b; line-height: 1.5;
+    border-top: 1px solid rgba(255,255,255,0.07); padding-top: 12px;
+  }
+
+  .gate-halo {
+    max-width: 820px; margin: 0 auto 18px; padding: 10px 16px;
+    background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 10px; font-size: 0.85rem; color: #94a3b8;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+  .gate-halo strong { color: #34d399; }
+  .gate-ganti {
+    background: none; border: none; cursor: pointer; padding: 0;
+    color: #64748b; font-size: 0.78rem; text-decoration: underline;
+  }
+  .gate-ganti:hover { color: #60a5fa; }
+
+  :global(html[data-theme="light"]) .gate-box {
+    background: rgba(255,255,255,0.85); border-color: rgba(37,99,235,0.28);
+    box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+  }
+  :global(html[data-theme="light"]) .gate-head h2 { color: #0f172a; }
+  :global(html[data-theme="light"]) .gate-head p { color: #475569; }
+  :global(html[data-theme="light"]) .gate-field input {
+    background: rgba(0,0,0,0.03); color: #0f172a; border-color: rgba(0,0,0,0.14);
+  }
+  :global(html[data-theme="light"]) .gate-field input::placeholder { color: #94a3b8; }
+  :global(html[data-theme="light"]) .gate-chip {
+    background: rgba(0,0,0,0.03); color: #475569; border-color: rgba(0,0,0,0.14);
+  }
+  :global(html[data-theme="light"]) .gate-chip:hover { color: #1e293b; border-color: rgba(37,99,235,0.45); }
+  :global(html[data-theme="light"]) .gate-chip.aktif {
+    background: #2563eb; color: white; border-color: #2563eb;
+  }
+  :global(html[data-theme="light"]) .gate-halo { color: #475569; }
+  :global(html[data-theme="light"]) .gate-halo strong { color: #059669; }
+
+  @media (max-width: 640px) {
+    .gate-box { padding: 22px 20px; margin-left: 16px; margin-right: 16px; }
+    .gate-halo { margin-left: 16px; margin-right: 16px; }
+  }
+
+  /* ── Konsultasi privat ── */
+  .konsul-box {
+    max-width: 1100px; margin: 0 auto 64px; padding: 22px 26px;
+    background: linear-gradient(135deg, rgba(52,211,153,0.09), rgba(96,165,250,0.07));
+    border: 1px solid rgba(52,211,153,0.28);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 22px; flex-wrap: wrap;
+  }
+  .konsul-isi { display: flex; gap: 15px; align-items: flex-start; flex: 1; min-width: 260px; }
+  .konsul-ikon { font-size: 1.7rem; line-height: 1.1; flex-shrink: 0; }
+  .konsul-teks h2 {
+    font-size: 1.05rem; font-weight: 700; color: #e2e8f0;
+    margin: 0 0 5px; border: none; padding: 0;
+  }
+  .konsul-teks p {
+    font-size: 0.85rem; color: #94a3b8; line-height: 1.55; margin: 0; max-width: 620px;
+  }
+  .konsul-kontak { margin-top: 7px !important; font-size: 0.82rem !important; color: #64748b !important; }
+  .konsul-kontak strong { color: #34d399; letter-spacing: 0.02em; }
+  .konsul-btn {
+    flex-shrink: 0; text-decoration: none; white-space: nowrap;
+    background: linear-gradient(135deg, #16a34a, #22c55e); color: white;
+    padding: 12px 24px; border-radius: 9px;
+    font-weight: 700; font-size: 0.9rem;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 4px 16px rgba(34,197,94,0.22);
+  }
+  .konsul-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+  :global(html[data-theme="light"]) .konsul-box {
+    background: linear-gradient(135deg, rgba(52,211,153,0.11), rgba(96,165,250,0.09));
+    border-color: rgba(5,150,105,0.3);
+  }
+  :global(html[data-theme="light"]) .konsul-teks h2 { color: #0f172a; }
+  :global(html[data-theme="light"]) .konsul-teks p { color: #475569; }
+  :global(html[data-theme="light"]) .konsul-kontak { color: #64748b !important; }
+  :global(html[data-theme="light"]) .konsul-kontak strong { color: #059669; }
+
+  /* ── Konsultasi gratis via TikTok ──
+     Kotak kedua sengaja dibedakan warnanya dari kotak konsultasi privat
+     supaya terbaca sebagai dua jalur berbeda, bukan tombol ganda. */
+  .konsul-box-tiktok {
+    margin-top: -44px;
+    background: linear-gradient(135deg, rgba(254,44,85,0.10), rgba(37,244,238,0.07));
+    border-color: rgba(254,44,85,0.28);
+  }
+  .konsul-box-tiktok .konsul-kontak strong { color: #fe2c55; }
+  .konsul-btn-tiktok {
+    background: linear-gradient(135deg, #fe2c55, #ff4d6d);
+    box-shadow: 0 4px 16px rgba(254,44,85,0.24);
+  }
+  :global(html[data-theme="light"]) .konsul-box-tiktok {
+    background: linear-gradient(135deg, rgba(254,44,85,0.10), rgba(37,244,238,0.08));
+    border-color: rgba(254,44,85,0.32);
+  }
+  :global(html[data-theme="light"]) .konsul-box-tiktok .konsul-kontak strong { color: #e01e42; }
+
+  @media (max-width: 640px) {
+    .konsul-box { flex-direction: column; align-items: stretch; padding: 20px; }
+    .konsul-btn { text-align: center; }
+    .konsul-box-tiktok { margin-top: -46px; }
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 900px) {
+    .results-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .filter-bar { padding: 16px; }
+    .chip { font-size: 0.8rem; padding: 7px 13px; }
+    .results-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  }
+  @media (max-width: 400px) {
+    .results-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── LIGHT MODE OVERRIDES ────────────────────────────────── */
+  :global(html[data-theme="light"]) .filter-bar {
+    background: rgba(255,255,255,0.88);
+    border-color: rgba(37,99,235,0.15);
+    box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+  }
+  :global(html[data-theme="light"]) .filter-bar.has-selection {
+    border-color: rgba(37,99,235,0.4);
+  }
+  :global(html[data-theme="light"]) .chip {
+    border-color: rgba(0,0,0,0.14);
+    background: rgba(0,0,0,0.04);
+    color: #475569;
+  }
+  :global(html[data-theme="light"]) .chip:hover {
+    border-color: rgba(37,99,235,0.35);
+    background: rgba(37,99,235,0.07);
+    color: #2563eb;
+  }
+  :global(html[data-theme="light"]) .chip.active {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+  }
+  :global(html[data-theme="light"]) .reset-btn {
+    border-color: rgba(0,0,0,0.18);
+    color: #475569;
+  }
+  :global(html[data-theme="light"]) .reset-btn:hover {
+    border-color: rgba(37,99,235,0.4);
+    color: #2563eb;
+  }
+  :global(html[data-theme="light"]) .rekomen-hero h1 {
+    background: linear-gradient(135deg, #1e293b, #2563eb, #7c3aed);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>
+
+<div class="rekomen-hero reveal">
+  <h1>🎯 Temukan Laptop yang Pas</h1>
+  <p>Jawab 5 pertanyaan singkat — kami carikan laptop terbaik dari 93 pilihan</p>
+</div>
+
+<!-- ══ GATE: nama + email ══ -->
+<div class="gate-box" id="gateBox">
+  <div class="gate-head">
+    <span class="gate-ikon">🔒</span>
+    <div>
+      <h2>Kenalan dulu, yuk</h2>
+      <p>Isi nama dan email untuk membuka pencarian. Cukup sekali — kunjungan berikutnya langsung terbuka.</p>
+    </div>
+  </div>
+
+  <form class="gate-form" id="gateForm" novalidate>
+    <div class="gate-field">
+      <label for="gNama">Nama</label>
+      <input type="text" id="gNama" name="nama" placeholder="Nama kamu" autocomplete="name" required />
+      <span class="gate-err" id="errNama"></span>
+    </div>
+    <div class="gate-field">
+      <label for="gEmail">Email</label>
+      <input type="email" id="gEmail" name="email" placeholder="nama@email.com" autocomplete="email" required />
+      <span class="gate-err" id="errEmail"></span>
+    </div>
+
+    <div class="gate-field">
+      <label>Kamu saat ini</label>
+      <div class="gate-pilihan" data-grup="okupansi">
+        <button type="button" class="gate-chip" data-val="Pelajar/Mahasiswa">🎓 Pelajar/Mahasiswa</button>
+        <button type="button" class="gate-chip" data-val="Pekerja">💼 Pekerja</button>
+        <button type="button" class="gate-chip" data-val="Pengguna Casual">🏠 Pengguna Casual</button>
+      </div>
+      <span class="gate-err" id="errOkupansi"></span>
+    </div>
+
+    <div class="gate-field">
+      <label>Laptopnya buat apa</label>
+      <div class="gate-pilihan" data-grup="kebutuhan">
+        <button type="button" class="gate-chip" data-val="Pekerjaan / Kuliah">📄 Pekerjaan / Kuliah</button>
+        <button type="button" class="gate-chip" data-val="Gaming">🎮 Gaming</button>
+        <button type="button" class="gate-chip" data-val="Livestream">🎥 Livestream</button>
+      </div>
+      <span class="gate-err" id="errKebutuhan"></span>
+    </div>
+
+    <button type="submit" class="gate-btn" id="gateBtn">Buka Pencarian →</button>
+  </form>
+
+  <p class="gate-privasi">
+    Nama dan email dipakai hanya untuk statistik penggunaan AstroLaptop. Tidak dibagikan ke pihak lain, tidak dipakai untuk spam.
+  </p>
+</div>
+
+<!-- Sapaan setelah gate terbuka -->
+<div class="gate-halo" id="gateHalo" hidden>
+  <span>👋 Halo, <strong id="haloNama"></strong> — <em id="haloProfil"></em>. Silakan pilih kriteriamu di bawah.</span>
+  <button type="button" id="gateReset" class="gate-ganti">Ganti data</button>
+</div>
+
+<div class="filter-wizard" id="filterWizard" hidden>
+
+  <!-- Bar 1: Budget -->
+  <div class="filter-bar reveal" id="bar-budget">
+    <div class="filter-label">
+      <span class="filter-num">1</span>
+      💰 Berapa budget kamu?
+    </div>
+    <div class="filter-chips" data-group="budget">
+      <button class="chip" data-val="under10">Di bawah Rp 10 juta</button>
+      <button class="chip" data-val="10to15">Rp 10–15 juta</button>
+      <button class="chip" data-val="15to20">Rp 15–20 juta</button>
+      <button class="chip" data-val="20to25">Rp 20–25 juta</button>
+      <button class="chip" data-val="over25">Di atas Rp 25 juta</button>
+    </div>
+  </div>
+
+  <!-- Bar 2: RAM -->
+  <div class="filter-bar reveal" id="bar-ram">
+    <div class="filter-label">
+      <span class="filter-num">2</span>
+      🔧 Perlu RAM upgradeable?
+    </div>
+    <div class="filter-chips" data-group="ram">
+      <button class="chip" data-val="ya">Ya</button>
+      <button class="chip" data-val="tidak">Tidak</button>
+    </div>
+  </div>
+
+  <!-- Bar 3: Editing -->
+  <div class="filter-bar reveal" id="bar-editing">
+    <div class="filter-label">
+      <span class="filter-num">3</span>
+      🎨 Kebutuhan editing?
+    </div>
+    <div class="filter-chips" data-group="editing">
+      <button class="chip" data-val="none">Tidak ada</button>
+      <button class="chip" data-val="light">Editing ringan (foto/Canva) — iGPU + 100% sRGB</button>
+      <button class="chip" data-val="heavy">Editing berat (video/3D) — GPU + 100% sRGB</button>
+    </div>
+  </div>
+
+  <!-- Bar 4: Performance -->
+  <div class="filter-bar reveal" id="bar-performa">
+    <div class="filter-label">
+      <span class="filter-num">4</span>
+      ⚡ Prioritas performa?
+    </div>
+    <div class="filter-chips" data-group="performa">
+      <button class="chip" data-val="ringan">🪶 Ringan & Awet Baterai</button>
+      <button class="chip" data-val="produktivitas">🖥️ Produktivitas</button>
+      <button class="chip" data-val="gaming">🎮 Gaming</button>
+    </div>
+  </div>
+
+  <!-- Bar 5: Brand -->
+  <div class="filter-bar reveal" id="bar-brand">
+    <div class="filter-label">
+      <span class="filter-num">5</span>
+      🏷️ Preferensi brand?
+    </div>
+    <div class="filter-chips" data-group="brand">
+      <button class="chip" data-val="all">Semua brand</button>
+      <button class="chip" data-val="lokal">Brand lokal/murah</button>
+      <button class="chip" data-val="luar">Brand luar (Asus/Acer/Lenovo/HP)</button>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:4px;">
+    <button class="reset-btn" id="resetBtn">↺ Reset Pilihan</button>
+  </div>
+</div>
+
+<!-- Results -->
+<div class="results-section" hidden>
+  <div id="resultsHeader" class="results-header"></div>
+  <div id="fallbackNote" style="display:none;">
+    <span class="fallback-note">⚠️ Tidak ada laptop yang 100% cocok. Ini yang paling mendekati kebutuhanmu:</span>
+  </div>
+  <div id="resultsGrid" class="results-grid"></div>
+</div>
+
+<!-- Private Consultation -->
+<div class="konsul-box">
+  <div class="konsul-isi">
+    <div class="konsul-ikon">💬</div>
+    <div class="konsul-teks">
+      <h2>Masih bingung juga?</h2>
+      <p>
+        Kalau hasil di atas belum pas, atau kebutuhanmu terlalu spesifik untuk dijawab lewat filter,
+        kamu bisa konsultasi langsung. Ceritakan budget, kebutuhan, dan software yang dipakai —
+        nanti dibantu carikan yang paling masuk akal.
+      </p>
+      <p class="konsul-kontak">WhatsApp <strong>089609265249</strong></p>
+    </div>
+  </div>
+  <a class="konsul-btn" href="https://forms.gle/SXzGGJGQS3DtAMMX8" target="_blank" rel="noopener">
+    Konsultasi Privat →
+  </a>
+</div>
+
+<!-- Free Consultation via TikTok -->
+<div class="konsul-box konsul-box-tiktok">
+  <div class="konsul-isi">
+    <div class="konsul-ikon">🎵</div>
+    <div class="konsul-teks">
+      <h2>Mau tanya gratis dulu?</h2>
+      <p>
+        Kalau belum siap konsultasi privat, pertanyaan singkat bisa langsung dilempar lewat TikTok.
+        Cocok buat pertanyaan cepat seperti membandingkan dua laptop atau memastikan satu spesifikasi
+        sebelum membeli.
+      </p>
+      <p class="konsul-kontak">TikTok <strong>@astrolaptop</strong> · Gratis</p>
+    </div>
+  </div>
+  <a class="konsul-btn konsul-btn-tiktok"
+     href="https://www.tiktok.com/@astrolaptop?is_from_webapp=1&amp;sender_device=pc"
+     target="_blank" rel="noopener">
+    Konsultasi Gratis →
+  </a>
+</div>
+
+<script define:vars={{ laptops }}>
+  /* ═══════════════════════════════════════════════════════════════
+     KONFIGURASI PENGUMPULAN DATA — ISI 3 BARIS DI BAWAH INI
+
+     Cara mendapatkannya:
+     1. Buat Google Form baru berisi 3 pertanyaan jawaban singkat:
+          - Nama
+          - Email
+          - Pilihan Filter
+     2. Klik "Send" > tab link > salin ID formnya.
+        Dari https://docs.google.com/forms/d/e/XXXXXXXX/viewform
+        yang dipakai adalah bagian XXXXXXXX.
+     3. Buka form versi isian, klik kanan di kotak "Nama" > Inspect,
+        cari teks entry.1234567890. Ulangi untuk Email dan Pilihan Filter.
+
+     Selama masih kosong, gate tetap berfungsi normal — pengguna bisa
+     masuk seperti biasa, datanya saja yang belum terkirim ke mana pun.
+     ═══════════════════════════════════════════════════════════════ */
+  const FORM_ID     = '1FAIpQLScF8mn2jb8cLEIWD6P1GahA-dDIgYW-0JCULdZfCbF0OyldPg';
+  const ENTRY_NAMA  = 'entry.55387959';     // kolom "Nama"
+  const ENTRY_EMAIL = 'entry.1765805379';   // kolom "Email"
+  const ENTRY_FILTER= 'entry.1028152146';   // kolom "Pilihan Filter"
+
+  const KUNCI_SIMPAN = 'astrolaptop_pengguna';
+
+  /* Kirim satu baris ke Google Form. Memakai mode no-cors karena Google
+     tidak mengirim header CORS — konsekuensinya kita tidak bisa membaca
+     balasannya, jadi kegagalan tidak akan terdeteksi. Itu disengaja:
+     pengumpulan data tidak boleh sampai menghalangi pengguna memakai situs. */
+  function kirimKeForm(nama, email, ringkasanFilter) {
+    if (!FORM_ID || !ENTRY_NAMA || !ENTRY_EMAIL) return;   // belum dikonfigurasi
+    try {
+      const data = new FormData();
+      data.append(ENTRY_NAMA, nama);
+      data.append(ENTRY_EMAIL, email);
+      if (ENTRY_FILTER) data.append(ENTRY_FILTER, ringkasanFilter || '(belum memilih)');
+      fetch(`https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`, {
+        method: 'POST', mode: 'no-cors', body: data,
+      }).catch(() => {});
+    } catch (e) { /* diabaikan dengan sengaja */ }
+  }
+
+  // State
+  const state = { budget: null, ram: null, editing: null, performa: null, brand: null };
+
+  // Filter logic
+  /* Rentang bucket harga, dalam juta rupiah. Batas bawah inklusif, batas atas
+     eksklusif — [lo, hi) — supaya laptop berharga tunggal (mis. tepat Rp 20 juta)
+     jatuh di tepat satu bucket, bukan dua atau nol. */
+  const BUDGET_BUCKETS = {
+    under10: [0,  10],
+    '10to15': [10, 15],
+    '15to20': [15, 20],
+    '20to25': [20, 25],
+    over25:  [25, Infinity],
+  };
+
+  function budgetPass(l, val) {
+    if (!val) return true;
+    // Laptop tanpa data harga (hMin=0) tidak boleh lolos filter budget spesifik —
+    // sebelumnya "return true" membuat laptop mahal (mis. RTX 5080) muncul di semua rentang budget.
+    if (l.hMin === 0) return false;
+    const bucket = BUDGET_BUCKETS[val];
+    if (!bucket) return true;
+    const [lo, hi] = bucket;
+    /* Cocokkan berdasarkan IRISAN rentang, bukan "harus muat seluruhnya".
+       Versi lama memakai `hMin >= lo && hMax <= hi`, sehingga laptop yang
+       harganya menyeberang batas bucket (mis. Rp 9–11 juta) tidak masuk bucket
+       mana pun dan hilang total dari hasil. Dengan irisan, laptop seperti itu
+       muncul di kedua bucket yang disentuhnya — yang memang benar. */
+    return l.hMin < hi && l.hMax >= lo;
+  }
+
+  /* Parameter s dibuat opsional supaya fungsi ini bisa dipakai ulang untuk
+     menguji state hipotetis — dipakai oleh diagnosaKosong() saat mencari
+     filter mana yang membuat hasilnya nol. */
+  function passesAllFilters(l, s = state) {
+    if (!budgetPass(l, s.budget)) return false;
+    // Bar 2: RAM upgradeable — "ya" wajib upgradeable, "tidak" tidak membatasi
+    if (s.ram === 'ya' && !l.ramUp) return false;
+    // Bar 3: Editing — ringan butuh 100% sRGB, berat butuh sRGB + GPU dedicated
+    if (s.editing === 'light' && !l.srgb) return false;
+    if (s.editing === 'heavy' && (!l.srgb || !l.gpuDed)) return false;
+    // Bar 4: Prioritas performa
+    if (s.performa === 'ringan' && l.gpuDed) return false;
+    if (s.performa === 'gaming' && !l.gpuDed) return false;
+    // 'produktivitas': tidak ada hard filter, hanya memengaruhi urutan (pmMulti tertinggi)
+    if (s.brand === 'lokal' && !l.lokal) return false;
+    if (s.brand === 'luar' && l.lokal) return false;
+    return true;
+  }
+
+  function scoreClosest(l) {
+    let s = 0;
+    if (budgetPass(l, state.budget)) s += 2;
+    if (!state.ram || state.ram === 'tidak' || l.ramUp) s++;
+    if (!state.editing || state.editing === 'none') s++;
+    else if (state.editing === 'light' && l.srgb) s++;
+    else if (state.editing === 'heavy' && l.srgb && l.gpuDed) s++;
+    // 'produktivitas' tidak punya hard filter, jadi selalu terpenuhi
+    if (!state.performa || state.performa === 'produktivitas') s++;
+    else if (state.performa === 'ringan' && !l.gpuDed) s++;
+    else if (state.performa === 'gaming' && l.gpuDed) s++;
+    if (!state.brand || state.brand === 'all') s++;
+    else if (state.brand === 'lokal' && l.lokal) s++;
+    else if (state.brand === 'luar' && !l.lokal) s++;
+    return s;
+  }
+
+  // Sort hasil berdasarkan pilihan Bar 4
+  /* Efficiency score untuk mode Ringan & Awet Baterai.
+     Komponen (semua dari data yang sudah ada di project):
+     - Tidak ada GPU dedicated (+60)  → hemat daya paling signifikan
+     - GPU TGP tinggi (-0.45/Watt)    → makin boros listrik, makin rendah
+     - Bobot ringan (+12 per 0.1 kg)   → chassis kecil biasanya baterai lebih awet
+     - pmMulti tinggi (+1/2000)       → proxy efisiensi CPU (performa per watt)
+  */
+  function efficiencyScore(l) {
+    let s = 0;
+    if (!l.gpuDed)    s += 60;
+    if (l.gpuTgp > 0) s -= l.gpuTgp * 0.45;
+    if (l.bobot > 0)  s += (3.2 - l.bobot) * 12;
+    if (l.pmMulti > 0) s += l.pmMulti / 2000;
+    return s;
+  }
+
+  function sortByPerforma(list) {
+    const p = state.performa;
+    if (p === 'gaming') {
+      // Gaming mode: TGP GPU tertinggi → VRAM terbesar
+      return [...list].sort((a, b) =>
+        b.gpuTgp !== a.gpuTgp ? b.gpuTgp - a.gpuTgp : b.gpuVram - a.gpuVram
+      );
+    }
+    if (p === 'produktivitas') {
+      // Produktivitas mode: Passmark Multi-Thread tertinggi
+      return [...list].sort((a, b) => b.pmMulti - a.pmMulti);
+    }
+    if (p === 'ringan') {
+      // Ringan mode: efficiency score tertinggi (no-dGPU bonus, TGP penalty, bobot, pmMulti)
+      return [...list].sort((a, b) => efficiencyScore(b) - efficiencyScore(a));
+    }
+    return list;
+  }
+
+  function hasAnyFilter() {
+    return state.budget || state.ram || state.editing || state.performa || state.brand;
+  }
+
+  /* ═══════════ DIAGNOSA SAAT HASIL KOSONG ═══════════
+     Menjelaskan filter mana yang membuat hasilnya nol, bukan sekadar
+     memberi tahu bahwa hasilnya kosong. Caranya: lepas satu filter,
+     hitung ulang; kalau hasilnya jadi ada, filter itulah penyebabnya. */
+
+  const NAMA_BAR = { budget:'Budget', ram:'RAM upgradeable', editing:'Kebutuhan editing',
+                     performa:'Prioritas performa', brand:'Preferensi brand' };
+
+  /* Label diambil langsung dari teks chip di halaman, jadi kalau suatu saat
+     teksnya diubah, penjelasan ini ikut berubah tanpa perlu disunting lagi. */
+  function labelChip(grup, val) {
+    const el = document.querySelector(`.filter-chips[data-group="${grup}"] .chip[data-val="${val}"]`);
+    return el ? el.textContent.trim() : val;
+  }
+
+  /* Alasan semantik untuk kombinasi yang memang mustahil secara logika.
+     Ditulis manual karena penjelasannya butuh konteks yang tidak bisa
+     disimpulkan otomatis dari data. */
+  function alasanKombinasi(a, b) {
+    const pasangan = [a, b].sort().join('|');
+    const peta = {
+      'editing:heavy|performa:ringan':
+        'Editing berat mensyaratkan GPU dedicated, sementara Ringan &amp; Awet Baterai justru hanya menampilkan laptop tanpa GPU dedicated. Dua kriteria ini saling meniadakan.',
+      'editing:light|performa:ringan':
+        'Editing ringan mensyaratkan panel 100% sRGB, dan di antara laptop tanpa GPU dedicated jumlahnya terbatas.',
+      'editing:heavy|performa:gaming':
+        'Keduanya mensyaratkan GPU dedicated, jadi yang menyempitkan hasil kemungkinan besar syarat panel 100% sRGB dari editing berat.',
+    };
+    return peta[pasangan] || null;
+  }
+
+  function diagnosaKosong() {
+    // Hanya hitung filter yang benar-benar membatasi. Nilai seperti
+    // "Tidak", "Tidak ada", dan "Semua brand" tidak menyaring apa pun.
+    const aktif = Object.entries(state)
+      .filter(([, v]) => v && !['none', 'all', 'tidak'].includes(v));
+    if (aktif.length === 0) return '';
+
+    const jml = (s) => laptops.filter(l => passesAllFilters(l, s)).length;
+
+    // Tahap 1: cari filter tunggal yang kalau dilepas langsung membuka hasil
+    const tunggal = [];
+    for (const [k, v] of aktif) {
+      const n = jml({ ...state, [k]: null });
+      if (n > 0) tunggal.push({ k, v, n });
+    }
+
+    const bagian = [];
+
+    /* Kontradiksi yang sudah dikenali diperiksa lebih dulu. Kalau dua kriteria
+       memang saling meniadakan, menjelaskan sebabnya lebih berguna daripada
+       menyalahkan salah satunya secara sepihak. */
+    let kontradiksi = null;
+    for (let i = 0; i < aktif.length && !kontradiksi; i++) {
+      for (let j = i + 1; j < aktif.length && !kontradiksi; j++) {
+        const [k1, v1] = aktif[i], [k2, v2] = aktif[j];
+        const alasan = alasanKombinasi(`${k1}:${v1}`, `${k2}:${v2}`);
+        if (alasan) kontradiksi = { k1, v1, k2, v2, alasan };
+      }
+    }
+
+    if (kontradiksi) {
+      const { k1, v1, k2, v2, alasan } = kontradiksi;
+      bagian.push(`<p class="diag-utama"><strong>${NAMA_BAR[k1]}</strong> (&ldquo;${labelChip(k1, v1)}&rdquo;) dan <strong>${NAMA_BAR[k2]}</strong> (&ldquo;${labelChip(k2, v2)}&rdquo;) saling bertentangan.</p>`);
+      bagian.push(`<p class="diag-sub">${alasan}</p>`);
+      const opsi = tunggal.map(x =>
+        `<li>Lepas <strong>${NAMA_BAR[x.k]}</strong> (&ldquo;${labelChip(x.k, x.v)}&rdquo;) &rarr; <strong>${x.n} laptop</strong> cocok</li>`
+      ).join('');
+      if (opsi) bagian.push(`<p class="diag-sub">Yang bisa dicoba:</p><ul class="diag-list">${opsi}</ul>`);
+    } else if (tunggal.length > 0) {
+      tunggal.sort((a, b) => b.n - a.n);
+      const t = tunggal[0];
+      bagian.push(`<p class="diag-utama">Penyebabnya ada di <strong>${NAMA_BAR[t.k]}</strong>, yaitu pilihan &ldquo;${labelChip(t.k, t.v)}&rdquo;. Tidak ada laptop yang memenuhi kriteria itu sekaligus kriteria lain yang kamu pilih.</p>`);
+      const opsi = tunggal.map(x =>
+        `<li>Lepas <strong>${NAMA_BAR[x.k]}</strong> (&ldquo;${labelChip(x.k, x.v)}&rdquo;) &rarr; <strong>${x.n} laptop</strong> cocok</li>`
+      ).join('');
+      bagian.push(`<p class="diag-sub">Yang bisa dicoba:</p><ul class="diag-list">${opsi}</ul>`);
+    } else {
+      // Tahap 2: tidak ada satu pun filter yang cukup dilepas sendirian,
+      // berarti ada dua kriteria yang saling bertentangan.
+      let ketemu = null;
+      for (let i = 0; i < aktif.length && !ketemu; i++) {
+        for (let j = i + 1; j < aktif.length && !ketemu; j++) {
+          const [k1, v1] = aktif[i], [k2, v2] = aktif[j];
+          if (jml({ ...state, [k1]: null, [k2]: null }) > 0) ketemu = [[k1, v1], [k2, v2]];
+        }
+      }
+      if (ketemu) {
+        const [[k1, v1], [k2, v2]] = ketemu;
+        const alasan = alasanKombinasi(`${k1}:${v1}`, `${k2}:${v2}`);
+        bagian.push(`<p class="diag-utama">Kombinasi <strong>${NAMA_BAR[k1]}</strong> (&ldquo;${labelChip(k1, v1)}&rdquo;) dan <strong>${NAMA_BAR[k2]}</strong> (&ldquo;${labelChip(k2, v2)}&rdquo;) tidak bisa dipenuhi bersamaan.</p>`);
+        if (alasan) bagian.push(`<p class="diag-sub">${alasan}</p>`);
+        bagian.push(`<p class="diag-sub">Lepas salah satu dari keduanya untuk melihat hasil.</p>`);
+      } else {
+        bagian.push(`<p class="diag-utama">Kriteria yang kamu pilih terlalu ketat untuk 93 laptop yang ada. Coba lepas satu atau dua pilihan.</p>`);
+      }
+    }
+
+    // Info tambahan: berapa laptop yang lolos tiap filter kalau berdiri sendiri
+    const sendiri = aktif.map(([k, v]) => {
+      const s = { budget:null, ram:null, editing:null, performa:null, brand:null, [k]: v };
+      return `<li>${NAMA_BAR[k]} &ldquo;${labelChip(k, v)}&rdquo; saja &rarr; ${jml(s)} laptop</li>`;
+    }).join('');
+    bagian.push(`<details class="diag-detail"><summary>Rincian tiap kriteria</summary><ul class="diag-list">${sendiri}</ul></details>`);
+
+    return `<div class="diagnosa">${bagian.join('')}</div>`;
+  }
+
+  // Warna aksen per kategori
+  const katColor = {
+    'Budget':       '#60a5fa',
+    'Produktivitas':'#a78bfa',
+    'Gaming':       '#f97316',
+    'High Gaming':  '#ef4444',
+    'Ultrabook':    '#06b6d4',
+  };
+
+  // Deteksi tema aktif (light/dark) untuk inline styles card yang theme-aware
+  function isLightTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'light';
+  }
+
+  // Build card HTML — fully inline styles (Astro scoped CSS tidak berlaku pada innerHTML)
+  // FIX P1: warna inline kini menyesuaikan light/dark mode (sebelumnya selalu dark).
+  function buildCard(l) {
+    const accent = katColor[l.kategori] || '#60a5fa';
+    const light = isLightTheme();
+    // Token warna per tema
+    const cardBg      = light ? 'rgba(255,255,255,0.92)' : 'rgba(10,10,42,0.85)';
+    const cardBorder  = light ? 'rgba(0,0,0,0.1)'        : 'rgba(96,165,250,0.15)';
+    const nameColor   = light ? '#1e293b'                : '#e2e8f0';
+    const specColor   = light ? '#475569'                : '#94a3b8';
+    const footerLine  = light ? 'rgba(0,0,0,0.08)'       : 'rgba(255,255,255,0.06)';
+    const seeColor    = light ? '#64748b'                : '#64748b';
+    const cardShadow  = light ? 'box-shadow:0 2px 12px rgba(0,0,0,0.07);' : '';
+
+    const badges = [];
+    if (l.srgb)   badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(52,211,153,0.15);color:${light ? '#059669' : '#34d399'};border:1px solid rgba(52,211,153,0.3);">✓ 100% sRGB</span>`);
+    if (l.gpuDed) badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,0.15);color:${light ? '#7c3aed' : '#a78bfa'};border:1px solid rgba(167,139,250,0.3);">GPU Dedicated</span>`);
+    if (l.ramUp)  badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(251,191,36,0.12);color:${light ? '#b45309' : '#fbbf24'};border:1px solid rgba(251,191,36,0.25);">RAM Upgradeable</span>`);
+    if (l.lokal)  badges.push(`<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(249,115,22,0.12);color:${light ? '#c2410c' : '#fb923c'};border:1px solid rgba(249,115,22,0.25);">Brand Lokal</span>`);
+
+    const hargaColor = l.hMin === 0 ? (light ? '#d97706' : '#fbbf24') : (light ? '#2563eb' : '#60a5fa');
+
+    return `
+      <a href="/review/${l.slug}" style="
+        display:flex;flex-direction:column;
+        background:${cardBg};
+        border:1px solid ${cardBorder};
+        border-top:3px solid ${accent};
+        border-radius:14px;overflow:hidden;
+        text-decoration:none;${cardShadow}
+        transition:border-color 0.25s,transform 0.25s;
+      " onmouseover="this.style.borderColor='${accent}';this.style.transform='translateY(-3px)'"
+         onmouseout="this.style.borderColor='${cardBorder}';this.style.transform='none'">
+        <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1;">
+
+          <!-- Kategori -->
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:${accent};">${l.kategori}</span>
+          </div>
+
+          <!-- Nama laptop -->
+          <div style="font-size:0.9rem;font-weight:700;color:${nameColor};line-height:1.35;">${l.nama}</div>
+
+          <!-- Spesifikasi -->
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="font-size:0.76rem;color:${specColor};">🖥️ ${l.cpu}</div>
+            <div style="font-size:0.76rem;color:${specColor};">🎮 ${l.gpu}</div>
+            <div style="font-size:0.76rem;color:${specColor};">💾 ${l.ram}</div>
+            ${state.performa === 'gaming' && l.gpuTgp ? `<div style="font-size:0.76rem;color:${light ? '#ea580c' : '#f97316'};">⚡ TGP: ${l.gpuTgp}W · VRAM: ${l.gpuVram}GB</div>` : ''}
+            ${state.performa === 'produktivitas' && l.pmMulti ? `<div style="font-size:0.76rem;color:${light ? '#2563eb' : '#60a5fa'};">🖥️ Passmark Multi: ${l.pmMulti.toLocaleString('id-ID')}</div>` : ''}
+            ${state.performa === 'ringan' ? `<div style="font-size:0.76rem;color:${light ? '#059669' : '#34d399'};">${!l.gpuDed ? '🔋 Tanpa dGPU' : ''}${l.bobot ? (l.gpuDed ? '' : ' · ') + '⚖️ ' + l.bobot + ' kg' : ''}${l.pmMulti ? ' · eff: ' + Math.round(efficiencyScore(l)) : ''}</div>` : ''}
+          </div>
+
+          <!-- Badges -->
+          ${badges.length ? `<div style="display:flex;flex-wrap:wrap;gap:5px;">${badges.join('')}</div>` : ''}
+
+          <!-- Footer: harga + link -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px;border-top:1px solid ${footerLine};">
+            <span style="font-size:0.83rem;font-weight:700;color:${hargaColor};">${l.harga}</span>
+            <span style="font-size:0.75rem;color:${seeColor};">Lihat review →</span>
+          </div>
+
+        </div>
+      </a>`;
+  }
+
+  function render() {
+    const header = document.getElementById('resultsHeader');
+    const grid = document.getElementById('resultsGrid');
+    const fallbackNote = document.getElementById('fallbackNote');
+
+    if (!hasAnyFilter()) {
+      header.innerHTML = `Pilih filter di atas untuk menemukan laptop yang pas.`;
+      fallbackNote.style.display = 'none';
+      grid.innerHTML = '';
+      return;
+    }
+
+    const matched = laptops.filter(l => passesAllFilters(l));
+
+    if (matched.length > 0) {
+      fallbackNote.style.display = 'none';
+      fallbackNote.innerHTML = '';   // bersihkan diagnosa lama supaya tidak tertinggal
+      header.innerHTML = `<strong>${matched.length} laptop</strong> cocok dengan pilihanmu`;
+      grid.innerHTML = sortByPerforma(matched).map(l => buildCard(l)).join('');
+    } else {
+      // Fallback: tampilkan 3 laptop dengan skor tertinggi.
+      // sortByPerforma() dijalankan lebih dulu supaya jadi tiebreak — Array.sort
+      // bersifat stabil, jadi laptop berskor sama tetap urut sesuai prioritas
+      // performa yang dipilih user, bukan urutan acak dari array sumber.
+      const scored = sortByPerforma(laptops.map(l => ({ ...l, _score: scoreClosest(l) })))
+        .sort((a, b) => b._score - a._score)
+        .slice(0, 3);
+
+      fallbackNote.style.display = 'block';
+      fallbackNote.innerHTML =
+        `<span class="fallback-note">⚠️ Tidak ada laptop yang 100% cocok. Ini yang paling mendekati kebutuhanmu:</span>`
+        + diagnosaKosong();
+      header.innerHTML = `Tidak ada laptop yang cocok 100% — menampilkan <strong>${scored.length} yang paling mendekati</strong>`;
+      grid.innerHTML = scored.map(l => buildCard(l)).join('');
+    }
+  }
+
+  // Chip click handling
+  document.querySelectorAll('.filter-chips').forEach(group => {
+    const groupName = group.dataset.group;
+    group.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        // Toggle: kalau sudah aktif → deselect
+        const isActive = chip.classList.contains('active');
+        group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        const bar = group.closest('.filter-bar');
+        if (isActive) {
+          state[groupName] = null;
+          bar.classList.remove('has-selection');
+        } else {
+          chip.classList.add('active');
+          state[groupName] = chip.dataset.val;
+          bar.classList.add('has-selection');
+        }
+        render();
+        catatPilihanFilter();
+      });
+    });
+  });
+
+  // Reset
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    Object.keys(state).forEach(k => state[k] = null);
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.filter-bar').forEach(b => b.classList.remove('has-selection'));
+    render();
+  });
+
+  // Re-render hasil saat tema berubah agar warna card (inline styles) ikut menyesuaikan
+  new MutationObserver(() => {
+    if (hasAnyFilter()) render();
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  /* ═══════════ GATE: nama + email ═══════════ */
+  const gateBox    = document.getElementById('gateBox');
+  const gateHalo   = document.getElementById('gateHalo');
+  const wizard     = document.getElementById('filterWizard');
+  const gateForm   = document.getElementById('gateForm');
+  const inpNama    = document.getElementById('gNama');
+  const inpEmail   = document.getElementById('gEmail');
+  const errNama    = document.getElementById('errNama');
+  const errEmail   = document.getElementById('errEmail');
+  const gateBtn    = document.getElementById('gateBtn');
+
+  let pengguna = null;
+  const pilihanGate = { okupansi: null, kebutuhan: null };
+
+  /* Chip okupansi & kebutuhan — satu pilihan per grup, bisa dibatalkan
+     dengan mengklik ulang chip yang sudah aktif. */
+  document.querySelectorAll('.gate-pilihan').forEach(grup => {
+    const nama = grup.dataset.grup;
+    grup.querySelectorAll('.gate-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const sudahAktif = chip.classList.contains('aktif');
+        grup.querySelectorAll('.gate-chip').forEach(c => c.classList.remove('aktif'));
+        if (sudahAktif) {
+          pilihanGate[nama] = null;
+        } else {
+          chip.classList.add('aktif');
+          pilihanGate[nama] = chip.dataset.val;
+        }
+        grup.classList.remove('salah');
+      });
+    });
+  });
+
+  function bacaSimpanan() {
+    try {
+      const raw = localStorage.getItem(KUNCI_SIMPAN);
+      if (!raw) return null;
+      const o = JSON.parse(raw);
+      return (o && o.nama && o.email) ? o : null;
+    } catch (e) { return null; }
+  }
+
+  /* Catatan: okupansi & kebutuhan SENGAJA tidak memengaruhi filter apa pun.
+     Keduanya murni data untuk analisis. Filter 5 pertanyaan tetap berdiri
+     sendiri dan selalu dimulai dari kondisi kosong. */
+
+  function ringkasProfil(u) {
+    return `okupansi=${u.okupansi || '-'} | kebutuhan=${u.kebutuhan || '-'}`;
+  }
+
+  function bukaKunci(u, baruDaftar) {
+    pengguna = u;
+    gateBox.hidden = true;
+    wizard.hidden = false;
+    document.querySelector('.results-section').hidden = false;
+    document.getElementById('haloNama').textContent = u.nama;
+    document.getElementById('haloProfil').textContent =
+      [u.okupansi, u.kebutuhan].filter(Boolean).join(' · ');
+    gateHalo.hidden = false;
+    if (baruDaftar) kirimKeForm(u.nama, u.email, `(baru mendaftar) ${ringkasProfil(u)}`);
+  }
+
+  /* Validasi email: cukup longgar supaya tidak menolak alamat yang sah,
+     tapi tetap menangkap salah ketik yang jelas seperti "budi@" atau "budi.com". */
+  function emailValid(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s.trim()); }
+
+  gateForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nama  = inpNama.value.trim();
+    const email = inpEmail.value.trim();
+    let ok = true;
+
+    errNama.textContent = ''; inpNama.classList.remove('salah');
+    errEmail.textContent = ''; inpEmail.classList.remove('salah');
+    document.getElementById('errOkupansi').textContent = '';
+    document.getElementById('errKebutuhan').textContent = '';
+    document.querySelectorAll('.gate-pilihan').forEach(g => g.classList.remove('salah'));
+
+    if (nama.length < 2) {
+      errNama.textContent = 'Nama minimal 2 huruf.';
+      inpNama.classList.add('salah'); ok = false;
+    }
+    if (!emailValid(email)) {
+      errEmail.textContent = 'Format email belum benar. Contoh: nama@email.com';
+      inpEmail.classList.add('salah'); ok = false;
+    }
+    if (!pilihanGate.okupansi) {
+      document.getElementById('errOkupansi').textContent = 'Pilih salah satu.';
+      document.querySelector('.gate-pilihan[data-grup="okupansi"]').classList.add('salah'); ok = false;
+    }
+    if (!pilihanGate.kebutuhan) {
+      document.getElementById('errKebutuhan').textContent = 'Pilih salah satu.';
+      document.querySelector('.gate-pilihan[data-grup="kebutuhan"]').classList.add('salah'); ok = false;
+    }
+    if (!ok) return;
+
+    gateBtn.disabled = true;
+    gateBtn.textContent = 'Membuka…';
+
+    const u = {
+      nama, email,
+      okupansi: pilihanGate.okupansi,
+      kebutuhan: pilihanGate.kebutuhan,
+      waktu: new Date().toISOString(),
+    };
+    try { localStorage.setItem(KUNCI_SIMPAN, JSON.stringify(u)); } catch (err) {}
+    bukaKunci(u, true);
+  });
+
+  document.getElementById('gateReset').addEventListener('click', () => {
+    try { localStorage.removeItem(KUNCI_SIMPAN); } catch (e) {}
+    pengguna = null;
+    gateHalo.hidden = true;
+    wizard.hidden = true;
+    document.querySelector('.results-section').hidden = true;
+    gateBox.hidden = false;
+    gateBtn.disabled = false;
+    gateBtn.textContent = 'Buka Pencarian →';
+    inpNama.value = ''; inpEmail.value = '';
+    pilihanGate.okupansi = null; pilihanGate.kebutuhan = null;
+    document.querySelectorAll('.gate-chip').forEach(c => c.classList.remove('aktif'));
+    gateBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
+  /* Rekam pilihan filter untuk analisis. Dikirim sekali saja per kunjungan,
+     5 detik setelah pengguna berhenti mengubah pilihan, supaya satu sesi
+     tidak menghasilkan puluhan baris di spreadsheet. */
+  let timerFilter = null, sudahKirimFilter = false;
+  function catatPilihanFilter() {
+    if (!pengguna || sudahKirimFilter || !ENTRY_FILTER) return;
+    clearTimeout(timerFilter);
+    timerFilter = setTimeout(() => {
+      const isi = Object.entries(state).filter(([, v]) => v);
+      if (isi.length === 0) return;
+      const ringkasan = isi.map(([k, v]) => `${k}=${v}`).join(', ');
+      const jml = laptops.filter(l => passesAllFilters(l)).length;
+      kirimKeForm(pengguna.nama, pengguna.email,
+        `${ringkasProfil(pengguna)} | ${ringkasan} | hasil: ${jml} laptop`);
+      sudahKirimFilter = true;
+    }, 5000);
+  }
+
+  // Init
+  const tersimpan = bacaSimpanan();
+  if (tersimpan) {
+    bukaKunci(tersimpan, false);
+  } else {
+    wizard.hidden = true;
+    document.querySelector('.results-section').hidden = true;
+  }
+  render();
+</script>
+</BaseLayout>

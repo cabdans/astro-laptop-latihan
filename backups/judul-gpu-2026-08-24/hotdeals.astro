@@ -1,0 +1,271 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+/* Sumber data: AstroLaptop Recomendation August Part 1.xlsx
+   Hanya berisi laptop yang SUDAH punya halaman review di project.
+   Harga memakai angka promo Agustus dari file rekomendasi, jadi bisa
+   berbeda dengan rentang harga di halaman review — itu memang disengaja. */
+const deals = [
+  { nama: "Acer Aspire Go 14 (i3-1315U)", harga: "Rp 8,3 juta", hargaNum: 8.3,
+    kategori: "Allrounder / Kuliah", merk: "Acer",
+    cpu: "Core i3-1315U", gpu: "iGPU Intel UHD", ram: "8 GB", storage: "SSD 512 GB",
+    layar: "14\" Full HD IPS", garansi: "1 tahun",
+    catatan: "Seimbang antara harga dan kelengkapan untuk kuliah dan kerja harian.",
+    slug: "/review/budget/acer-aspire-go-14-i3-1315u",
+    link: "https://tk.tokopedia.com/ZS4tE9JT2/" },
+
+  { nama: "Acer Aspire Go 14 Ai (Ultra 5 125H)", harga: "Rp 11,9 juta", hargaNum: 11.9,
+    kategori: "Non-Gaming / Editing", merk: "Acer",
+    cpu: "Core Ultra 5 125H", gpu: "Intel Arc (iGPU)", ram: "16 GB", storage: "SSD 512 GB",
+    layar: "14\" WUXGA", garansi: "2 tahun",
+    catatan: "iGPU Arc cukup kuat untuk editing foto dan video ringan tanpa GPU terpisah.",
+    slug: "/review/produktivitas/acer-aspire-go-14-ultra5-125h",
+    link: "https://tk.tokopedia.com/ZS4tE5QvJ/" },
+
+  { nama: "Acer Aspire 7 Pro A715", harga: "Rp 12,7 juta", hargaNum: 12.7,
+    kategori: "Gaming / Value", merk: "Acer",
+    cpu: "Core i5-13420H", gpu: "RTX 3050 6 GB", ram: "16 GB", storage: "SSD 512 GB",
+    layar: "15\" FHD 144 Hz", garansi: "2Y Part / 3Y Servis + 1Y ADP",
+    catatan: "RTX 3050 6 GB dengan RAM dual channel, value gaming terbaik di kelasnya.",
+    slug: "/review/gaming/acer-aspire-7-pro-a715",
+    link: "https://tk.tokopedia.com/ZS4tEa4A9/" },
+
+  { nama: "Acer Nitro Lite 16 (NL16)", harga: "Rp 13,2 juta", hargaNum: 13.2,
+    kategori: "Gaming + Mobilitas", merk: "Acer",
+    cpu: "Core 5 210H", gpu: "RTX 3050 6 GB", ram: "16 GB", storage: "SSD 512 GB",
+    layar: "16\" WUXGA 180 Hz 100% sRGB", garansi: "2Y Part / 3Y Servis + 1Y ADP",
+    catatan: "Bobot 1,95 kg untuk laptop gaming 16 inch, paling ringan di kelasnya.",
+    slug: "/review/gaming/acer-nitro-lite-nl16",
+    link: "https://tk.tokopedia.com/ZS4tE4bqT/" },
+
+  { nama: "Lenovo LOQ Essential 15ARP10E", harga: "Rp 13,5 juta", hargaNum: 13.5,
+    kategori: "Gaming + Mobilitas", merk: "Lenovo",
+    cpu: "Ryzen 7 7735HS", gpu: "RTX 3050 6 GB", ram: "16 GB", storage: "SSD 512 GB",
+    layar: "15\" FHD 144 Hz", garansi: "2 tahun + ADP",
+    catatan: "Ryzen 7 8 core di harga 13 jutaan, plus garansi ADP dari Lenovo.",
+    slug: "/review/gaming/lenovo-loq-essential-15arp10e",
+    link: "https://tk.tokopedia.com/ZS4tEVArt/" },
+
+  { nama: "Colorful Evol P15 HE55D (RTX 4050)", harga: "Rp 15,5 juta", hargaNum: 15.5,
+    kategori: "Gaming / Performa", merk: "Colorful",
+    cpu: "Core i5-12450H", gpu: "RTX 4050 full power", ram: "16 GB", storage: "SSD 512 GB",
+    layar: "15\" FHD 144 Hz", garansi: "2 tahun",
+    catatan: "RTX 4050 full power di harga 15 jutaan, TGP tidak ditahan.",
+    slug: "/review/gaming/colorful-evol-p15-he55d",
+    link: "https://tk.tokopedia.com/ZS4tEaS7p/" },
+
+  { nama: "Colorful Evol P15 (RTX 5050)", harga: "Rp 19 juta", hargaNum: 19.0,
+    kategori: "Gaming / Performa", merk: "Colorful",
+    cpu: "Core i5-13420H", gpu: "RTX 5050 full power", ram: "16 GB", storage: "SSD 512 GB",
+    layar: "15\" FHD 144 Hz", garansi: "2 tahun",
+    catatan: "RTX 5050 arsitektur Blackwell dengan TGP penuh 115 W.",
+    slug: "/review/gaming/colorful-evol-p15-rtx5050",
+    link: "" },
+
+  { nama: "Acer Nitro V15 (RTX 5050)", harga: "Rp 17,5 juta", hargaNum: 17.5,
+    kategori: "Gaming / Brand Ternama", merk: "Acer",
+    cpu: "Core i5-13420H", gpu: "RTX 5050 8 GB (TGP 75 W)", ram: "16 GB DDR4", storage: "SSD 512 GB",
+    layar: "15.6\" FHD 180 Hz 100% sRGB", garansi: "2Y Part / 3Y Servis + 1Y ADP",
+    catatan: "Baterai 76 Wh terbesar di kelasnya, plus panel 180 Hz 100% sRGB.",
+    slug: "/review/gaming/acer-nitro-v15-5050",
+    link: "https://tk.tokopedia.com/ZS4too9ra/" },
+
+  { nama: "Acer Swift Go 14 AI (SFG14-73)", harga: "Rp 18,5 juta", hargaNum: 18.5,
+    kategori: "Ultrabook Premium", merk: "Acer",
+    cpu: "Core Ultra 7 258V (Lunar Lake)", gpu: "Intel Arc 140V (iGPU)", ram: "16 GB LPDDR5X",
+    storage: "SSD 512 GB", layar: "14\" OLED", garansi: "3Y / 2Y Sparepart",
+    catatan: "Lunar Lake dengan Arc 140V, efisiensi daya kelas atas untuk ultrabook.",
+    slug: "/review/ultrabook/acer-swift-go-14-sfg14-73p9",
+    link: "https://tk.tokopedia.com/ZS4tos6XL/" },
+
+  { nama: "Axioo Pongo 755-X72 (Ryzen AI 7 255)", harga: "Rp 19 juta", hargaNum: 19.0,
+    kategori: "Gaming / Value", merk: "Axioo",
+    cpu: "Ryzen AI 7 255", gpu: "RTX 5050 8 GB TGP up to 135 W", ram: "16 GB DDR5", storage: "SSD 512 GB",
+    layar: "16\" FHD+ 165 Hz 100% sRGB", garansi: "No Data",
+    catatan: "TGP RTX 5050 sampai 135 W, tertinggi di kelasnya. Namun RAM tidak bisa ditambah.",
+    slug: "/review/gaming/axioo-pongo-755-x72",
+    link: "" },
+
+  { nama: "Lenovo LOQ 15IRX10 (i5-13450HX)", harga: "Rp 20,1 juta", hargaNum: 20.1,
+    kategori: "Gaming / Paket Komplit", merk: "Lenovo",
+    cpu: "Core i5-13450HX", gpu: "RTX 5050 full power", ram: "16 GB DDR5", storage: "SSD 512 GB",
+    layar: "15\" FHD 144 Hz", garansi: "2 tahun + ADP",
+    catatan: "CPU seri HX 10 core dengan RTX 5050 TGP 105 W, paket paling lengkap.",
+    slug: "/review/gaming/lenovo-loq-15irx10",
+    link: "" },
+];
+
+const totalLink = deals.filter(d => d.link).length;
+---
+
+<BaseLayout title="Hot Deals" description="Rekomendasi laptop terbaik bulan Agustus 2026 dengan link pembelian langsung.">
+  <style>
+    .page-header {
+      margin-bottom: 28px;
+      background:
+        linear-gradient(135deg, rgba(20,4,4,0.92) 0%, rgba(30,8,6,0.82) 40%, rgba(12,3,3,0.90) 100%),
+        url('/planet-mars.jpg') center/cover no-repeat;
+      border: 1px solid rgba(248,113,113,0.28);
+      border-radius: 16px; padding: 48px 40px; position: relative; overflow: hidden;
+      box-shadow: 0 0 60px rgba(248,113,113,0.12);
+    }
+    .page-header::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(248,113,113,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 30%, rgba(251,146,60,0.12) 0%, transparent 45%);
+    }
+    .page-header h1 {
+      font-size: 2rem; font-weight: 800; color: #e2e8f0; margin-bottom: 6px;
+      position: relative; z-index: 1; text-shadow: 0 0 32px rgba(248,113,113,0.55);
+    }
+    .page-header p { color: rgba(255,255,255,0.72); position: relative; z-index: 1; }
+
+    .meta-bar {
+      display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center;
+      font-size: 0.85rem; color: #64748b; margin-bottom: 20px;
+    }
+    .meta-bar strong { color: #e2e8f0; }
+    .badge-periode {
+      background: rgba(248,113,113,0.12); color: #f87171;
+      border: 1px solid rgba(248,113,113,0.3);
+      padding: 3px 12px; border-radius: 20px; font-weight: 700; font-size: 0.78rem;
+    }
+
+    .deals-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 18px; margin-bottom: 32px;
+    }
+    .deal-card {
+      background: rgba(10,10,42,0.85);
+      border: 1px solid rgba(96,165,250,0.15);
+      border-top: 3px solid var(--accent, #f87171);
+      border-radius: 14px; overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .deal-card:hover { border-color: rgba(248,113,113,0.55); transform: translateY(-3px); }
+
+    .deal-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .deal-nama { font-size: 1rem; font-weight: 700; color: #e2e8f0; line-height: 1.35; }
+    .deal-nama a { color: inherit; text-decoration: none; }
+    .deal-nama a:hover { color: #60a5fa; }
+
+    .deal-harga { font-size: 1.35rem; font-weight: 800; color: #34d399; letter-spacing: -0.01em; }
+
+    .deal-kat {
+      display: inline-block; font-size: 0.7rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px; width: fit-content;
+      background: rgba(248,113,113,0.12); color: #f87171;
+      border: 1px solid rgba(248,113,113,0.25);
+    }
+
+    .deal-spek { display: grid; gap: 5px; font-size: 0.82rem; color: #94a3b8; }
+    .deal-spek div { display: flex; gap: 8px; }
+    .deal-spek span:first-child { color: #64748b; min-width: 62px; flex-shrink: 0; }
+    .deal-spek span:last-child { color: #cbd5e1; }
+
+    .deal-catatan {
+      font-size: 0.8rem; color: #94a3b8; line-height: 1.5;
+      border-left: 2px solid rgba(96,165,250,0.3); padding-left: 10px;
+    }
+
+    .deal-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 4px; }
+    .btn-beli-deal {
+      flex: 1; text-align: center; text-decoration: none;
+      background: linear-gradient(135deg, #16a34a, #22c55e); color: white;
+      padding: 10px 14px; border-radius: 8px; font-weight: 700; font-size: 0.85rem;
+      transition: opacity 0.2s;
+    }
+    .btn-beli-deal:hover { opacity: 0.85; }
+    .btn-beli-deal.soon {
+      background: rgba(255,255,255,0.07); color: #94a3b8;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .btn-review {
+      text-align: center; text-decoration: none; white-space: nowrap;
+      background: rgba(96,165,250,0.1); color: #60a5fa;
+      border: 1px solid rgba(96,165,250,0.3);
+      padding: 10px 14px; border-radius: 8px; font-weight: 700; font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+    .btn-review:hover { background: rgba(96,165,250,0.2); }
+
+    .disclaimer-box {
+      background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.22);
+      border-radius: 12px; padding: 16px 20px; font-size: 0.85rem;
+      color: #94a3b8; line-height: 1.6;
+    }
+    .disclaimer-box strong { color: #fbbf24; }
+
+    /* ── Light mode ── */
+    html[data-theme="light"] .deal-card {
+      background: rgba(255,255,255,0.92);
+      border-color: rgba(0,0,0,0.1);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    html[data-theme="light"] .deal-nama { color: #1e293b; }
+    html[data-theme="light"] .deal-harga { color: #059669; }
+    html[data-theme="light"] .deal-spek { color: #475569; }
+    html[data-theme="light"] .deal-spek span:last-child { color: #334155; }
+    html[data-theme="light"] .deal-catatan { color: #475569; }
+    html[data-theme="light"] .meta-bar strong { color: #1e293b; }
+    html[data-theme="light"] .disclaimer-box { color: #475569; }
+
+    @media (max-width: 640px) {
+      .page-header { padding: 32px 22px; }
+      .page-header h1 { font-size: 1.5rem; }
+      .deals-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <div class="page-header">
+    <h1>🔥 Hot Deals Agustus 2026</h1>
+    <p>Rekomendasi laptop pilihan bulan ini, langsung terhubung ke halaman pembelian.</p>
+  </div>
+
+  <div class="meta-bar">
+    <span class="badge-periode">Periode Agustus 2026</span>
+    <span><strong>{deals.length}</strong> laptop rekomendasi</span>
+    <span><strong>{totalLink}</strong> siap dibeli</span>
+    <span>Harga Rp {Math.min(...deals.map(d => d.hargaNum))} – {Math.max(...deals.map(d => d.hargaNum))} juta</span>
+  </div>
+
+  <div class="deals-grid">
+    {deals.map(d => (
+      <article class="deal-card">
+        <div class="deal-body">
+          <span class="deal-kat">{d.kategori}</span>
+          <h2 class="deal-nama"><a href={d.slug}>{d.nama}</a></h2>
+          <div class="deal-harga">{d.harga}</div>
+
+          <div class="deal-spek">
+            <div><span>CPU</span><span>{d.cpu}</span></div>
+            <div><span>GPU</span><span>{d.gpu}</span></div>
+            <div><span>RAM</span><span>{d.ram}</span></div>
+            <div><span>Storage</span><span>{d.storage}</span></div>
+            <div><span>Layar</span><span>{d.layar}</span></div>
+            <div><span>Garansi</span><span>{d.garansi}</span></div>
+          </div>
+
+          <p class="deal-catatan">{d.catatan}</p>
+
+          <div class="deal-actions">
+            {d.link
+              ? <a class="btn-beli-deal" href={d.link} target="_blank" rel="nofollow sponsored noopener">🛒 Beli Sekarang</a>
+              : <a class="btn-beli-deal soon" href={d.slug}>Lihat Detail Dulu</a>}
+            <a class="btn-review" href={d.slug}>Review →</a>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <div class="disclaimer-box">
+    <strong>Catatan.</strong> Harga di halaman ini adalah harga promo Agustus 2026 dan bisa berbeda
+    dengan rentang harga di halaman review, karena review memakai kisaran harga pasar sepanjang tahun.
+    Harga juga berubah tergantung toko, waktu, dan promo yang sedang berjalan.
+    Tautan pembelian merupakan tautan afiliasi, jadi AstroLaptop bisa memperoleh komisi
+    tanpa menambah harga yang Anda bayar.
+  </div>
+</BaseLayout>
