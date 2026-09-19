@@ -17,13 +17,17 @@ export interface Props {
   hargaUpdate?: string;
   /* Penanda unit langka / sulit dicari stoknya di pasar. */
   rare?: boolean;
+  /* Penanda unit yang sudah tidak diproduksi / tidak dijual lagi.
+     Kalau aktif, badge [ Discontinued ] muncul di header dan tombol
+     beli disembunyikan karena linknya sudah tidak relevan. */
+  discontinued?: boolean;
   /* Override "Ringkasan Cepat" untuk kasus khusus. Kalau tidak diisi,
      isinya diturunkan otomatis dari kategori laptop. */
   cocokUntuk?: string[];
   kurangUntuk?: string[];
 }
 
-const { title, harga, rating, kategori, tanggal, ringkasan, linkTokopedia, linkShopee, update, hargaUpdate, rare, cocokUntuk, kurangUntuk } = Astro.props;
+const { title, harga, rating, kategori, tanggal, ringkasan, linkTokopedia, linkShopee, update, hargaUpdate, rare, discontinued, cocokUntuk, kurangUntuk } = Astro.props;
 
 /* ── RINGKASAN CEPAT ──
    Sebelumnya dua kalimat ini hardcoded sama untuk semua 89 halaman, jadi
@@ -242,6 +246,31 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
         background: rgba(167,139,250,0.16);
         border: 1px solid rgba(167,139,250,0.5);
         backdrop-filter: blur(4px);
+      }
+      .badge-discontinued {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 13px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+        margin-left: 8px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #fca5a5;
+        background: rgba(248,113,113,0.16);
+        border: 1px solid rgba(248,113,113,0.5);
+        backdrop-filter: blur(4px);
+      }
+      .stok-habis {
+        margin: 0 0 10px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        line-height: 1.5;
+        color: #b91c1c;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
       }
       .review-hero-content h1 {
         font-size: 1.9rem;
@@ -622,6 +651,7 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
         {update && <span class="badge-update">Update: {update}</span>}
         {hargaUpdate && <span class="badge-harga">[ Harga {hargaUpdate} ]</span>}
         {rare && <span class="badge-rare">[ Rare ]</span>}
+        {discontinued && <span class="badge-discontinued">[ Discontinued ]</span>}
         <h1>Review {title}</h1>
         <div class="meta">Diterbitkan: {tanggal}</div>
       </div>
@@ -653,13 +683,19 @@ const bColor = badgeColor[kategori] ?? '#2563eb';
         <div class="sidebar-card">
           <h3>💰 Harga</h3>
           <div class="harga-display">{harga}</div>
-          <a href={tokoHref} class="btn-beli"
-             target={tokoExt ? '_blank' : undefined}
-             rel={tokoExt ? 'nofollow sponsored noopener' : undefined}>🛒 Beli di Tokopedia</a>
-          <a href={shopHref} class="btn-beli-secondary"
-             target={shopExt ? '_blank' : undefined}
-             rel={shopExt ? 'nofollow sponsored noopener' : undefined}>🛍️ Beli di Shopee</a>
-          <p class="disclaimer">*Link afiliasi — harga dapat berubah</p>
+          {discontinued ? (
+            <p class="stok-habis">Unit ini sudah tidak diproduksi lagi, jadi tombol pembelian ditiadakan. Harga di atas adalah harga terakhir yang tercatat.</p>
+          ) : (
+            <>
+              <a href={tokoHref} class="btn-beli"
+                 target={tokoExt ? '_blank' : undefined}
+                 rel={tokoExt ? 'nofollow sponsored noopener' : undefined}>🛒 Beli di Tokopedia</a>
+              <a href={shopHref} class="btn-beli-secondary"
+                 target={shopExt ? '_blank' : undefined}
+                 rel={shopExt ? 'nofollow sponsored noopener' : undefined}>🛍️ Beli di Shopee</a>
+              <p class="disclaimer">*Link afiliasi — harga dapat berubah</p>
+            </>
+          )}
         </div>
 
         <div class="sidebar-card">
