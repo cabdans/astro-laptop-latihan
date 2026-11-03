@@ -24,7 +24,7 @@ const laptops = [
   { slug:"high-gaming/axioo-pongo-765", nama:"Axioo Pongo 765 i7-13620H RTX 5060", harga:"Rp 21.300.000", hMin:21.3, hMax:21.3, kategori:"High Gaming", cpu:"Intel Core i7-13620H", gpu:"RTX 5060 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:true, gpuTgp:115, gpuVram:8, bobot:2.35, pmMulti:23398 },
   { slug:"high-gaming/axioo-pongo-765-v2", nama:"Axioo Pongo 765 V2 i7-13700H RTX 5060", harga:"Rp 22.600.000", hMin:22.6, hMax:22.6, kategori:"High Gaming", cpu:"Intel Core i7-13700H", gpu:"RTX 5060 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:true, gpuTgp:115, gpuVram:8, bobot:2.35, pmMulti:25960 },
   { slug:"gaming/lenovo-loq-15ahp11", nama:"Lenovo LOQ 15AHP11 R7 250 RTX 5050", harga:"Rp 23.600.000", hMin:23.6, hMax:23.6, kategori:"Gaming", cpu:"AMD Ryzen AI 7 250", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.1, pmMulti:25331 },
-  { slug:"gaming/axioo-pongo-755-x72", nama:"Axioo Pongo 755AMD R7 255 RTX 5050", harga:"Rp 19.000.000", hMin:19.0, hMax:19.0, kategori:"Gaming", cpu:"AMD Ryzen AI 7 255", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:true, gpuTgp:135, gpuVram:8, bobot:2.35, pmMulti:28774 },
+  { slug:"gaming/axioo-pongo-755amd-r7-255-rtx5050", nama:"Axioo Pongo 755AMD R7 255 RTX 5050", harga:"Rp 19.000.000", hMin:19.0, hMax:19.0, kategori:"Gaming", cpu:"AMD Ryzen AI 7 255", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:true, gpuTgp:135, gpuVram:8, bobot:2.35, pmMulti:28774 },
   { slug:"gaming/lenovo-loq-15ahp10", nama:"Lenovo LOQ 15AHP10 RTX 5050", harga:"Rp 20 Juta", hMin:20, hMax:20, kategori:"Gaming", cpu:"AMD Ryzen AI 7 250", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:100, gpuVram:8, bobot:2.3, pmMulti:25331 },
   { slug:"gaming/lenovo-loq-15irx10-i7", nama:"Lenovo LOQ 15IRX10 i7-13700HX RTX 5050", harga:"Rp 24.500.000", hMin:24.5, hMax:24.5, kategori:"Gaming", cpu:"Intel Core i7-13700HX", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:100, gpuVram:8, bobot:2.4, pmMulti:31788 },
   { slug:"gaming/lenovo-loq-15irx10", nama:"Lenovo LOQ 15IRX10 i5-13450HX RTX 5050", harga:"Rp 22–23 Juta", hMin:22, hMax:23, kategori:"Gaming", cpu:"Intel Core i5-13450HX", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5 (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:105, gpuVram:8, bobot:2.4, pmMulti:24682, disc:true },
@@ -65,7 +65,6 @@ const laptops = [
   { slug:"budget/polytron-luxia-i3-1215", nama:"Polytron Laptop Luxia i3 1215", harga:"Rp 7.000.000", hMin:7.0, hMax:7.0, kategori:"Budget", cpu:"Intel Core i3-1215U", gpu:"Intel UHD Graphics", ram:"8 GB DDR4 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:10173 },
   { slug:"high-gaming/lenovo-legion-5i-15irx10-i7-13650hx", nama:"Lenovo Legion 5i 15IRX10 i7-13650HX RTX 5050", harga:"Rp 25.800.000", hMin:25.8, hMax:25.8, kategori:"High Gaming", cpu:"Intel Core i7-13650HX", gpu:"RTX 5050 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:2.1, pmMulti:30232 },
   { slug:"high-gaming/asus-tuf-a14-fa401uh-rtx5050", nama:"ASUS TUF A14 FA401UH Ryzen AI 7 260 RTX 5050", harga:"Rp 26.800.000", hMin:26.8, hMax:26.8, kategori:"High Gaming", cpu:"AMD Ryzen AI 7 260", gpu:"RTX 5050 8 GB", ram:"32 GB LPDDR5X (soldered)", srgb:true, ramUp:false, gpuDed:true, lokal:false, gpuTgp:105, gpuVram:8, bobot:1.46, pmMulti:28167 },
-  { slug:"high-gaming/lenovo-legion-5i-15irx10-oled-rtx5050", nama:"Lenovo Legion 5i 15IRX10 OLED RTX 5050", harga:"Rp 25 Juta", hMin:25, hMax:25, kategori:"High Gaming", cpu:"Tidak tercantum", gpu:"RTX 5050 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:1.9, pmMulti:0 },
   { slug:"high-gaming/gigabyte-a16-ga63h-3vh-r7-260-rtx5060", nama:"Gigabyte A16 GA63H-3VH Ryzen 7 260 RTX 5060", harga:"—", hMin:0, hMax:0, kategori:"High Gaming", cpu:"AMD Ryzen 7 260", gpu:"RTX 5060 8 GB", ram:"16 GB DDR5-5600 (1 keping)", srgb:true, ramUp:false, gpuDed:true, lokal:false, gpuTgp:0, gpuVram:8, bobot:0, pmMulti:28167 },
   { slug:"high-gaming/lenovo-legion-5-15ahp11-r7-250-rtx5050", nama:"Lenovo Legion 5 15AHP11 Ryzen 7 250 RTX 5050 (Catatan)", harga:"—", hMin:0, hMax:0, kategori:"High Gaming", cpu:"AMD Ryzen 7 250", gpu:"RTX 5050 8 GB", ram:"16 GB DDR5-5600 (1 keping)", srgb:true, ramUp:false, gpuDed:true, lokal:false, gpuTgp:0, gpuVram:8, bobot:0, pmMulti:25331 },
   { slug:"high-gaming/asus-rog-strix-g16-g614ph-rtx5050", nama:"ASUS ROG Strix G16 G614PH Ryzen 9 8940HX RTX 5050", harga:"Rp 30.800.000", hMin:30.8, hMax:30.8, kategori:"High Gaming", cpu:"AMD Ryzen 9 8940HX", gpu:"RTX 5050 8 GB", ram:"DDR5 SO-DIMM (upgradeable)", srgb:false, ramUp:true, gpuDed:true, lokal:false, gpuTgp:115, gpuVram:8, bobot:0, pmMulti:50289 },
@@ -93,7 +92,7 @@ const laptops = [
   { slug:"ultrabook/acer-swift-go-14-sfg14-ultra5-125h", nama:"Acer Swift Go 14 SFG14 Ultra 5 125H", harga:"Rp 12.500.000", hMin:12.5, hMax:12.5, kategori:"Ultrabook", cpu:"Intel Core Ultra 5 125H", gpu:"Integrated", ram:"LPDDR5 (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:20314 },
   { slug:"ultrabook/acer-swift-go-14-sfg14-73p9", nama:"Acer Swift Go 14 AI SFG14-73-73P9", harga:"Rp 18.500.000", hMin:18.5, hMax:18.5, kategori:"Ultrabook", cpu:"Tidak tercantum", gpu:"Integrated", ram:"16 GB LPDDR5X (soldered)", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:0 },
   { slug:"ultrabook/advan-workplus-ai-ryzen7-255", nama:"Advan Workplus AI Ryzen 7 255", harga:"Rp 10.200.000", hMin:10.2, hMax:10.2, kategori:"Ultrabook", cpu:"AMD Ryzen 7 255", gpu:"Integrated", ram:"8 GB DDR5 (upgradeable)", srgb:false, ramUp:true, gpuDed:false, lokal:true, gpuTgp:0, gpuVram:0, bobot:1.54, pmMulti:28774 },
-  { slug:"ultrabook/apple-macbook-air-m2-13", nama:"Apple MacBook Air M2 13\"", harga:"Rp 12–13 Juta", hMin:12, hMax:13, kategori:"Ultrabook", cpu:"Apple M2", gpu:"Integrated", ram:"Tidak tercantum", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:15652 },
+  { slug:"ultrabook/apple-macbook-air-m2", nama:"Apple MacBook Air M2", harga:"Rp 12–13 Juta", hMin:12, hMax:13, kategori:"Ultrabook", cpu:"Apple M2", gpu:"Integrated", ram:"Tidak tercantum", srgb:true, ramUp:false, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:0, pmMulti:15652 },
   { slug:"ultrabook/lenovo-ideapad-slim5-14-oled-ryzen7-8845hs", nama:"Lenovo IdeaPad Slim 5 14 OLED Ryzen 7 8845HS", harga:"Rp 17.700.000", hMin:17.7, hMax:17.7, kategori:"Ultrabook", cpu:"AMD Ryzen 7 8845HS", gpu:"Integrated", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:1.39, pmMulti:28378 },
   { slug:"ultrabook/lenovo-ideapad-slim5-14iah10-ultra5-225h", nama:"Lenovo IdeaPad Slim 5 14IAH10 Ultra 5 225H", harga:"Rp 18.200.000", hMin:18.2, hMax:18.2, kategori:"Ultrabook", cpu:"Intel Core Ultra 5 225H", gpu:"Integrated", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:1.39, pmMulti:28339 },
   { slug:"ultrabook/lenovo-ideapad-slim5i-ultra7-255h", nama:"Lenovo IdeaPad Slim 5i Ultra 7 255H", harga:"Rp 20.000.000", hMin:20.0, hMax:20.0, kategori:"Ultrabook", cpu:"Intel Core Ultra 7 255H", gpu:"Integrated", ram:"DDR5 SO-DIMM (upgradeable)", srgb:true, ramUp:true, gpuDed:false, lokal:false, gpuTgp:0, gpuVram:0, bobot:1.39, pmMulti:30718 },
@@ -522,7 +521,7 @@ const laptops = [
 
 <div class="rekomen-hero reveal">
   <h1>🎯 Temukan Laptop yang Pas</h1>
-  <p>Jawab 5 pertanyaan singkat — kami carikan laptop terbaik dari 102 pilihan</p>
+  <p>Jawab 5 pertanyaan singkat — kami carikan laptop terbaik dari 101 pilihan</p>
 </div>
 
 <!-- ══ GATE: nama + email ══ -->
@@ -949,7 +948,7 @@ const laptops = [
         if (alasan) bagian.push(`<p class="diag-sub">${alasan}</p>`);
         bagian.push(`<p class="diag-sub">Lepas salah satu dari keduanya untuk melihat hasil.</p>`);
       } else {
-        bagian.push(`<p class="diag-utama">Kriteria yang kamu pilih terlalu ketat untuk 102 laptop yang ada. Coba lepas satu atau dua pilihan.</p>`);
+        bagian.push(`<p class="diag-utama">Kriteria yang kamu pilih terlalu ketat untuk 101 laptop yang ada. Coba lepas satu atau dua pilihan.</p>`);
       }
     }
 

@@ -9,5 +9,9 @@ export default defineConfig({
     // Axioo Pongo 765 & 765 V2 dipindah dari gaming/ ke high-gaming/ (Sesi 3, Opsi A) — jaga URL lama tetap hidup
     '/review/gaming/axioo-pongo-765': '/review/high-gaming/axioo-pongo-765',
     '/review/gaming/axioo-pongo-765-v2': '/review/high-gaming/axioo-pongo-765-v2',
+    // November 2026: rename slug (mark RENAME di Excel) & hapus data duplikat
+    '/review/ultrabook/apple-macbook-air-m2-13': '/review/ultrabook/apple-macbook-air-m2',
+    '/review/gaming/axioo-pongo-755-x72': '/review/gaming/axioo-pongo-755amd-r7-255-rtx5050',
+    '/review/high-gaming/lenovo-legion-5i-15irx10-oled-rtx5050': '/review/high-gaming/lenovo-legion-5i-15irx10-i7-13650hx',
   }
 });
